@@ -22,6 +22,7 @@ export default function SideNavBar() {
   const intelligenceLinks = [
     { name: 'Ecosystem Network', href: '/dashboard/network', icon: 'hub' },
     { name: 'Live Monitoring', href: '/dashboard/monitoring', icon: 'monitoring' },
+    { name: 'Simulation Sandbox', href: '/dashboard/sandbox', icon: 'tune' },
     { name: 'AI Copilot Chat', href: '/dashboard/copilot', icon: 'smart_toy' },
     { name: 'Cost Savings Hub', href: '/dashboard/cost-savings', icon: 'monetization_on' },
   ];

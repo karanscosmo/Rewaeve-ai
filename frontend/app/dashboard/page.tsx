@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useCircular } from '@/lib/CircularContext';
 
 export default function CircularIntelligenceWorkspace() {
@@ -15,7 +14,6 @@ export default function CircularIntelligenceWorkspace() {
     isIngesting, 
     ingestionStatus,
     activeScores,
-    listings,
     ytdSavings,
     avoidedCarbonTons,
     recycledWaterGallons
@@ -37,8 +35,6 @@ export default function CircularIntelligenceWorkspace() {
   const handleCSVIngest = () => {
     if (!selectedFile) return;
 
-    // Standard columns extraction simulation
-    // Simulating heavy chemical wash or smelter residue based on filename
     const name = selectedFile.name;
     const isDyeTextile = name.toLowerCase().includes('textile') || name.toLowerCase().includes('dye') || name.toLowerCase().includes('rinse');
     
@@ -67,7 +63,7 @@ export default function CircularIntelligenceWorkspace() {
     <div className="flex flex-col gap-8 pb-16">
       
       {/* Workspace Header Panel */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-surface/30 backdrop-blur-glass p-6 rounded-2xl border border-outline-variant/15 shadow-sm">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-surface/30 backdrop-blur-glass p-6 rounded-2xl border border-outline-variant/15 shadow-sm w-full">
         <div>
           <span className="font-label-caps text-[10px] text-primary font-bold uppercase tracking-widest bg-primary-container/20 px-3.5 py-1.5 rounded-full border border-primary/20">
             Node Synchronized
@@ -88,12 +84,59 @@ export default function CircularIntelligenceWorkspace() {
         </div>
       </div>
 
+      {/* FEATURE 8: Circular Flow Intelligence Engine Panel */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center bg-surface/40 border border-[#7A928A]/20 rounded-2xl p-6 relative overflow-hidden shadow-sm">
+        <div className="absolute inset-0 bg-radial-gradient from-[rgba(127,255,212,0.1)] to-transparent pointer-events-none" />
+        
+        {/* Left Side Score Information */}
+        <div className="lg:col-span-8 space-y-4">
+          <span className="font-label-caps text-[9px] text-primary border border-primary/20 bg-primary-container/20 px-2.5 py-1 rounded-full uppercase tracking-wider font-extrabold">Active Flow Analytics</span>
+          <h2 className="font-display-hero text-2xl font-extrabold text-on-background">Circular Flow Efficiency</h2>
+          <p className="text-xs text-on-surface-variant leading-relaxed max-w-2xl">
+            Evaluating how seamlessly secondary industrial flows circulate. Calculated dynamically using feedstock recyclability, logistics complexity, regional buyer matching indexes, and chemical extraction coefficients.
+          </p>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs font-semibold">
+            <div className="p-3 bg-surface/50 border border-outline-variant/15 rounded-xl">
+              <span className="text-on-surface-variant text-[10px]">Ecosystem Efficiency</span>
+              <p className="text-sm font-extrabold text-primary mt-1">92% Optimal</p>
+            </div>
+            <div className="p-3 bg-surface/50 border border-outline-variant/15 rounded-xl">
+              <span className="text-on-surface-variant text-[10px]">Reuse Optimization</span>
+              <p className="text-sm font-extrabold text-secondary mt-1">84% Sourced</p>
+            </div>
+            <div className="p-3 bg-surface/50 border border-outline-variant/15 rounded-xl">
+              <span className="text-on-surface-variant text-[10px]">Logistics Friction</span>
+              <p className="text-sm font-bold text-on-background mt-1">Low Overhead</p>
+            </div>
+            <div className="p-3 bg-surface/50 border border-outline-variant/15 rounded-xl">
+              <span className="text-on-surface-variant text-[10px]">Market Value Potential</span>
+              <p className="text-sm font-extrabold text-primary mt-1">₹18,500/Ton max</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Side Rotating Circular Ecosystem SVG */}
+        <div className="lg:col-span-4 flex items-center justify-center relative min-h-[160px]">
+          <div className="w-32 h-32 relative flex items-center justify-center">
+            {/* Pulsing circular flow pathways */}
+            <div className="absolute inset-0 rounded-full border border-primary-container/30 animate-spin-slow" />
+            <div className="absolute w-[85%] h-[85%] rounded-full border border-dashed border-secondary/20 animate-[spin_12s_linear_infinite]" />
+            <svg className="w-24 h-24 text-primary animate-pulse" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="2" strokeDasharray="6,4" fill="none" className="opacity-60" />
+              <path d="M50 10 A40 40 0 0 1 90 50" stroke="#7bffd9" strokeWidth="4" fill="none" />
+              <text x="50" y="55" textAnchor="middle" fill="currentColor" className="font-display-hero text-2xl font-black">84%</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
       {/* Global Telemetry Bar */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <div className="glass-panel rounded-2xl p-6 hover-lift flex items-center justify-between">
           <div>
             <span className="font-metadata text-xs text-on-surface-variant font-medium">YTD Savings Ledger</span>
-            <h3 className="font-display-hero text-3xl font-extrabold text-primary text-glow mt-1">${(ytdSavings/1000000).toFixed(2)}M</h3>
+            <h3 className="font-display-hero text-3xl font-extrabold text-primary text-glow mt-1">₹{(ytdSavings/10000000).toFixed(2)} Crore</h3>
           </div>
           <span className="material-symbols-outlined text-3xl text-primary bg-primary-container/20 p-3 rounded-full">monetization_on</span>
         </div>
@@ -174,80 +217,7 @@ export default function CircularIntelligenceWorkspace() {
             </div>
           )}
 
-          {/* ROLE: RECYCLER SPECIFIC CONTROLS */}
-          {user?.role === 'recycler' && (
-            <div className="glass-panel rounded-2xl p-6 flex flex-col gap-6">
-              <div className="flex justify-between items-start border-b border-outline-variant/15 pb-4">
-                <div>
-                  <h2 className="font-headline-md text-xl text-secondary font-bold">Waste Sourcing & Sieve Matching</h2>
-                  <p className="font-metadata text-xs text-on-surface-variant">Identify nearby industrial outputs matching your recycling segregation looms.</p>
-                </div>
-                <span className="material-symbols-outlined text-secondary bg-secondary-container/30 p-2.5 rounded-xl text-base">recycling</span>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 bg-surface/30 border border-outline-variant/25 rounded-xl">
-                  <h3 className="font-body-large text-sm font-bold text-on-background">Loom A Capacity</h3>
-                  <div className="flex justify-between items-end mt-2">
-                    <span className="text-xs text-on-surface-variant">Neutralization Reactor</span>
-                    <span className="text-sm font-bold text-primary">45% Load</span>
-                  </div>
-                  <div className="w-full bg-outline-variant/25 h-1.5 mt-1.5 rounded-full overflow-hidden">
-                    <div className="bg-primary h-full w-[45%]" />
-                  </div>
-                </div>
-
-                <div className="p-4 bg-surface/30 border border-outline-variant/25 rounded-xl">
-                  <h3 className="font-body-large text-sm font-bold text-on-background">Sieve B Capacity</h3>
-                  <div className="flex justify-between items-end mt-2">
-                    <span className="text-xs text-on-surface-variant">Fibre Agglomeration press</span>
-                    <span className="text-sm font-bold text-secondary">82% Load</span>
-                  </div>
-                  <div className="w-full bg-outline-variant/25 h-1.5 mt-1.5 rounded-full overflow-hidden">
-                    <div className="bg-secondary h-full w-[82%]" />
-                  </div>
-                </div>
-              </div>
-
-              <Link href="/dashboard/exchange">
-                <button className="w-full py-3 bg-transparent border border-secondary text-secondary font-label-caps text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-secondary-container/20 transition-all">
-                  Browse raw feedstock bidding exchange
-                </button>
-              </Link>
-            </div>
-          )}
-
-          {/* ROLE: BUYER SPECIFIC CONTROLS */}
-          {user?.role === 'buyer' && (
-            <div className="glass-panel rounded-2xl p-6 flex flex-col gap-6">
-              <div className="flex justify-between items-start border-b border-outline-variant/15 pb-4">
-                <div>
-                  <h2 className="font-headline-md text-xl text-tertiary font-bold">Circular Procurement Console</h2>
-                  <p className="font-metadata text-xs text-on-surface-variant">Source cured eco-bricks, soundproofing fibers and recycled alloys.</p>
-                </div>
-                <span className="material-symbols-outlined text-tertiary bg-tertiary-container/30 p-2.5 rounded-xl text-base">shopping_cart</span>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 bg-surface/30 border border-outline-variant/25 rounded-xl flex items-center justify-between">
-                  <div>
-                    <h3 className="font-body-large text-sm font-bold text-on-background">Active Procured Batches</h3>
-                    <span className="text-xs text-on-surface-variant">Eco-concrete structural slabs</span>
-                  </div>
-                  <span className="text-xl font-bold text-primary">120 Tons</span>
-                </div>
-                <div className="p-4 bg-surface/30 border border-outline-variant/25 rounded-xl flex items-center justify-between">
-                  <div>
-                    <h3 className="font-body-large text-sm font-bold text-on-background">Est. Procurement Saving</h3>
-                    <span className="text-xs text-on-surface-variant">Compared to raw quarrying</span>
-                  </div>
-                  <span className="text-xl font-bold text-secondary">+18% Profit</span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ACTIVE INGESTED STREAM PANEL (ALWAYS DISPLAY IF INGESTED OR FALLBACK AVAILABLE) */}
+          {/* ACTIVE INGESTED STREAM PANEL */}
           <div className="glass-panel rounded-2xl p-6">
             <h2 className="font-headline-md text-xl text-primary font-bold mb-4">Active Industrial Stream Ingested</h2>
             

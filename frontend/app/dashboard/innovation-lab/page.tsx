@@ -10,7 +10,8 @@ export default function ProductInnovationLab() {
     generateProductFromMaterial, 
     saveProduct, 
     listProductOnMarketplace, 
-    startRecoveryWorkflow 
+    startRecoveryWorkflow,
+    addNotification
   } = useCircular();
 
   const [listingPrices, setListingPrices] = useState<{[key: string]: string}>({});
@@ -56,6 +57,11 @@ export default function ProductInnovationLab() {
   const submitSynthesis = () => {
     if (selectedMaterialId && customProdName && customProdPrice) {
       generateProductFromMaterial(selectedMaterialId, customProdName, customProdPrice);
+      addNotification(
+        'Circular Blueprint Formulated',
+        `Dynamic processing blueprint and thermal sequence generated for "${customProdName}".`,
+        'success'
+      );
       setSelectedMaterialId(null);
     }
   };
@@ -193,7 +199,7 @@ export default function ProductInnovationLab() {
         </div>
       </section>
 
-      {/* SECTION 2: Active Rotating Capsule Pods & Holographic Detail Console */}
+      {/* SECTION 2: Active Rotating Capsule Pods & FEATURE 4: AI Recovery Blueprint Generator */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
         {/* Pods Grid (7 cols) */}
@@ -314,8 +320,8 @@ export default function ProductInnovationLab() {
           </div>
         </section>
 
-        {/* Holographic Specification Panel (5 cols) */}
-        <section className="col-span-1 lg:col-span-5 glass-panel rounded-2xl p-6 border border-primary-container relative">
+        {/* FEATURE 4: AI Recovery Blueprint Generator Panel (5 cols) */}
+        <section className="col-span-1 lg:col-span-5 glass-panel rounded-2xl p-6 border border-primary-container relative min-h-[500px]">
           <div className="absolute inset-0 bg-gradient-to-br from-primary-container/[0.03] to-transparent pointer-events-none rounded-2xl" />
           
           {selectedProductId ? (() => {
@@ -325,71 +331,67 @@ export default function ProductInnovationLab() {
               <div className="space-y-6 relative z-10 font-semibold text-xs text-on-surface">
                 
                 <div className="border-b border-primary-container/30 pb-4">
-                  <span className="font-metadata text-[9px] text-primary font-bold uppercase tracking-widest bg-primary-container/20 px-2 py-1 rounded">
-                    Selected Product Node
+                  <span className="font-metadata text-[9px] text-primary font-bold uppercase tracking-widest bg-primary-container/20 px-2.5 py-1 rounded">
+                    AI Engineering Blueprint
                   </span>
-                  <h3 className="font-display-hero text-xl text-on-background font-extrabold mt-3 tracking-tight">
-                    {prod.name}
+                  <h3 className="font-display-hero text-lg text-on-background font-extrabold mt-3 tracking-tight">
+                    {prod.name} Specifications
                   </h3>
                   <p className="font-metadata text-[10px] text-on-surface-variant mt-1">
-                    Source Manifest Stream ID: {prod.sourceStreamId}
+                    Curing Node Blueprint Status: Active
                   </p>
                 </div>
 
-                {/* Sub section: Real-time molecular updates */}
-                <div className="space-y-3.5 bg-surface-variant/20 p-4 rounded-xl border border-outline-variant/15">
-                  <h4 className="font-label-caps text-[10px] text-primary uppercase font-extrabold tracking-wider flex items-center gap-1.5">
-                    <span className="material-symbols-outlined text-sm">wifi_tethering</span>
-                    Real-time Physical Updates
+                {/* Layered engineering blueprint schema layout */}
+                <div className="p-4 bg-surface-container-low/40 border border-outline-variant/20 rounded-xl space-y-4 text-xs font-semibold">
+                  <h4 className="text-[10px] text-primary uppercase font-bold tracking-widest flex items-center gap-1">
+                    <span className="material-symbols-outlined text-sm">precision_manufacturing</span>
+                    1. Processing sequence
                   </h4>
-
-                  <div className="space-y-2.5 text-[11px]">
+                  <div className="space-y-2 text-[11px] font-mono text-on-surface-variant">
                     <div className="flex justify-between border-b border-outline-variant/10 pb-1.5">
-                      <span className="text-on-surface-variant font-medium">Molecular Consistency</span>
-                      <span className="text-on-background font-bold">{prod.molecularConsistency}</span>
+                      <span>Machinery sequence</span>
+                      <span className="text-on-background font-bold">{prod.machineryRequirement}</span>
                     </div>
                     <div className="flex justify-between border-b border-outline-variant/10 pb-1.5">
-                      <span className="text-on-surface-variant font-medium">Curing Coefficient</span>
-                      <span className="text-on-background font-bold">{prod.curingPhase}</span>
+                      <span>Operational Timeline</span>
+                      <span className="text-on-background font-bold">18.5 mins per batch</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-on-surface-variant font-medium">Scalability Potential</span>
-                      <span className="text-on-background font-bold text-right max-w-[150px] truncate" title={prod.scalabilityPotential}>
-                        {prod.scalabilityPotential}
-                      </span>
+                      <span>Workforce Allocated</span>
+                      <span className="text-on-background font-bold">{prod.workforceRequirement}</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Sub section: Live market trends */}
-                <div className="space-y-3.5 bg-secondary-container/5 p-4 rounded-xl border border-secondary-container/20">
-                  <h4 className="font-label-caps text-[10px] text-secondary uppercase font-extrabold tracking-wider flex items-center gap-1.5">
-                    <span className="material-symbols-outlined text-sm">trending_up</span>
-                    Interactive Market values (INR)
+                {/* Sourcing Cost & Energy Breakdowns */}
+                <div className="p-4 bg-surface-container-low/40 border border-outline-variant/20 rounded-xl space-y-4 text-xs font-semibold">
+                  <h4 className="text-[10px] text-secondary uppercase font-bold tracking-widest flex items-center gap-1">
+                    <span className="material-symbols-outlined text-sm">energy_savings_leaf</span>
+                    2. Energy & Cost Analysis
                   </h4>
-
-                  <ul className="space-y-2">
-                    {prod.marketTrendUpdates.map((update, idx) => (
-                      <li key={idx} className="flex items-center gap-2 text-[11px] text-on-background font-bold">
-                        <span className="w-1.5 h-1.5 rounded-full bg-secondary-fixed shrink-0 animate-ping" />
-                        {update}
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="space-y-2 text-[11px] font-mono text-on-surface-variant">
+                    <div className="flex justify-between border-b border-outline-variant/10 pb-1.5">
+                      <span>Thermal consumption</span>
+                      <span className="text-on-background font-bold">42 MWh per batch</span>
+                    </div>
+                    <div className="flex justify-between border-b border-outline-variant/10 pb-1.5">
+                      <span>Est. Carbon Reduction</span>
+                      <span className="text-secondary font-bold">{prod.carbonReduction}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Safety Certification</span>
+                      <span className="text-primary font-bold">Certified Standard 10B</span>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Standard specs */}
-                <div className="space-y-3 pt-2">
-                  <div className="flex justify-between">
-                    <span className="text-on-surface-variant font-medium">Regional Demand</span>
-                    <span className="text-primary font-bold">{prod.marketDemand}% High</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-on-surface-variant font-medium">Neutralization Scope</span>
-                    <span className="text-on-background font-semibold text-right max-w-[150px] truncate" title={prod.treatmentDependency}>
-                      {prod.treatmentDependency}
-                    </span>
-                  </div>
+                {/* Scalability recommendations */}
+                <div className="p-4 bg-secondary-container/5 border border-secondary/20 rounded-xl space-y-2">
+                  <h4 className="text-[10px] text-secondary uppercase font-bold tracking-wider">3. AI Scalability Analysis</h4>
+                  <p className="text-[11px] text-on-surface-variant leading-relaxed">
+                    {prod.scalabilityPotential}. Sourced raw cost averages ₹1,200/unit with a final commercial resale valuation of {prod.estimatedMarketValue}.
+                  </p>
                 </div>
 
               </div>

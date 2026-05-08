@@ -11,6 +11,15 @@ export default function IndustrialExchange() {
   // Local state for Highlight Chamber partnership
   const [isChamberPartnershipRequested, setIsChamberPartnershipRequested] = useState(false);
 
+  // Commodity indexes default simulation
+  const commodityIndexes = [
+    { name: 'Textile Sludge Index', value: '₹4,800/T', trend: 'up', percentage: '14%', color: 'text-primary' },
+    { name: 'Pigment Recovery Demand', value: '₹12,400/T', trend: 'up', percentage: '21%', color: 'text-primary' },
+    { name: 'Smelter Slag Index', value: '₹9,500/T', trend: 'down', percentage: '2%', color: 'text-error' },
+    { name: 'Fly Ash Aggregate', value: '₹3,100/T', trend: 'up', percentage: '8%', color: 'text-primary' },
+    { name: 'Chemical wash residues', value: '₹140/L', trend: 'up', percentage: '11%', color: 'text-primary' }
+  ];
+
   const handlePlaceBidSubmit = (id: string, currentBid: string) => {
     const numericVal = parseFloat(currentBid.replace(/[^0-9.]/g, '')) || 5000;
     const nextBid = numericVal + 25000; // Increment bids in ₹
@@ -44,21 +53,46 @@ export default function IndustrialExchange() {
     <div className="flex flex-col gap-8 pb-16">
       
       {/* Header section */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 bg-surface/30 backdrop-blur-glass p-6 rounded-2xl border border-outline-variant/15 shadow-sm">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 bg-surface/30 backdrop-blur-glass p-6 rounded-2xl border border-outline-variant/15 shadow-sm w-full">
         <div>
           <span className="font-label-caps text-[10px] text-primary font-bold uppercase tracking-widest bg-primary-container/20 px-3.5 py-1.5 rounded-full border border-primary/20">
             Exchange Module
           </span>
           <h1 className="font-display-hero text-4xl md:text-5xl font-extrabold text-on-background tracking-tighter mt-3">
-            Industrial Marketplace
+            Circular Commodity Exchange
           </h1>
           <p className="font-body-large text-sm text-on-surface-variant mt-1.5 max-w-2xl leading-relaxed">
-            Live decentralized environmental intelligence & circular material exchange network.
+            Trade industrial byproducts as high-yield financial commodities. Monitor real-time indexes, forecasts, and pricing fluctuations.
           </p>
         </div>
         <div className="glass-panel px-5 py-2.5 rounded-full flex items-center gap-3 border border-primary-container shadow-[0_0_20px_rgba(76,242,194,0.15)] animate-pulse">
           <span className="w-2 h-2 rounded-full bg-primary-fixed" />
-          <span className="font-label-caps text-xs text-primary font-bold uppercase tracking-wider">System Online</span>
+          <span className="font-label-caps text-xs text-primary font-bold uppercase tracking-wider">Stock Feed Live</span>
+        </div>
+      </div>
+
+      {/* FEATURE 6: Live stock ticker panel */}
+      <div className="w-full bg-surface-container-low/40 border border-outline-variant/20 rounded-xl p-3 overflow-hidden relative shadow-inner">
+        <div className="flex gap-8 animate-marquee whitespace-nowrap text-xs font-bold text-on-surface">
+          {commodityIndexes.map((idx, index) => (
+            <div key={`ticker-${index}`} className="flex items-center gap-2 border-r border-outline-variant/30 pr-8">
+              <span className="text-on-surface-variant font-medium">{idx.name}:</span>
+              <span className="font-mono text-on-background">{idx.value}</span>
+              <span className={`flex items-center font-bold ${idx.color}`}>
+                {idx.trend === 'up' ? '▲' : '▼'} {idx.percentage}
+              </span>
+            </div>
+          ))}
+          {/* Duplicate to create a perfect seamless carousel */}
+          {commodityIndexes.map((idx, index) => (
+            <div key={`ticker-dup-${index}`} className="flex items-center gap-2 border-r border-outline-variant/30 pr-8">
+              <span className="text-on-surface-variant font-medium">{idx.name}:</span>
+              <span className="font-mono text-on-background">{idx.value}</span>
+              <span className={`flex items-center font-bold ${idx.color}`}>
+                {idx.trend === 'up' ? '▲' : '▼'} {idx.percentage}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -144,26 +178,36 @@ export default function IndustrialExchange() {
           </div>
         </section>
 
-        {/* AI Insights & Nearby Bidders Card (Spans 4 cols) */}
+        {/* AI Insights & Commodity Leaderboard (Spans 4 cols) */}
         <section className="col-span-1 md:col-span-4 flex flex-col gap-6">
-          {/* AI Insights panel */}
-          <div className="glass-panel rounded-2xl p-6 relative flex flex-col items-center justify-center text-center hover-lift flex-grow border border-outline-variant/20">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary-container/30 to-surface-variant/30 border border-primary-container flex items-center justify-center mb-4 relative shadow-[0_0_30px_rgba(127,255,212,0.35)] animate-[pulse_4s_ease-in-out_infinite]">
-              <span className="material-symbols-outlined text-3xl text-primary fill-1">smart_toy</span>
-              <div className="absolute -right-1 -top-1 w-5 h-5 rounded-full bg-surface border border-outline-variant/30 flex items-center justify-center">
-                <span className="w-2 h-2 rounded-full bg-secondary-container animate-ping"></span>
+          {/* Dynamic Leaderboard for commodity performance */}
+          <div className="glass-panel rounded-2xl p-6 flex flex-col justify-between hover-lift flex-grow border border-outline-variant/20">
+            <div className="border-b border-outline-variant/15 pb-3 mb-3">
+              <h3 className="font-headline-md text-base font-bold text-on-background flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-secondary">trending_up</span>
+                Top Recovery Assets
+              </h3>
+            </div>
+            <div className="space-y-3.5 text-xs font-semibold text-on-surface">
+              <div className="flex justify-between">
+                <span>1. Cured Slag concrete</span>
+                <span className="text-primary font-bold">+28% Vol</span>
+              </div>
+              <div className="flex justify-between">
+                <span>2. Neutralized dye wash</span>
+                <span className="text-primary font-bold">+18% Vol</span>
+              </div>
+              <div className="flex justify-between">
+                <span>3. Pulped lignin fibers</span>
+                <span className="text-on-surface-variant font-medium">Stable</span>
               </div>
             </div>
-            <h3 className="font-headline-md text-base mb-1 font-bold text-on-background">Copilot Insights</h3>
-            <p className="font-body-main text-xs text-on-surface-variant leading-relaxed px-2">
-              &quot;Local buyer demand for Bio-Bricks is peaking within a 50km radius. Recommend listing current batch.&quot;
-            </p>
           </div>
 
           {/* Bidding Location Map */}
           <div className="glass-panel rounded-2xl p-4 flex flex-col hover-lift relative overflow-hidden min-h-[140px] border border-outline-variant/20">
             <div className="flex justify-between items-center mb-3 z-10">
-              <span className="font-label-caps text-[10px] text-on-surface-variant font-bold tracking-wider uppercase">Nearby Buyers</span>
+              <span className="font-label-caps text-[10px] text-on-surface-variant font-bold tracking-wider uppercase">Regional Demand Hubs</span>
               <span className="material-symbols-outlined text-primary text-base">my_location</span>
             </div>
             <div className="relative w-full flex-grow rounded-xl overflow-hidden min-h-[100px] bg-surface-variant/30 border border-outline-variant/10">
@@ -198,85 +242,93 @@ export default function IndustrialExchange() {
           </div>
 
           {/* Table headers (Desktop) */}
-          <div className="hidden md:grid grid-cols-12 gap-4 font-label-caps text-[10px] text-on-surface-variant font-bold tracking-wider mb-4 px-4">
-            <div className="col-span-3">Asset / Stream</div>
-            <div className="col-span-2">Volume</div>
-            <div className="col-span-3">Current Bid / Value</div>
-            <div className="col-span-2">Recovery Score</div>
-            <div className="col-span-2 text-right">Actions</div>
+          <div className="hidden lg:grid grid-cols-12 gap-4 px-4 py-3 bg-surface-container-low/40 border border-outline-variant/15 rounded-xl text-[10px] text-on-surface-variant font-bold uppercase tracking-wider mb-4">
+            <span className="col-span-3">Material Listing</span>
+            <span className="col-span-2">Owner Facility</span>
+            <span className="col-span-1 text-center">Circularity</span>
+            <span className="col-span-2 text-right">Base / High Bid</span>
+            <span className="col-span-2 text-center">Haulage complexity</span>
+            <span className="col-span-2 text-center">Bilateral Actions</span>
           </div>
 
-          {/* Listings list */}
-          <div className="flex flex-col gap-3 font-semibold text-xs text-on-surface">
+          {/* Listings iteration */}
+          <div className="space-y-4">
             {filteredListings.map((item) => (
               <div 
-                key={item.id} 
-                className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center p-4 rounded-xl bg-surface border border-primary-container/30 holographic-glow hover:scale-[1.01] transition-transform"
+                key={item.id}
+                className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center p-4 bg-surface/40 hover:bg-surface/80 border border-outline-variant/15 hover:border-primary-container transition-all duration-300 rounded-xl shadow-sm"
               >
-                <div className="col-span-1 md:col-span-3 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary-container/20 flex items-center justify-center shrink-0 text-primary border border-primary/10">
+                
+                {/* 1. Name & category */}
+                <div className="col-span-3 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-primary-container/20 border border-primary/25 flex items-center justify-center shrink-0 text-primary">
                     <span className="material-symbols-outlined text-lg">
-                      {item.type === 'WASTE' ? 'water_drop' : 'architecture'}
+                      {item.type === 'WASTE' ? 'water_drop' : item.type === 'PRODUCT' ? 'architecture' : 'gavel'}
                     </span>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-on-background">{item.title}</p>
-                    <p className="font-metadata text-[10px] text-on-surface-variant/80">Org: {item.ownerOrg} • {item.type}</p>
-                  </div>
-                </div>
-                
-                <div className="col-span-1 md:col-span-2 font-medium">
-                  {item.volume}
-                </div>
-                
-                <div className="col-span-1 md:col-span-3 flex items-center gap-3">
-                  <span className="text-base text-on-background font-bold tracking-tight">{item.currentBid}</span>
-                  {item.bidsCount > 0 && (
-                    <span className="font-metadata text-[10px] text-primary bg-primary-container/20 border border-primary/20 px-1.5 py-0.5 rounded flex items-center gap-0.5 font-bold">
-                      {item.bidsCount} Bids
+                    <h4 className="text-sm font-bold text-on-background leading-tight">{item.title}</h4>
+                    <span className="font-metadata text-[10px] text-on-surface-variant uppercase font-bold tracking-wider block mt-1">
+                      {item.material} • <span className="text-primary">{item.volume}</span>
                     </span>
-                  )}
-                </div>
-                
-                <div className="col-span-1 md:col-span-2 flex flex-col gap-1">
-                  <div className="w-full bg-surface-variant h-1.5 rounded-full overflow-hidden">
-                    <div className="bg-primary-fixed h-full rounded-full" style={{ width: `${item.recoveryScore}%` }} />
                   </div>
-                  <span className="font-metadata text-[10px] text-on-surface-variant font-medium">{item.recoveryScore}% Yield</span>
                 </div>
-                
-                <div className="col-span-1 md:col-span-2 md:text-right flex items-center md:items-end justify-end gap-2 text-right">
+
+                {/* 2. Facility */}
+                <div className="col-span-2 text-xs font-semibold text-on-surface-variant">
+                  <span className="block truncate">{item.ownerOrg}</span>
+                  <span className="font-metadata text-[9px] uppercase font-bold tracking-wide mt-0.5 text-on-surface-variant/75">{item.ownerRole}</span>
+                </div>
+
+                {/* 3. Circularity score */}
+                <div className="col-span-1 text-center">
+                  <span className="font-display-hero text-sm font-black text-primary">{item.recoveryScore}%</span>
+                  <span className="block font-metadata text-[8px] text-on-surface-variant font-bold uppercase mt-0.5">Rating</span>
+                </div>
+
+                {/* 4. Pricing / bids */}
+                <div className="col-span-2 text-right text-xs font-bold space-y-1">
+                  <div className="text-on-surface-variant font-medium">Base: <span className="font-mono text-on-background">{item.basePrice}</span></div>
+                  <div className="text-secondary font-extrabold text-sm">Bid: <span className="font-mono">{item.currentBid}</span></div>
+                  <span className="font-metadata text-[9px] bg-secondary-container/15 text-secondary border border-secondary/20 px-2 py-0.5 rounded-full inline-block font-bold mt-1">
+                    {item.bidsCount} active bids
+                  </span>
+                </div>
+
+                {/* 5. Haulage difficulty */}
+                <div className="col-span-2 text-center text-xs font-semibold text-on-surface-variant">
+                  <span className="material-symbols-outlined text-base block text-on-surface-variant/60 mb-0.5">local_shipping</span>
+                  <span className="font-metadata text-[10px]">{item.logisticsComplexity}</span>
+                </div>
+
+                {/* 6. Action triggers */}
+                <div className="col-span-2 flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-2">
+                  <button 
+                    onClick={() => handlePlaceBidSubmit(item.id, item.currentBid)}
+                    className="flex-1 py-2 px-3 bg-secondary text-white hover:bg-primary font-label-caps text-[9px] font-bold uppercase tracking-wider rounded-lg transition-all text-center shadow-sm"
+                  >
+                    Place Bid
+                  </button>
+
                   <button 
                     onClick={() => togglePartnershipOnListing(item.id)}
-                    className={`px-3 py-2 border rounded-lg font-label-caps text-[9px] font-bold uppercase tracking-wider transition-colors ${
+                    className={`flex-1 py-2 px-3 border font-label-caps text-[9px] font-bold uppercase tracking-wider rounded-lg transition-all text-center ${
                       item.isPartnershipRequested 
-                        ? 'bg-secondary text-white border-secondary' 
-                        : 'border-secondary-container text-secondary hover:bg-secondary-container/20'
+                        ? 'bg-primary text-white border-primary holographic-glow shadow-[0_0_12px_#7fffd4]' 
+                        : 'border-outline-variant hover:bg-surface-dim text-on-background'
                     }`}
                   >
                     {item.isPartnershipRequested ? '✓ Linked' : 'Partner'}
                   </button>
-                  
-                  <div className="flex flex-col items-stretch md:items-end">
-                    <button 
-                      onClick={() => handlePlaceBidSubmit(item.id, item.currentBid)}
-                      className="px-3 py-2 border border-primary text-primary hover:bg-primary hover:text-on-primary font-label-caps text-[9px] font-bold tracking-wider uppercase rounded-lg transition-colors"
-                    >
-                      Bid
-                    </button>
-                    {item.highestBidder && (
-                      <span className="text-[8px] text-primary font-bold text-center mt-1 animate-pulse max-w-[80px] truncate">
-                        {item.highestBidder}
-                      </span>
-                    )}
-                  </div>
                 </div>
+
               </div>
             ))}
           </div>
         </section>
 
       </div>
+
     </div>
   );
 }
