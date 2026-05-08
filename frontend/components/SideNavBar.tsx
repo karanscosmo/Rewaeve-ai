@@ -4,17 +4,17 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { useCircular } from '@/lib/CircularContext';
+import { useCircular, GlobalLanguage } from '@/lib/CircularContext';
 
 export default function SideNavBar() {
   const pathname = usePathname();
-  const { user, logout } = useCircular();
+  const { user, logout, language, setLanguage, t } = useCircular();
 
   const primaryLinks = [
     { name: 'Circular Flows', href: '/dashboard', icon: 'loop' },
     { name: 'Water Twin Diagnostics', href: '/dashboard/water-twin', icon: 'psychology' },
     { name: 'AI Recovery Center', href: '/dashboard/recovery-center', icon: 'model_training' },
-    { name: 'Product Innovation Lab', href: '/dashboard/innovation-lab', icon: 'auto_awesome' },
+    { name: 'AI Circular Manufacturing', href: '/dashboard/innovation-lab', icon: 'auto_awesome' },
     { name: 'Industrial Marketplace', href: '/dashboard/exchange', icon: 'shopping_basket' },
     { name: 'Tenders & Contracts', href: '/dashboard/tenders', icon: 'gavel' },
   ];
@@ -24,7 +24,7 @@ export default function SideNavBar() {
     { name: 'Live Monitoring', href: '/dashboard/monitoring', icon: 'monitoring' },
     { name: 'Simulation Sandbox', href: '/dashboard/sandbox', icon: 'tune' },
     { name: 'AI Copilot Chat', href: '/dashboard/copilot', icon: 'smart_toy' },
-    { name: 'Cost Savings Hub', href: '/dashboard/cost-savings', icon: 'monetization_on' },
+    { name: 'Cooperative Network', href: '/dashboard/expert-network', icon: 'groups_3' },
   ];
 
   const sustainabilityLinks = [
@@ -35,10 +35,22 @@ export default function SideNavBar() {
 
   const systemLinks = [
     { name: 'Alert Notification Log', href: '/dashboard/notifications', icon: 'notifications' },
-    { name: 'Platform Billing', href: '/dashboard/billing', icon: 'credit_card' },
-    { name: 'Ingestion Reports', href: '/dashboard/reports', icon: 'description' },
     { name: 'Organization Settings', href: '/dashboard/settings', icon: 'settings' },
   ];
+
+  // Dynamic colors based on active login role
+  const roleColorMap = {
+    manufacturer: { border: 'border-primary/20', text: 'text-primary', textBg: 'bg-primary-container/20' },
+    buyer: { border: 'border-sky-500/20', text: 'text-sky-500', textBg: 'bg-sky-500/10' },
+    middleman: { border: 'border-cyan-400/20', text: 'text-cyan-400', textBg: 'bg-cyan-400/10' },
+    sustainability: { border: 'border-emerald-500/20', text: 'text-emerald-500', textBg: 'bg-emerald-500/10' },
+    government: { border: 'border-emerald-600/20', text: 'text-emerald-600', textBg: 'bg-emerald-600/10' },
+    recycler: { border: 'border-primary/20', text: 'text-primary', textBg: 'bg-primary-container/20' },
+    treatment: { border: 'border-primary/20', text: 'text-primary', textBg: 'bg-primary-container/20' },
+    admin: { border: 'border-primary/20', text: 'text-primary', textBg: 'bg-primary-container/20' }
+  };
+
+  const activeTheme = roleColorMap[user?.role || 'manufacturer'] || roleColorMap.manufacturer;
 
   return (
     <>
@@ -46,13 +58,40 @@ export default function SideNavBar() {
       <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 z-40 flex-col bg-surface/40 backdrop-blur-glass border-r border-outline-variant/10 shadow-xl w-20 hover:w-80 transition-all duration-500 overflow-hidden group">
         
         {/* Header Branding */}
-        <div className="p-5 flex items-center gap-4 border-b border-outline-variant/10 whitespace-nowrap shrink-0">
-          <div className="w-10 h-10 rounded-full bg-primary-container/30 flex items-center justify-center border border-primary/25 animate-pulse shrink-0">
-            <span className="material-symbols-outlined text-primary font-bold">all_inclusive</span>
+        <div className="p-5 flex items-center justify-between border-b border-outline-variant/10 whitespace-nowrap shrink-0">
+          <div className="flex items-center gap-4">
+            <div className={`w-10 h-10 rounded-full bg-primary-container/30 flex items-center justify-center border ${activeTheme.border} animate-pulse shrink-0`}>
+              <span className={`material-symbols-outlined ${activeTheme.text} font-bold`}>all_inclusive</span>
+            </div>
+            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="font-display-hero text-lg text-on-background font-extrabold tracking-tighter">ReWeave OS</div>
+              <div className="font-metadata text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">Active Intelligence</div>
+            </div>
           </div>
-          <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <div className="font-display-hero text-lg text-primary font-extrabold tracking-tighter">ReWeave OS</div>
-            <div className="font-metadata text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">Active Intelligence</div>
+        </div>
+
+        {/* Dynamic Global Multilingual Switcher inside sidebar */}
+        <div className="px-5 py-3 border-b border-outline-variant/10 whitespace-nowrap shrink-0 group-hover:block hidden">
+          <span className="font-label-caps text-[9px] text-on-surface-variant/60 font-bold uppercase tracking-widest block mb-2">Platform Language</span>
+          <div className="grid grid-cols-4 gap-1.5">
+            {([
+              { code: 'en', label: 'EN' },
+              { code: 'hi', label: 'HI' },
+              { code: 'ta', label: 'TA' },
+              { code: 'gu', label: 'GU' }
+            ] as const).map((lang) => (
+              <button
+                key={lang.code}
+                onClick={() => setLanguage(lang.code)}
+                className={`text-[9.5px] py-1 rounded font-bold transition-all border ${
+                  language === lang.code 
+                    ? 'bg-primary text-white border-primary shadow-sm' 
+                    : 'bg-surface-container-lowest border-outline-variant/20 hover:bg-surface-dim text-on-surface-variant'
+                }`}
+              >
+                {lang.label}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -137,7 +176,7 @@ export default function SideNavBar() {
         <div className="p-4 border-t border-outline-variant/10 whitespace-nowrap shrink-0 bg-surface-container-low/20">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/20 relative">
+              <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/20 relative shrink-0">
                 <Image 
                   alt="Avatar" 
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuB464UF0oP9M6VCaumXyK_rgUHsUDpOCjeAgoguI-Rlt5CKYeTZ0F6eHOtMcQ0JuaR1HMyGCIr9scJgUhNZdBaB1Exzp4ptYdcCiPw1noM3xoIPm9ZlP-cln9agLwz0FXIyEeqUf4xclz30uv4pA9TFgw_UEG3XN2TMkhz0gpI6qrsGTjEodiDjDT8cyTN_mBlFrCsjxenN6eE1brrzk6mnan4lvs6_280DpEVCYMwCDlQtNY6SRLwrDzrmASPOSqL04s7hQ0p7dA"
@@ -147,7 +186,9 @@ export default function SideNavBar() {
               </div>
               <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <div className="text-xs font-bold text-on-background max-w-[130px] truncate">{user?.fullName || 'Guest Operator'}</div>
-                <div className="text-[10px] text-primary font-bold uppercase tracking-wider">{user?.role || 'manufacturer'}</div>
+                <div className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${activeTheme.text} ${activeTheme.textBg} border ${activeTheme.border} w-max`}>
+                  {user?.role || 'manufacturer'}
+                </div>
               </div>
             </div>
             

@@ -16,7 +16,8 @@ export default function CircularIntelligenceWorkspace() {
     activeScores,
     ytdSavings,
     avoidedCarbonTons,
-    recycledWaterGallons
+    recycledWaterGallons,
+    t
   } = useCircular();
 
   // Selected file for CSV parsing simulation
@@ -68,17 +69,17 @@ export default function CircularIntelligenceWorkspace() {
           <span className="font-label-caps text-[10px] text-primary font-bold uppercase tracking-widest bg-primary-container/20 px-3.5 py-1.5 rounded-full border border-primary/20">
             Node Synchronized
           </span>
-          <h1 className="font-display-hero text-4xl md:text-5xl font-extrabold text-on-background tracking-tighter mt-3">
-            Circular Intelligence Workspace
+          <h1 className="font-display-hero text-3xl md:text-4xl font-extrabold text-on-background tracking-tighter mt-3">
+            {t('dashboardTitle')}
           </h1>
           <p className="font-body-large text-sm text-on-surface-variant mt-1.5 max-w-2xl">
-            Facility: <span className="font-bold text-primary">{user?.organization || 'Active Plant'}</span> • Operator: <span className="font-medium">{user?.fullName || 'Active Operator'}</span>
+            {t('facility')}: <span className="font-bold text-primary">{user?.organization || 'Active Plant'}</span> • {t('operator')}: <span className="font-medium">{user?.fullName || 'Active Operator'}</span>
           </p>
         </div>
         
         <div className="flex items-center gap-3">
           <div className="px-5 py-2.5 rounded-xl bg-surface-container-low border border-outline-variant/20 flex flex-col">
-            <span className="font-metadata text-[10px] text-on-surface-variant/70 uppercase font-bold tracking-wider">Node Protocol</span>
+            <span className="font-metadata text-[10px] text-on-surface-variant/70 uppercase font-bold tracking-wider">{t('nodeProtocol')}</span>
             <span className="text-sm font-bold text-primary uppercase mt-0.5">{user?.role || 'manufacturer'}</span>
           </div>
         </div>
@@ -91,7 +92,7 @@ export default function CircularIntelligenceWorkspace() {
         {/* Left Side Score Information */}
         <div className="lg:col-span-8 space-y-4">
           <span className="font-label-caps text-[9px] text-primary border border-primary/20 bg-primary-container/20 px-2.5 py-1 rounded-full uppercase tracking-wider font-extrabold">Active Flow Analytics</span>
-          <h2 className="font-display-hero text-2xl font-extrabold text-on-background">Circular Flow Efficiency</h2>
+          <h2 className="font-display-hero text-xl font-bold text-on-background">{t('decisionModule')}</h2>
           <p className="text-xs text-on-surface-variant leading-relaxed max-w-2xl">
             Evaluating how seamlessly secondary industrial flows circulate. Calculated dynamically using feedstock recyclability, logistics complexity, regional buyer matching indexes, and chemical extraction coefficients.
           </p>
@@ -184,7 +185,7 @@ export default function CircularIntelligenceWorkspace() {
                   className="absolute inset-0 opacity-0 cursor-pointer"
                 />
                 <span className="material-symbols-outlined text-5xl text-primary/40 group-hover:scale-110 transition-transform mb-3">analytics</span>
-                <span className="font-body-large text-sm font-semibold text-on-background">Drag & Drop Waste Stream Manifest</span>
+                <span className="font-body-large text-sm font-semibold text-on-background">{t('dragDropText')}</span>
                 <span className="font-metadata text-xs text-on-surface-variant mt-1">Accepts CSV telemetry, digital report indexes, or material manifests.</span>
               </div>
 
@@ -219,7 +220,7 @@ export default function CircularIntelligenceWorkspace() {
 
           {/* ACTIVE INGESTED STREAM PANEL */}
           <div className="glass-panel rounded-2xl p-6">
-            <h2 className="font-headline-md text-xl text-primary font-bold mb-4">Active Industrial Stream Ingested</h2>
+            <h2 className="font-headline-md text-xl text-primary font-bold mb-4">{t('activeStreamTitle')}</h2>
             
             {activeStream ? (
               <div className="space-y-4">
@@ -281,7 +282,7 @@ export default function CircularIntelligenceWorkspace() {
                 <span className="material-symbols-outlined text-lg">smart_toy</span>
                 Copilot Lens
               </h3>
-              <p className="font-body-main text-xs text-on-surface-variant leading-relaxed">
+              <p className="font-body-main text-xs text-on-surface-variant leading-relaxed font-semibold">
                 {activeStream 
                   ? `"${activeStream.name}" has completed neural calibration. Chemical index BOD of ${activeStream.bod} mg/L is highly suitable for Soundproofing Panel conversion with +95% est. ROI.` 
                   : "Operational matrix nominal. Select or drop your facility files, and I will instantly formulate premium resale models."

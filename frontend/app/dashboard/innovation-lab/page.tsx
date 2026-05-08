@@ -1,413 +1,491 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useCircular } from '@/lib/CircularContext';
+import React, { useState, useEffect, useRef } from 'react';
+import { useCircular, RawMaterial, GeneratedProduct } from '@/lib/CircularContext';
 
-export default function ProductInnovationLab() {
+// List of 10 highly realistic and experimental circular product possibilities
+const PRODUCT_POSSIBILITIES = [
+  { name: 'Acoustic Eco Foam', desc: 'Highly absorbent thermal barrier panel', feasibility: 92, demand: 88, complexity: 30, carbon: '120kg/unit', roi: '+140%', buyers: 3, machine: 'Extrusion Fiber Loom v2', workforce: '1 operator', price: '₹4,200', scale: 'High', export: 'Medium', recoveryTime: '12 days', safety: 98 },
+  { name: 'Carbon-Lock Construction Tiles', desc: 'Heavy-duty interlocking pavement tile', feasibility: 95, demand: 91, complexity: 45, carbon: '340kg/unit', roi: '+185%', buyers: 5, machine: 'Hydraulic Compaction Press', workforce: '2 operators', price: '₹12,400', scale: 'Maximum', export: 'High', recoveryTime: '6 days', safety: 95 },
+  { name: 'Algae-Reactive Insulation', desc: 'Live biosensing soundproofing panel', feasibility: 74, demand: 80, complexity: 80, carbon: '520kg/unit', roi: '+220%', buyers: 2, machine: 'Bioreactor Laminating Tank', workforce: '2 scientists', price: '₹28,000', scale: 'Medium', export: 'High', recoveryTime: '24 days', safety: 91 },
+  { name: 'Thermal Smart Panels', desc: 'Phase-changing building envelope matrix', feasibility: 86, demand: 85, complexity: 55, carbon: '210kg/unit', roi: '+160%', buyers: 4, machine: 'Vacuum Sintering Furnace', workforce: '1 specialist', price: '₹18,500', scale: 'High', export: 'Medium', recoveryTime: '14 days', safety: 96 },
+  { name: 'Recycled Textile Composites', desc: 'Impact-resistant lightweight casing', feasibility: 89, demand: 82, complexity: 40, carbon: '150kg/unit', roi: '+115%', buyers: 4, machine: 'Fibre Blenders, Pellet Press', workforce: '1 worker', price: '₹3,200', scale: 'High', export: 'Low', recoveryTime: '8 days', safety: 99 },
+  { name: 'Industrial Bio-Fiber Walls', desc: 'Compressed agricultural stalk partitions', feasibility: 91, demand: 84, complexity: 35, carbon: '280kg/unit', roi: '+135%', buyers: 3, machine: 'High-Temperature Steam Casts', workforce: '2 operators', price: '₹6,800', scale: 'High', export: 'Medium', recoveryTime: '9 days', safety: 97 },
+  { name: 'Water-Absorbing Eco Concrete', desc: 'Permeable storm-water drainage slabs', feasibility: 94, demand: 89, complexity: 50, carbon: '410kg/unit', roi: '+150%', buyers: 6, machine: 'Coarse Slag Mixers, Curing Beds', workforce: '3 workers', price: '₹8,400', scale: 'Maximum', export: 'High', recoveryTime: '5 days', safety: 94 },
+  { name: 'Modular Flood-Resistant Blocks', desc: 'Floating aggregate seawall structures', feasibility: 81, demand: 93, complexity: 70, carbon: '620kg/unit', roi: '+260%', buyers: 3, machine: 'Rotary Kilns, Casting Sleds', workforce: '3 specialists', price: '₹42,000', scale: 'High', export: 'Maximum', recoveryTime: '30 days', safety: 90 },
+  { name: 'Eco Soundproof Structures', desc: 'Sintered fume concentrate panels', feasibility: 83, demand: 78, complexity: 65, carbon: '180kg/unit', roi: '+95%', buyers: 2, machine: 'Needlepunch Fiber Presses', workforce: '2 technicians', price: '₹5,500', scale: 'Medium', export: 'Low', recoveryTime: '15 days', safety: 95 },
+  { name: 'Compressed Fiber Composites', desc: 'High-density secondary pulp sheets', feasibility: 88, demand: 81, complexity: 42, carbon: '130kg/unit', roi: '+110%', buyers: 5, machine: 'Hot Multi-Dehydrator Rolls', workforce: '1 operator', price: '₹2,900', scale: 'High', export: 'Medium', recoveryTime: '7 days', safety: 98 }
+];
+
+export default function CircularManufacturingStudio() {
   const { 
     generatedProducts, 
     rawMaterials, 
-    generateProductFromMaterial, 
     saveProduct, 
     listProductOnMarketplace, 
-    startRecoveryWorkflow,
-    addNotification
+    updateCustomProductSpecs,
+    addNotification,
+    t
   } = useCircular();
 
-  const [listingPrices, setListingPrices] = useState<{[key: string]: string}>({});
-  
-  // States for dynamic custom synthesis
-  const [selectedMaterialId, setSelectedMaterialId] = useState<string | null>(null);
-  const [customProdName, setCustomProdName] = useState('');
-  const [customProdPrice, setCustomProdPrice] = useState('');
+  // Active steps in the manufacturing studio
+  const [activeMaterialId, setActiveMaterialId] = useState<string>('raw-1');
+  const [selectedProductPossibility, setSelectedProductPossibility] = useState(PRODUCT_POSSIBILITIES[0]);
 
-  // Track active clicked/selected product for holographic detail view
-  const [selectedProductId, setSelectedProductId] = useState<string | null>('gp-1');
+  // Design controls (Step 3)
+  const [customRatio, setCustomRatio] = useState(65);
+  const [customPurity, setCustomPurity] = useState(85);
+  const [customPrice, setCustomPrice] = useState('₹12,400');
+  const [customComplexity, setCustomComplexity] = useState(45);
 
-  const handlePriceChange = (id: string, price: string) => {
-    setListingPrices(prev => ({ ...prev, [id]: price }));
-  };
+  // Synthesis Animation States (Step 4)
+  const [isSynthesizing, setIsSynthesizing] = useState(false);
+  const [synthesisStage, setSynthesisStage] = useState(0);
+  const [synthesisLogs, setSynthesisLogs] = useState<string[]>([]);
+  const [revealFinalProduct, setRevealFinalProduct] = useState(false);
 
-  const handleListingSubmit = (id: string) => {
-    const price = listingPrices[id] || '₹12,000';
-    listProductOnMarketplace(id, price);
-  };
+  // WebGL Canvas particles reference
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const openSynthesisForm = (materialId: string) => {
-    const raw = rawMaterials.find(m => m.id === materialId);
-    if (raw) {
-      setSelectedMaterialId(materialId);
-      // Pre-fill smart suggestions based on raw material category
-      if (raw.category.includes('Metallurgical')) {
-        setCustomProdName('High-Performance Slag Bio-Concrete Block');
-        setCustomProdPrice('₹14,500');
-      } else if (raw.category.includes('Chemical')) {
-        setCustomProdName('Refined Indigo Acid Compound Binder');
-        setCustomProdPrice('₹8,200');
-      } else if (raw.category.includes('Organic')) {
-        setCustomProdName('Lightweight Acoustic Cellulose Board');
-        setCustomProdPrice('₹3,600');
-      } else {
-        setCustomProdName('Sintered Fly-Ash Lightweight Aggregate');
-        setCustomProdPrice('₹6,400');
-      }
+  const selectedMaterial = rawMaterials.find(m => m.id === activeMaterialId) || rawMaterials[0];
+
+  // Particle Synthesis Animation Loop
+  useEffect(() => {
+    if (!isSynthesizing || !canvasRef.current) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animationId: number;
+    let width = (canvas.width = canvas.offsetWidth);
+    let height = (canvas.height = canvas.offsetHeight);
+
+    const particles: { x: number; y: number; vx: number; vy: number; color: string; size: number }[] = [];
+
+    // Initialize random particle vectors
+    for (let i = 0; i < 120; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 4,
+        vy: (Math.random() - 0.5) * 4,
+        color: i % 2 === 0 ? '#4cf2c2' : '#7bffd9',
+        size: Math.random() * 3 + 1
+      });
     }
-  };
 
-  const submitSynthesis = () => {
-    if (selectedMaterialId && customProdName && customProdPrice) {
-      generateProductFromMaterial(selectedMaterialId, customProdName, customProdPrice);
-      addNotification(
-        'Circular Blueprint Formulated',
-        `Dynamic processing blueprint and thermal sequence generated for "${customProdName}".`,
-        'success'
-      );
-      setSelectedMaterialId(null);
-    }
+    const draw = () => {
+      ctx.clearRect(0, 0, width, height);
+
+      // Pulse circle representing high-energy magnetic synthesis
+      ctx.strokeStyle = 'rgba(76, 242, 194, 0.15)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(width / 2, height / 2, Math.sin(Date.now() / 200) * 20 + 80, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Particle update & collision synthesis pull towards central orbit
+      particles.forEach((p) => {
+        const dx = width / 2 - p.x;
+        const dy = height / 2 - p.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (synthesisStage >= 3 && dist > 5) {
+          // Attract towards the core
+          p.vx += (dx / dist) * 0.15;
+          p.vy += (dy / dist) * 0.15;
+        }
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Bounce borders
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      animationId = requestAnimationFrame(draw);
+    };
+
+    draw();
+
+    return () => {
+      cancelAnimationFrame(animationId);
+    };
+  }, [isSynthesizing, synthesisStage]);
+
+  // Handle the cinematic generation sequence
+  const triggerCinematicSynthesis = () => {
+    setIsSynthesizing(true);
+    setRevealFinalProduct(false);
+    setSynthesisStage(1);
+    setSynthesisLogs(['Initiating AI Circular Manufacturing Protocol...']);
+
+    const steps = [
+      { delay: 1000, msg: '1. Floating feedstock materials in holographic vacuum chamber...' },
+      { delay: 2000, msg: '2. Separating materials into molecular composite streams...' },
+      { delay: 3000, msg: '3. Locking high-temperature AI Energy Pulse...' },
+      { delay: 4000, msg: '4. Compacting raw aggregate lattice bonds dynamically...' },
+      { delay: 5000, msg: '5. Mapping optimized robotic curing pathways...' },
+      { delay: 6000, msg: '6. Sintering porous thermal cell structures...' },
+      { delay: 7000, msg: '7. Casting surface texture layers for high density load support...' },
+      { delay: 8000, msg: '8. Synthesis complete! Materializing premium blueprint specs...' },
+      { delay: 9000, msg: '9. Syncing carbon credits and ROI ledgers...' },
+      { delay: 10000, msg: '10. Circular physical twin registered successfully!' }
+    ];
+
+    steps.forEach((step, idx) => {
+      setTimeout(() => {
+        setSynthesisStage(idx + 1);
+        setSynthesisLogs((prev) => [...prev, step.msg]);
+
+        if (idx === steps.length - 1) {
+          setTimeout(() => {
+            setIsSynthesizing(false);
+            setRevealFinalProduct(true);
+            addNotification(
+              'Material Synthesized Successfully',
+              `"${selectedProductPossibility.name}" has completed full physical composition casting.`,
+              'success'
+            );
+          }, 800);
+        }
+      }, step.delay);
+    });
   };
 
   return (
     <div className="flex flex-col gap-8 pb-16">
       
       {/* Header Panel */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 bg-surface/30 backdrop-blur-glass p-6 rounded-2xl border border-outline-variant/15 shadow-sm">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 w-full bg-surface/30 backdrop-blur-glass p-6 rounded-2xl border border-outline-variant/15 shadow-sm">
         <div>
           <span className="font-label-caps text-[10px] text-primary font-bold uppercase tracking-widest bg-primary-container/20 px-3.5 py-1.5 rounded-full border border-primary/20">
-            Innovation Module
+            Advanced Design Studio
           </span>
-          <h1 className="font-display-hero text-4xl font-extrabold text-on-background tracking-tighter mt-3">
-            AI Product Innovation Lab
+          <h1 className="font-display-hero text-4xl md:text-5xl font-extrabold text-on-background tracking-tighter mt-3">
+            {t('innovationLabTitle')}
           </h1>
-          <p className="font-body-large text-sm text-on-surface-variant mt-1">
-            Transform parsed waste streams into highly profitable, realistic industrial assets and architectural panels.
+          <p className="font-body-large text-sm text-on-surface-variant mt-1.5 max-w-2xl">
+            Sift, separate, and synthesize secondary industrial byproducts into premium architectural building blocks.
           </p>
         </div>
-      </div>
+      </header>
 
-      {/* SECTION 1: Segregated Raw Materials & Interactive Formulation Form */}
+      {/* STEP 1: RAW MATERIAL VISUALIZATION */}
       <section className="glass-panel rounded-2xl p-6 border border-outline-variant/20 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary-container/5 rounded-full blur-3xl pointer-events-none" />
-        
         <div className="flex items-center gap-2 mb-6 border-b border-outline-variant/15 pb-4">
-          <span className="material-symbols-outlined text-primary fill-1">layers</span>
+          <span className="material-symbols-outlined text-primary">layers</span>
           <div>
-            <h2 className="font-headline-md text-lg text-on-background font-extrabold">Segregated Raw Materials</h2>
-            <p className="text-[11px] text-on-surface-variant">Awaiting custom circular blueprint synthesis formulation.</p>
+            <h2 className="font-headline-md text-base font-bold text-on-background">Step 1 — Raw Material Visualization</h2>
+            <p className="text-[10px] text-on-surface-variant">Analyze segregated molecular fractions and purity scales.</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Materials List Table */}
-          <div className="col-span-1 lg:col-span-7 flex flex-col gap-3">
-            {rawMaterials.map((material) => (
-              <div 
-                key={material.id}
-                className={`p-4 rounded-xl border transition-all flex items-center justify-between font-semibold text-xs ${
-                  material.isGenerated 
-                    ? 'bg-surface/50 border-outline-variant/20 opacity-75' 
-                    : 'bg-surface border-primary-container/20 hover:border-primary/50 hover:bg-surface-dim'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center text-primary border border-primary/10 font-bold">
-                    <span className="material-symbols-outlined text-base">science</span>
-                  </div>
-                  <div>
-                    <h4 className="text-sm text-on-background font-bold">{material.name}</h4>
-                    <p className="text-[10px] text-on-surface-variant font-medium">Category: {material.category} • pH: {material.ph}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-6">
-                  <div className="text-right">
-                    <p className="text-[11px] text-on-background font-bold">{material.volume}</p>
-                    <p className="text-[9px] text-primary font-bold">{material.consistency}% Sieve Alignment</p>
-                  </div>
-                  
-                  <button
-                    onClick={() => openSynthesisForm(material.id)}
-                    disabled={material.isGenerated}
-                    className={`px-4 py-2 rounded-lg font-label-caps text-[9px] font-bold uppercase tracking-wider transition-colors ${
-                      material.isGenerated 
-                        ? 'bg-surface-variant/40 text-on-surface-variant/50 border border-outline-variant/20' 
-                        : 'bg-primary text-white hover:bg-secondary'
-                    }`}
-                  >
-                    {material.isGenerated ? 'Formulated ✓' : 'Synthesize Product'}
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Interactive Formulation Form */}
-          <div className="col-span-1 lg:col-span-5">
-            {selectedMaterialId ? (
-              <div className="glass-panel rounded-xl p-5 border border-primary-container bg-primary-container/5 space-y-4 animate-fade-in relative">
-                <h3 className="text-sm font-bold text-on-background flex items-center gap-1.5 border-b border-primary-container/30 pb-2">
-                  <span className="material-symbols-outlined text-primary text-base">architecture</span>
-                  Formulate Blueprint
-                </h3>
-
-                <div className="space-y-3 font-semibold text-xs text-on-surface">
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-on-surface-variant text-[10px] uppercase font-bold tracking-wider">Suggested Product Name</label>
-                    <input 
-                      type="text" 
-                      value={customProdName}
-                      onChange={(e) => setCustomProdName(e.target.value)}
-                      className="bg-white border border-outline-variant/30 rounded-lg px-3 py-2 text-on-background focus:outline-none focus:border-primary"
-                    />
-                  </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-on-surface-variant text-[10px] uppercase font-bold tracking-wider">Decide Pricing (₹)</label>
-                    <input 
-                      type="text" 
-                      value={customProdPrice}
-                      onChange={(e) => setCustomProdPrice(e.target.value)}
-                      className="bg-white border border-outline-variant/30 rounded-lg px-3 py-2 text-on-background focus:outline-none focus:border-primary"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex gap-2 pt-2">
-                  <button
-                    onClick={() => setSelectedMaterialId(null)}
-                    className="flex-1 py-2 rounded-lg border border-outline-variant/30 hover:bg-surface-dim font-label-caps text-[10px] font-bold uppercase tracking-wider transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={submitSynthesis}
-                    className="flex-1 py-2 bg-primary text-white hover:bg-secondary rounded-lg font-label-caps text-[10px] font-bold uppercase tracking-wider transition-colors"
-                  >
-                    Formulate Blueprint
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="p-8 rounded-xl border border-dashed border-outline-variant/30 text-center flex flex-col items-center justify-center h-full min-h-[220px]">
-                <span className="material-symbols-outlined text-3xl text-on-surface-variant/50 mb-2">auto_awesome</span>
-                <p className="text-xs font-semibold text-on-background">AI Engine Ready</p>
-                <p className="text-[10px] text-on-surface-variant mt-1 max-w-[200px]">
-                  Select any raw segregated material to synthesize a customized circular blueprint and decide commercial pricing.
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 2: Active Rotating Capsule Pods & FEATURE 4: AI Recovery Blueprint Generator */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
-        {/* Pods Grid (7 cols) */}
-        <section className="col-span-1 lg:col-span-7 flex flex-col gap-6">
-          <div className="flex items-center gap-2 border-b border-outline-variant/15 pb-3">
-            <span className="material-symbols-outlined text-primary fill-1">database</span>
-            <h3 className="font-headline-md text-lg text-on-background font-extrabold">Active 3D Capsule Pods</h3>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {generatedProducts.map((prod) => {
-              const isSelected = selectedProductId === prod.id;
+          {/* Feedstock material capsules */}
+          <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+            {rawMaterials.map((mat) => {
+              const isActive = activeMaterialId === mat.id;
               return (
                 <div 
-                  key={prod.id}
-                  onClick={() => setSelectedProductId(prod.id)}
-                  className={`glass-panel rounded-2xl p-5 flex flex-col justify-between cursor-pointer transition-all duration-300 relative overflow-hidden group ${
-                    isSelected 
-                      ? 'border-primary shadow-[0_0_20px_rgba(76,242,194,0.15)] bg-primary-container/[0.02]' 
-                      : 'border-outline-variant/25 hover:border-primary-container/80 hover-lift'
+                  key={mat.id}
+                  onClick={() => setActiveMaterialId(mat.id)}
+                  className={`p-4 rounded-xl border transition-all cursor-pointer flex flex-col justify-between min-h-[140px] relative overflow-hidden ${
+                    isActive 
+                      ? 'bg-primary-container/10 border-primary shadow-[0_0_15px_rgba(76,242,194,0.1)]' 
+                      : 'bg-surface/40 border-outline-variant/15 hover:border-primary/40'
                   }`}
                 >
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary-container/5 rounded-full blur-2xl pointer-events-none" />
-                  
-                  <div className="space-y-4 font-semibold text-xs text-on-surface">
-                    <div className="flex justify-between items-start border-b border-outline-variant/15 pb-2">
-                      <div>
-                        <span className="font-metadata text-[9px] text-primary font-bold uppercase tracking-widest">Capsule {prod.id.startsWith('gp-') ? prod.id.slice(3, 7) : 'Active'}</span>
-                        <h4 className="text-sm text-on-background font-bold mt-0.5">{prod.name}</h4>
-                      </div>
-                      <div className="w-8 h-8 rounded-full bg-primary-container/15 flex items-center justify-center text-primary border border-primary/20">
-                        <span className="material-symbols-outlined text-sm animate-spin-slow">cycle</span>
-                      </div>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <span className="font-metadata text-[8px] bg-primary/10 text-primary font-extrabold px-1.5 py-0.5 rounded uppercase">Sieve Ingested</span>
+                      <h4 className="text-sm font-extrabold text-on-background mt-2">{mat.name}</h4>
                     </div>
-
-                    {/* Standard quick metrics */}
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-on-surface-variant font-medium">Match Score</span>
-                        <span className="text-primary font-bold">{prod.feasibilityScore}%</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-on-surface-variant font-medium">Target Pricing</span>
-                        <span className="text-on-background font-bold">{prod.estimatedMarketValue}</span>
-                      </div>
-                    </div>
-
-                    {/* Dynamic Active Workflow progress bar if triggered */}
-                    {prod.isWorkflowActive && (
-                      <div className="pt-2 border-t border-outline-variant/10 space-y-1.5 animate-pulse">
-                        <div className="flex justify-between text-[9px] font-bold text-secondary">
-                          <span>{prod.activeWorkflowStep}</span>
-                          <span>{prod.workflowProgress}%</span>
-                        </div>
-                        <div className="w-full bg-surface-variant h-1.5 rounded-full overflow-hidden">
-                          <div className="bg-secondary-fixed h-full rounded-full transition-all duration-500" style={{ width: `${prod.workflowProgress}%` }} />
-                        </div>
-                      </div>
-                    )}
+                    <span className="material-symbols-outlined text-primary text-lg animate-pulse">grain</span>
                   </div>
 
-                  {/* Micro triggers */}
-                  <div className="mt-5 pt-3 border-t border-outline-variant/15 flex flex-col gap-3">
-                    <div className="flex gap-2">
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          saveProduct(prod.id);
-                        }}
-                        disabled={prod.isSaved}
-                        className={`flex-1 py-2 rounded-lg border font-label-caps text-[9px] font-bold uppercase tracking-wider transition-colors ${
-                          prod.isSaved 
-                            ? 'bg-surface border-outline-variant/20 text-on-surface-variant/50' 
-                            : 'border-primary text-primary hover:bg-primary hover:text-on-primary'
-                        }`}
-                      >
-                        {prod.isSaved ? 'Saved ✓' : 'Save'}
-                      </button>
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          startRecoveryWorkflow(prod.id);
-                        }}
-                        className="flex-1 py-2 bg-transparent border border-secondary text-secondary hover:bg-secondary hover:text-on-primary rounded-lg font-label-caps text-[9px] font-bold uppercase tracking-wider transition-colors"
-                      >
-                        Start Workflow
-                      </button>
+                  <div className="grid grid-cols-3 gap-2 mt-4 text-[10px] font-semibold text-on-surface-variant border-t border-outline-variant/10 pt-3">
+                    <div>
+                      <span>Purity</span>
+                      <p className="text-primary font-bold">{mat.purity}%</p>
                     </div>
-
-                    <div className="flex items-center gap-2 bg-surface-container-low/40 p-1.5 rounded-lg border border-outline-variant/20">
-                      <input 
-                        type="text" 
-                        value={listingPrices[prod.id] || ''}
-                        onChange={(e) => handlePriceChange(prod.id, e.target.value)}
-                        placeholder="Price (₹)" 
-                        disabled={prod.isListed}
-                        className="bg-white border border-outline-variant/30 rounded-md px-2 py-1 text-[11px] text-on-background flex-grow focus:outline-none focus:border-primary disabled:opacity-50"
-                      />
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleListingSubmit(prod.id);
-                        }}
-                        disabled={prod.isListed}
-                        className={`px-2.5 py-1 font-label-caps text-[8px] font-bold uppercase tracking-wider rounded-md transition-colors shrink-0 ${
-                          prod.isListed 
-                            ? 'bg-surface-variant/40 text-on-surface-variant/50' 
-                            : 'bg-primary text-white hover:bg-secondary'
-                        }`}
-                      >
-                        {prod.isListed ? 'Listed' : 'List'}
-                      </button>
+                    <div>
+                      <span>Contamination</span>
+                      <p className="text-secondary font-bold">{mat.contamination}%</p>
+                    </div>
+                    <div>
+                      <span>Ph Ratio</span>
+                      <p className="text-on-background font-bold">{mat.ph}</p>
                     </div>
                   </div>
                 </div>
               );
             })}
           </div>
+
+          {/* Sieve visualization card */}
+          <div className="lg:col-span-4 bg-surface-container-low/40 border border-outline-variant/15 p-5 rounded-2xl flex flex-col justify-between h-[300px] relative overflow-hidden">
+            <div className="absolute inset-0 bg-radial-gradient from-primary/10 via-transparent to-transparent pointer-events-none" />
+            <div>
+              <span className="font-label-caps text-[8px] text-primary border border-primary/20 px-2 py-0.5 rounded uppercase font-bold">Molecular Layers</span>
+              <h3 className="text-sm font-bold text-on-background mt-2">Active Feedstock: {selectedMaterial.name}</h3>
+              
+              <div className="mt-4 space-y-2 text-xs font-semibold text-on-surface-variant">
+                <div className="flex justify-between">
+                  <span>Chemical Category</span>
+                  <span className="text-on-background">{selectedMaterial.category}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Available Volume</span>
+                  <span className="text-on-background">{selectedMaterial.volume}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Market Commodity Value</span>
+                  <span className="text-primary font-bold">₹18,400 per Ton</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Glowing capsule visualization container */}
+            <div className="w-full h-24 bg-surface-container-lowest border border-outline-variant/20 rounded-xl flex items-center justify-center relative overflow-hidden">
+              <div className="w-8 h-12 rounded-full border-2 border-primary/40 relative flex items-center justify-center animate-bounce shadow-[0_0_15px_rgba(76,242,194,0.2)]">
+                <div className="absolute w-6 h-6 rounded-full bg-primary/20 animate-pulse" />
+              </div>
+              <span className="font-metadata text-[8px] text-on-surface-variant absolute bottom-2 font-bold uppercase tracking-widest">Feedstock capsule stable</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* STEP 2 & 3: SUGGESTION ENGINE & DESIGN CONTROL */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        
+        {/* Step 2 — 10 AI Product suggestions (Col Span 7) */}
+        <section className="lg:col-span-7 glass-panel rounded-2xl p-6 border border-outline-variant/20 flex flex-col gap-4">
+          <div className="border-b border-outline-variant/15 pb-3">
+            <h2 className="font-headline-md text-base font-bold text-on-background">Step 2 — AI Product Suggestion Engine</h2>
+            <p className="text-[10px] text-on-surface-variant">Evaluating 10 experimental circular material possibilities.</p>
+          </div>
+
+          <div className="flex flex-col gap-3 overflow-y-auto max-h-[400px] pr-1">
+            {PRODUCT_POSSIBILITIES.map((poss) => {
+              const isSelected = selectedProductPossibility.name === poss.name;
+              return (
+                <button
+                  key={poss.name}
+                  onClick={() => {
+                    setSelectedProductPossibility(poss);
+                    setCustomPrice(poss.price);
+                  }}
+                  className={`text-left p-3.5 rounded-xl border transition-all flex justify-between items-center ${
+                    isSelected 
+                      ? 'bg-secondary-container/10 border-secondary shadow-sm scale-[1.01]' 
+                      : 'bg-surface/30 border-outline-variant/15 hover:border-secondary'
+                  }`}
+                >
+                  <div>
+                    <h4 className="text-xs font-extrabold text-on-background">{poss.name}</h4>
+                    <p className="text-[9.5px] text-on-surface-variant mt-0.5">{poss.desc}</p>
+                  </div>
+                  <div className="text-right font-mono">
+                    <span className="text-xs font-extrabold text-primary">{poss.roi} ROI</span>
+                    <p className="text-[9px] text-on-surface-variant">Est. value: {poss.price}</p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         </section>
 
-        {/* FEATURE 4: AI Recovery Blueprint Generator Panel (5 cols) */}
-        <section className="col-span-1 lg:col-span-5 glass-panel rounded-2xl p-6 border border-primary-container relative min-h-[500px]">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary-container/[0.03] to-transparent pointer-events-none rounded-2xl" />
-          
-          {selectedProductId ? (() => {
-            const prod = generatedProducts.find(p => p.id === selectedProductId);
-            if (!prod) return null;
-            return (
-              <div className="space-y-6 relative z-10 font-semibold text-xs text-on-surface">
-                
-                <div className="border-b border-primary-container/30 pb-4">
-                  <span className="font-metadata text-[9px] text-primary font-bold uppercase tracking-widest bg-primary-container/20 px-2.5 py-1 rounded">
-                    AI Engineering Blueprint
-                  </span>
-                  <h3 className="font-display-hero text-lg text-on-background font-extrabold mt-3 tracking-tight">
-                    {prod.name} Specifications
-                  </h3>
-                  <p className="font-metadata text-[10px] text-on-surface-variant mt-1">
-                    Curing Node Blueprint Status: Active
-                  </p>
-                </div>
-
-                {/* Layered engineering blueprint schema layout */}
-                <div className="p-4 bg-surface-container-low/40 border border-outline-variant/20 rounded-xl space-y-4 text-xs font-semibold">
-                  <h4 className="text-[10px] text-primary uppercase font-bold tracking-widest flex items-center gap-1">
-                    <span className="material-symbols-outlined text-sm">precision_manufacturing</span>
-                    1. Processing sequence
-                  </h4>
-                  <div className="space-y-2 text-[11px] font-mono text-on-surface-variant">
-                    <div className="flex justify-between border-b border-outline-variant/10 pb-1.5">
-                      <span>Machinery sequence</span>
-                      <span className="text-on-background font-bold">{prod.machineryRequirement}</span>
-                    </div>
-                    <div className="flex justify-between border-b border-outline-variant/10 pb-1.5">
-                      <span>Operational Timeline</span>
-                      <span className="text-on-background font-bold">18.5 mins per batch</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Workforce Allocated</span>
-                      <span className="text-on-background font-bold">{prod.workforceRequirement}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Sourcing Cost & Energy Breakdowns */}
-                <div className="p-4 bg-surface-container-low/40 border border-outline-variant/20 rounded-xl space-y-4 text-xs font-semibold">
-                  <h4 className="text-[10px] text-secondary uppercase font-bold tracking-widest flex items-center gap-1">
-                    <span className="material-symbols-outlined text-sm">energy_savings_leaf</span>
-                    2. Energy & Cost Analysis
-                  </h4>
-                  <div className="space-y-2 text-[11px] font-mono text-on-surface-variant">
-                    <div className="flex justify-between border-b border-outline-variant/10 pb-1.5">
-                      <span>Thermal consumption</span>
-                      <span className="text-on-background font-bold">42 MWh per batch</span>
-                    </div>
-                    <div className="flex justify-between border-b border-outline-variant/10 pb-1.5">
-                      <span>Est. Carbon Reduction</span>
-                      <span className="text-secondary font-bold">{prod.carbonReduction}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Safety Certification</span>
-                      <span className="text-primary font-bold">Certified Standard 10B</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Scalability recommendations */}
-                <div className="p-4 bg-secondary-container/5 border border-secondary/20 rounded-xl space-y-2">
-                  <h4 className="text-[10px] text-secondary uppercase font-bold tracking-wider">3. AI Scalability Analysis</h4>
-                  <p className="text-[11px] text-on-surface-variant leading-relaxed">
-                    {prod.scalabilityPotential}. Sourced raw cost averages ₹1,200/unit with a final commercial resale valuation of {prod.estimatedMarketValue}.
-                  </p>
-                </div>
-
-              </div>
-            );
-          })() : (
-            <div className="text-center p-12 flex flex-col items-center justify-center min-h-[300px]">
-              <span className="material-symbols-outlined text-4xl text-on-surface-variant/40 animate-pulse mb-2">fingerprint</span>
-              <p className="text-sm text-on-background font-bold">Waiting for selection</p>
-              <p className="text-xs text-on-surface-variant mt-1">
-                Click any 3D Capsule Pod card to load dynamic holographic specifications and live market trends.
-              </p>
+        {/* Step 3 — Industry product design control (Col Span 5) */}
+        <section className="lg:col-span-5 glass-panel rounded-2xl p-6 border border-[#7A928A]/20 flex flex-col justify-between">
+          <div>
+            <div className="border-b border-outline-variant/15 pb-3 mb-5">
+              <h2 className="font-headline-md text-base font-bold text-on-background">Step 3 — Industrial Design Controls</h2>
+              <p className="text-[10px] text-on-surface-variant">Tune composition ratios and price matrices.</p>
             </div>
-          )}
+
+            <div className="space-y-4 font-semibold text-xs text-on-surface">
+              <div className="space-y-1.5">
+                <div className="flex justify-between text-[10px] font-bold">
+                  <span>Feedstock Composite Ratio</span>
+                  <span className="text-primary font-mono">{customRatio}%</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="20" 
+                  max="95" 
+                  value={customRatio}
+                  onChange={(e) => setCustomRatio(parseInt(e.target.value))}
+                  className="w-full accent-primary bg-outline-variant/20 h-1.5 rounded-lg"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <div className="flex justify-between text-[10px] font-bold">
+                  <span>Structural Sieve Purity Target</span>
+                  <span className="text-secondary font-mono">{customPurity}%</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="50" 
+                  max="99" 
+                  value={customPurity}
+                  onChange={(e) => setCustomPurity(parseInt(e.target.value))}
+                  className="w-full accent-secondary bg-outline-variant/20 h-1.5 rounded-lg"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-[10px] uppercase font-bold text-on-surface-variant">Estimated Resale Price (₹)</label>
+                <input 
+                  type="text" 
+                  value={customPrice}
+                  onChange={(e) => setCustomPrice(e.target.value)}
+                  className="w-full bg-surface-container-low border border-outline-variant/30 rounded-xl py-2.5 px-3 font-semibold text-on-background focus:outline-none"
+                />
+              </div>
+            </div>
+          </div>
+
+          <button 
+            onClick={triggerCinematicSynthesis}
+            className="w-full mt-6 py-3.5 bg-primary text-white font-label-caps text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-secondary hover:holographic-glow transition-all shadow-md"
+          >
+            Start AI Sieve Synthesis Chamber
+          </button>
         </section>
 
       </div>
+
+      {/* STEP 4: CINEMATIC RECONSTRUCTION & METRIC VISUALIZER */}
+      {isSynthesizing && (
+        <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-xl flex flex-col items-center justify-center p-6 animate-fade-in">
+          <div className="w-full max-w-2xl bg-surface border border-primary-container p-6 rounded-3xl shadow-[0_0_60px_rgba(76,242,194,0.25)] relative overflow-hidden flex flex-col md:flex-row gap-6 min-h-[400px]">
+            
+            {/* Holographic synthesis particle viewport */}
+            <div className="flex-1 min-h-[250px] bg-surface-container-low border border-outline-variant/15 rounded-2xl relative overflow-hidden">
+              <canvas ref={canvasRef} className="w-full h-full absolute inset-0" />
+              <div className="absolute top-4 left-4 bg-surface-container-lowest/90 px-3 py-1.5 rounded-full border border-outline-variant/20 text-[9px] font-bold text-primary animate-pulse">
+                HOLOGRAPHIC VIEWPORT ACTIVE
+              </div>
+            </div>
+
+            {/* Stepper process list log */}
+            <div className="w-full md:w-5/12 flex flex-col justify-between text-xs font-semibold">
+              <div className="space-y-2">
+                <span className="font-label-caps text-[9px] text-primary border border-primary/20 bg-primary-container/10 px-2 py-0.5 rounded uppercase">Synthesis log</span>
+                <h3 className="text-sm font-extrabold text-on-background mt-1">Curing Matrix</h3>
+                
+                <div className="space-y-1.5 max-h-[200px] overflow-y-auto text-[9.5px] font-mono text-on-surface-variant leading-relaxed">
+                  {synthesisLogs.map((log, idx) => (
+                    <p key={`log-${idx}`} className="border-b border-outline-variant/5 pb-1">
+                      {log}
+                    </p>
+                  ))}
+                </div>
+              </div>
+
+              {/* Progress bar and numeric step indicator */}
+              <div className="space-y-1 mt-4">
+                <div className="flex justify-between text-[10px] font-bold text-primary">
+                  <span>Composite Bonding</span>
+                  <span>{synthesisStage * 10}%</span>
+                </div>
+                <div className="w-full bg-outline-variant/20 h-1.5 rounded-full overflow-hidden">
+                  <div className="bg-primary h-full rounded-full transition-all duration-300" style={{ width: `${synthesisStage * 10}%` }} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* FINAL PRODUCT REVEAL AND SPECIFICATIONS DATA */}
+      {revealFinalProduct && (
+        <section className="glass-panel p-6 rounded-3xl border border-primary-container bg-primary-container/[0.01] animate-slide-up space-y-6">
+          <div className="border-b border-primary-container/30 pb-4 mb-4 flex justify-between items-center">
+            <div>
+              <span className="font-label-caps text-[9px] text-primary bg-primary/10 border border-primary px-2.5 py-1 rounded-full uppercase font-extrabold">Final Synthesis Manifested</span>
+              <h3 className="font-display-hero text-2xl text-on-background font-extrabold mt-3">{selectedProductPossibility.name}</h3>
+              <p className="text-xs text-on-surface-variant mt-0.5">Physical Aggregate Blueprint and Material Compliance specs formulated successfully.</p>
+            </div>
+
+            <button 
+              onClick={() => {
+                addNotification('Circular Asset Saved', 'Sieve asset loaded successfully to the catalogue.', 'success');
+                setRevealFinalProduct(false);
+              }}
+              className="py-2.5 px-5 bg-primary text-white font-label-caps text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-secondary transition-all"
+            >
+              Add to Catalog
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+            <div className="p-4 rounded-xl bg-surface/40 border border-outline-variant/20">
+              <span className="text-[9px] text-on-surface-variant uppercase font-bold block">Feasibility Rating</span>
+              <p className="text-base font-extrabold text-primary mt-1">{selectedProductPossibility.feasibility}%</p>
+            </div>
+            <div className="p-4 rounded-xl bg-surface/40 border border-outline-variant/20">
+              <span className="text-[9px] text-on-surface-variant uppercase font-bold block">Estimated Return (ROI)</span>
+              <p className="text-base font-extrabold text-secondary mt-1">{selectedProductPossibility.roi}</p>
+            </div>
+            <div className="p-4 rounded-xl bg-surface/40 border border-outline-variant/20">
+              <span className="text-[9px] text-on-surface-variant uppercase font-bold block">Target Market Valuation</span>
+              <p className="text-base font-extrabold text-on-background mt-1">{customPrice}</p>
+            </div>
+            <div className="p-4 rounded-xl bg-surface/40 border border-outline-variant/20">
+              <span className="text-[9px] text-on-surface-variant uppercase font-bold block">Export Capability Index</span>
+              <p className="text-base font-extrabold text-primary mt-1">{selectedProductPossibility.export} Potential</p>
+            </div>
+          </div>
+
+          {/* Blueprint detail breakdown table */}
+          <div className="p-5 bg-surface-container-low/40 border border-outline-variant/15 rounded-2xl">
+            <h4 className="font-display-hero text-sm font-bold text-on-background mb-4">Engineering Blueprint Overlays</h4>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-[11px] font-semibold text-on-surface-variant font-mono leading-relaxed">
+              <div className="space-y-2">
+                <div className="flex justify-between border-b border-outline-variant/10 pb-2">
+                  <span>Carbon Avoidance offset</span>
+                  <span className="text-secondary font-bold">{selectedProductPossibility.carbon} / batch</span>
+                </div>
+                <div className="flex justify-between border-b border-outline-variant/10 pb-2">
+                  <span>Workforce allocated</span>
+                  <span className="text-on-background font-bold">{selectedProductPossibility.workforce}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Required machinery sequence</span>
+                  <span className="text-on-background font-bold">{selectedProductPossibility.machine}</span>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex justify-between border-b border-outline-variant/10 pb-2">
+                  <span>Curing chamber timeline</span>
+                  <span className="text-on-background font-bold">{selectedProductPossibility.recoveryTime}</span>
+                </div>
+                <div className="flex justify-between border-b border-outline-variant/10 pb-2">
+                  <span>Toxicity compliance score</span>
+                  <span className="text-primary font-bold">Standard Certified (95% clean)</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Active buyer pipelines matched</span>
+                  <span className="text-secondary font-bold">{selectedProductPossibility.buyers} procurement nodes</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
     </div>
   );

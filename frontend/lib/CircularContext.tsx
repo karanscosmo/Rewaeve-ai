@@ -2,9 +2,19 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-// Definitions for the Industrial Circular Intelligence Ecosystem
+// Definitions for the Upgraded Circular Intelligence Operating System
 
-export type UserRole = 'manufacturer' | 'recycler' | 'buyer' | 'treatment' | 'sustainability' | 'admin';
+export type UserRole = 
+  | 'manufacturer' 
+  | 'buyer' 
+  | 'recycler' 
+  | 'treatment' 
+  | 'sustainability' 
+  | 'government' 
+  | 'middleman' 
+  | 'admin';
+
+export type GlobalLanguage = 'en' | 'hi' | 'ta' | 'gu';
 
 export interface User {
   email: string;
@@ -32,17 +42,23 @@ export interface WasteStream {
   timestamp: string;
 }
 
+// 15 Advanced Diagnostic Scores
 export interface FeasibilityScores {
   recoveryFeasibility: number;
-  profitability: number;
-  operationalComplexity: number;
-  workforceRequirement: number;
-  machineryCompatibility: number;
-  treatmentDependency: number;
-  logisticsComplexity: number;
-  circularityScore: number;
+  circularFlowScore: number;
   sustainabilityImpact: number;
-  resalePotential: number;
+  toxicityRisk: number;
+  infrastructureDependency: number;
+  waterRecoveryEfficiency: number;
+  industrialReusability: number;
+  resourceRecovery: number;
+  carbonOffsetPotential: number;
+  buyerDemand: number;
+  treatmentComplexity: number;
+  logisticsComplexity: number;
+  industrialScalability: number;
+  esgComplianceReadiness: number;
+  hazardProbability: number;
 }
 
 export interface RawMaterial {
@@ -52,6 +68,8 @@ export interface RawMaterial {
   volume: string;
   consistency: number;
   ph: number;
+  purity: number;
+  contamination: number;
   isGenerated: boolean;
 }
 
@@ -73,6 +91,12 @@ export interface GeneratedProduct {
   isSaved: boolean;
   isListed: boolean;
   
+  // Advanced specs for Custom synthesis design
+  customRatio?: number;
+  customPurity?: number;
+  customMarketPrice?: string;
+  customComplexity?: number;
+
   // Immersive physical state properties
   activeWorkflowStep: string;
   workflowProgress: number;
@@ -127,6 +151,16 @@ export interface SystemNotification {
   read: boolean;
 }
 
+export interface CollaborationExpert {
+  id: string;
+  name: string;
+  type: 'NGO' | 'GOVERNMENT' | 'EXPERT';
+  specialty: string;
+  rate: string;
+  rating: string;
+  description: string;
+}
+
 interface CircularContextType {
   // Authentication & Onboarding
   user: User | null;
@@ -134,6 +168,11 @@ interface CircularContextType {
   registerUser: (fullName: string, email: string, organization: string, role: UserRole) => void;
   onboardOrganization: (details: { industryType: string; facilitiesCount: number; location: string }) => void;
   logout: () => void;
+
+  // Multilingual state
+  language: GlobalLanguage;
+  setLanguage: (lang: GlobalLanguage) => void;
+  t: (key: string) => string;
 
   // Waste Stream Ingestion
   wasteStreams: WasteStream[];
@@ -150,11 +189,12 @@ interface CircularContextType {
   // Feasibility & Scores
   activeScores: FeasibilityScores | null;
 
-  // Product Innovation Lab
+  // Product Innovation Lab / AI Circular Manufacturing Studio
   generatedProducts: GeneratedProduct[];
   saveProduct: (id: string) => void;
   listProductOnMarketplace: (id: string, initialPrice: string) => void;
   startRecoveryWorkflow: (id: string) => void;
+  updateCustomProductSpecs: (id: string, ratio: number, purity: number, marketPrice: string, complexity: number) => void;
 
   // Industrial Marketplace
   listings: MarketplaceListing[];
@@ -166,6 +206,10 @@ interface CircularContextType {
   networkNodes: CircularNetworkNode[];
   selectedNode: CircularNetworkNode | null;
   setSelectedNode: (node: CircularNetworkNode | null) => void;
+
+  // NGO & Governmental Experts
+  experts: CollaborationExpert[];
+  requestCollaboration: (expertId: string) => void;
 
   // AI Copilot
   copilotMessages: CopilotMessage[];
@@ -185,8 +229,83 @@ interface CircularContextType {
 
 const CircularContext = createContext<CircularContextType | undefined>(undefined);
 
+// Core translation matrix dictionary
+const TRANSLATIONS: Record<GlobalLanguage, Record<string, string>> = {
+  en: {
+    dashboardTitle: "Circular Intelligence Workspace",
+    facility: "Facility",
+    operator: "Operator",
+    nodeProtocol: "Node Protocol",
+    activeStreamTitle: "Active Industrial Stream Ingested",
+    dragDropText: "Drag & Drop Waste Stream Manifest",
+    recalcRoute: "Recalculate Optimal Freight Route",
+    decisionModule: "AI Recovery Decision Center",
+    autonomousVerdict: "Autonomous Diagnostic Verdict",
+    sellCredits: "Sell Certified Credits",
+    tendersTitle: "Autonomous Circular Contract Engine",
+    innovationLabTitle: "AI Circular Manufacturing Studio",
+    synthesisReady: "AI Material Synthesis Chamber Ready",
+    sustainabilityHub: "AI Compliance Risk Predictor",
+    copilotGreetings: "Greetings. I am your ReWeave Industrial Intelligence Copilot. Ask me how to optimize molecular curing and regional raw feedstock margins.",
+    expertNetwork: "Circular Workforce & Sustainability Assistance Network"
+  },
+  hi: {
+    dashboardTitle: "चक्रीय औद्योगिक प्रबंधन कार्यक्षेत्र",
+    facility: "औद्योगिक केंद्र",
+    operator: "प्रचालक",
+    nodeProtocol: "नोड प्रोटोकॉल",
+    activeStreamTitle: "सक्रिय औद्योगिक अपशिष्ट प्रवाह",
+    dragDropText: "सक्रिय सामग्री रिपोर्ट फ़ाइलें यहाँ छोड़ें",
+    recalcRoute: "इष्टतम परिवहन मार्ग की पुनर्गणना करें",
+    decisionModule: "एआई पुनर्चक्रण निर्णय केंद्र",
+    autonomousVerdict: "स्वायत्त नैदानिक निर्णय प्रणाली",
+    sellCredits: "प्रमाणित कार्बन क्रेडिट बेचें",
+    tendersTitle: "स्वायत्त चक्रीय अनुबंध प्रणाली",
+    innovationLabTitle: "एआई चक्रीय विनिर्माण स्टूडियो",
+    synthesisReady: "एआई सामग्री संश्लेषण कक्ष तैयार है",
+    sustainabilityHub: "एआई पर्यावरण अनुपालन जोखिम सूचक",
+    copilotGreetings: "नमस्कार। मैं आपका रीवीव औद्योगिक सहायक हूँ। आणविक शोधन और क्षेत्रीय कच्चे माल की मूल्य सीमा को अनुकूलित करने के लिए मुझसे प्रश्न पूछें।",
+    expertNetwork: "चक्रीय कार्यबल और स्थिरता सहायता नेटवर्क"
+  },
+  ta: {
+    dashboardTitle: "சுழற்சி தொழிற்துறை நுண்ணறிவு தளம்",
+    facility: "தொழில்துறை வசதி",
+    operator: "இயக்குனர்",
+    nodeProtocol: "நோட் நெறிமுறை",
+    activeStreamTitle: "செயலில் உள்ள தொழில்துறை கழிவு ஓட்டம்",
+    dragDropText: "கழிவு ஓட்ட ஆவணத்தை இங்கே பதிவேற்றவும்",
+    recalcRoute: "சரியான போக்குவரத்து பாதையை மீண்டும் கணக்கிடு",
+    decisionModule: "ஏஐ மறுசுழற்சி முடிவு மையம்",
+    autonomousVerdict: "தன்னியக்க பகுப்பாய்வு தீர்ப்பு",
+    sellCredits: "சான்றளிக்கப்பட்ட கார்பன் கிரெடிட்களை விற்கவும்",
+    tendersTitle: "தன்னியக்க சுழற்சி ஒப்பந்த தளம்",
+    innovationLabTitle: "ஏஐ சுழற்சி உற்பத்தி அரங்கம்",
+    synthesisReady: "ஏஐ சுழற்சி பொருள் உற்பத்தி கலன் தயார்",
+    sustainabilityHub: "ஏஐ சுற்றுச்சூழல் இணக்க ஆபத்து கண்டறிவி",
+    copilotGreetings: "வணக்கம். நான் உங்கள் ரீவீவ் தொழில்துறை நுண்ணறிவு உதவியாளர். மூலக்கூறு சுத்திகரிப்பு மற்றும் பிராந்திய சுழற்சி பொருள் வரம்புகளை எவ்வாறு மேம்படுத்துவது என்று என்னிடம் கேளுங்கள்.",
+    expertNetwork: "சுழற்சி தொழிலாளர் மற்றும் நிலைத்தன்மை உதவி நெட்வொர்க்"
+  },
+  gu: {
+    dashboardTitle: "વર્તુળાકાર ઔદ્યોગિક ઇન્ટેલિજન્સ વર્કસ્પેસ",
+    facility: "ઔદ્યોગિક સુવિધા",
+    operator: "ઓપરેટર",
+    nodeProtocol: "નોડ પ્રોટોકોલ",
+    activeStreamTitle: "સક્રિય ઔદ્યોગિક કચરો પ્રવાહ",
+    dragDropText: "મટીરીયલ રિપોર્ટ ફાઇલો અહીં ડ્રોપ કરો",
+    recalcRoute: "શ્રેષ્ઠ પરિવહન માર્ગની પુનઃગણતરી કરો",
+    decisionModule: "એઆઈ રિસાયક્લિંગ નિર્ણય કેન્દ્ર",
+    autonomousVerdict: "સ્વાયત્ત નિદાન ચુકાદો",
+    sellCredits: "પ્રમાણિત કાર્બન ક્રેડિટ વેચો",
+    tendersTitle: "સ્વાયત્ત વર્તુળાકાર કરાર એન્જિન",
+    innovationLabTitle: "એઆઈ વર્તુળાકાર મેન્યુફેક્ચરિંગ સ્ટુડિયો",
+    synthesisReady: "એઆઈ મટીરીયલ સિન્થેસીસ ચેમ્બર તૈયાર છે",
+    sustainabilityHub: "એઆઈ પર્યાવરણીય પાલન જોખમ સૂચક",
+    copilotGreetings: "નમસ્કાર. હું આપનો રીવીવ ઔદ્યોગિક સહાયક છું. મોલેક્યુલર રિફાઇનિંગ અને પ્રાદેશિક કાચા માલના ભાવોને કેવી રીતે બહેતર બનાવવા તે મને પૂછો.",
+    expertNetwork: "વર્તુળાકાર કાર્યબળ અને સ્થિરતા સહાય નેટવર્ક"
+  }
+};
+
 export function CircularProvider({ children }: { children: React.ReactNode }) {
-  // Simulated initial logged-in state (Manufacturer defaults)
   const [user, setUser] = useState<User | null>({
     email: 'operator@facility.com',
     fullName: 'Dr. Helen Vance',
@@ -194,6 +313,25 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
     role: 'manufacturer',
     isOnboarded: true,
   });
+
+  const [language, setLanguage] = useState<GlobalLanguage>('en');
+
+  // Multi-lingual translation lookup function
+  const t = (key: string): string => {
+    return TRANSLATIONS[language]?.[key] || TRANSLATIONS['en']?.[key] || key;
+  };
+
+  // Pre-configured experts listing
+  const [experts] = useState<CollaborationExpert[]>([
+    { id: 'exp-1', name: 'Dr. Ramesh Kumar', type: 'EXPERT', specialty: 'Metallurgical Slag Aggregates', rate: '₹14,500/session', rating: '4.9', description: 'Retired Principal Scientist specializing in structural concrete casting ratios.' },
+    { id: 'exp-2', name: 'Zero-Carbon India Foundation', type: 'NGO', specialty: 'Water Footprint Audits', rate: 'Subsidized NGO consulting', rating: '4.8', description: 'Provides low-cost workforce certifications on toxic chemical neutralization sequences.' },
+    { id: 'exp-3', name: 'MoEFCC Green-Subsidy Portal', type: 'GOVERNMENT', specialty: 'SBTi Carbon Grants', rate: 'Free Government advisory', rating: '4.7', description: 'Guides state-level manufacturers to unlock state grants on waste-to-tile furnaces.' }
+  ]);
+
+  // Financial ROI state trackers in Indian Rupee (₹)
+  const [ytdSavings, setYtdSavings] = useState(94000000); // ₹9.4 Crore
+  const [avoidedCarbonTons, setAvoidedCarbonTons] = useState(14200); // 14.2k Tons
+  const [recycledWaterGallons, setRecycledWaterGallons] = useState(2800000); // 2.8M Gal
 
   // Notifications state
   const [notifications, setNotifications] = useState<SystemNotification[]>([
@@ -204,21 +342,8 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
       type: 'success',
       timestamp: 'Just Now',
       read: false,
-    },
-    {
-      id: '2',
-      title: 'Ecosystem Match Found',
-      message: 'Eco-Brick Inc. added a high-priority procurement bid on Sludge Waste batches.',
-      type: 'info',
-      timestamp: '2 hours ago',
-      read: false,
     }
   ]);
-
-  // Financial ROI state trackers in Indian Rupee (₹)
-  const [ytdSavings, setYtdSavings] = useState(94000000); // ₹9.4 Crore
-  const [avoidedCarbonTons, setAvoidedCarbonTons] = useState(14200); // 14.2k Tons
-  const [recycledWaterGallons, setRecycledWaterGallons] = useState(2800000); // 2.8M Gal
 
   // Waste Stream Database state
   const [wasteStreams, setWasteStreams] = useState<WasteStream[]>([
@@ -265,10 +390,10 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
 
   // Raw Segregated Materials listing
   const [rawMaterials, setRawMaterials] = useState<RawMaterial[]>([
-    { id: 'raw-1', name: 'High-Density Smelter Slag', category: 'Metallurgical Residue', volume: '150 Tons', consistency: 92, ph: 8.2, isGenerated: false },
-    { id: 'raw-2', name: 'Acid Rinse Wash Fluid', category: 'Chemical Effluent', volume: '45,000 Liters', consistency: 85, ph: 4.5, isGenerated: false },
-    { id: 'raw-3', name: 'Cellulose Pulp Fiber Residue', category: 'Organic Fiber pulp', volume: '80 Tons', consistency: 78, ph: 6.8, isGenerated: false },
-    { id: 'raw-4', name: 'Coal Fly Ash Residue', category: 'Smelter Fly Ash', volume: '200 Tons', consistency: 89, ph: 9.1, isGenerated: false }
+    { id: 'raw-1', name: 'High-Density Smelter Slag', category: 'Metallurgical Residue', volume: '150 Tons', consistency: 92, ph: 8.2, purity: 89, contamination: 11, isGenerated: false },
+    { id: 'raw-2', name: 'Acid Rinse Wash Fluid', category: 'Chemical Effluent', volume: '45,000 Liters', consistency: 85, ph: 4.5, purity: 74, contamination: 26, isGenerated: false },
+    { id: 'raw-3', name: 'Cellulose Pulp Fiber Residue', category: 'Organic Fiber pulp', volume: '80 Tons', consistency: 78, ph: 6.8, purity: 91, contamination: 9, isGenerated: false },
+    { id: 'raw-4', name: 'Coal Fly Ash Residue', category: 'Smelter Fly Ash', volume: '200 Tons', consistency: 89, ph: 9.1, purity: 82, contamination: 18, isGenerated: false }
   ]);
 
   // Generated Product Innovation state
@@ -360,7 +485,7 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
       ownerOrg: 'DyeFlow Textiles',
       ownerRole: 'manufacturer',
       material: 'Chemical Wash Liquid',
-      volume: '24,000 Liters',
+      volume: '24,00,000 Liters',
       basePrice: '₹3,20,000',
       currentBid: '₹3,25,000',
       bidsCount: 1,
@@ -389,73 +514,95 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
     {
       id: 'm-init',
       sender: 'assistant',
-      text: 'Greetings. I am your ReWeave Industrial Intelligence Copilot. Stream telemetry arrays or upload industrial waste manifests, and I will instantly map your chemical profiles, generate carbon-avoidance logs, formulate premium reuse models, and match high-bidding circular buyers.',
+      text: TRANSLATIONS[language]?.copilotGreetings || TRANSLATIONS['en'].copilotGreetings,
       timestamp: 'Just Now'
     }
   ]);
   const [isCopilotThinking, setIsCopilotThinking] = useState(false);
 
-  // Load the first stream automatically as the active stream
+  // Load the first stream automatically as active
   useEffect(() => {
     if (wasteStreams.length > 0 && !activeStream) {
       setActiveStreamById(wasteStreams[0].id);
     }
   }, [wasteStreams]);
 
+  // Sync greetings when language changes
+  useEffect(() => {
+    setCopilotMessages([
+      {
+        id: 'm-init',
+        sender: 'assistant',
+        text: TRANSLATIONS[language]?.copilotGreetings || TRANSLATIONS['en'].copilotGreetings,
+        timestamp: 'Just Now'
+      }
+    ]);
+  }, [language]);
+
   const setActiveStreamById = (id: string) => {
     const stream = wasteStreams.find(s => s.id === id);
     if (stream) {
       setActiveStream(stream);
-      // Calculate dynamic scores based on parameters
       const calculatedScores = calculateMetricsForStream(stream);
       setActiveScores(calculatedScores);
     }
   };
 
-  // Helper score calculator
+  // 15 Advanced ML Diagnostic Scores implementation (simulating XGBoost/LightGBM model weights)
   const calculateMetricsForStream = (stream: WasteStream): FeasibilityScores => {
-    // Generate scores utilizing physical values in the stream
     const penalty = (stream.ph < 5 || stream.ph > 9) ? 15 : 0;
-    const contaminationPenalty = stream.contaminants.length > 20 ? 10 : 0;
     
-    const recoveryFeasibility = Math.min(98, Math.max(40, Math.round(95 - (stream.tds / 1000) - penalty)));
-    const profitability = Math.min(95, Math.max(30, Math.round(88 - (stream.turbidity / 3) - (stream.cod / 400))));
-    const operationalComplexity = Math.min(99, Math.max(10, Math.round((stream.sludge_percentage * 0.8) + (stream.dye_concentration * 2) + penalty)));
-    const workforceRequirement = Math.min(95, Math.max(20, Math.round(45 + (stream.quantity / 10))));
-    const machineryCompatibility = Math.min(99, Math.max(30, Math.round(100 - operationalComplexity)));
-    const treatmentDependency = Math.min(99, Math.max(10, Math.round(operationalComplexity * 1.1)));
-    const logisticsComplexity = Math.min(95, Math.max(20, Math.round(30 + (stream.sludge_percentage / 2))));
-    const circularityScore = Math.min(99, Math.max(40, Math.round((recoveryFeasibility + profitability) / 2)));
-    const sustainabilityImpact = Math.min(98, Math.max(35, Math.round(circularityScore * 1.05)));
-    const resalePotential = Math.min(96, Math.max(25, Math.round(profitability * 1.1)));
+    const recoveryFeasibility = Math.min(98, Math.max(40, Math.round(95 - (stream.tds / 1200) - penalty)));
+    const circularFlowScore = Math.min(99, Math.max(35, Math.round(92 - (stream.turbidity / 4))));
+    const sustainabilityImpact = Math.min(98, Math.max(40, Math.round(84 + (stream.bod / 120))));
+    const toxicityRisk = Math.min(99, Math.max(5, Math.round((stream.ph < 5 ? 85 : 20) + (stream.dye_concentration * 3))));
+    const infrastructureDependency = Math.min(95, Math.max(10, Math.round(operationalComplexityCalc(stream) * 1.15)));
+    const waterRecoveryEfficiency = Math.min(98, Math.max(25, Math.round(100 - (stream.tds / 200))));
+    const industrialReusability = Math.min(96, Math.max(30, Math.round(88 - penalty)));
+    const resourceRecovery = Math.min(97, Math.max(20, Math.round(75 + (stream.sludge_percentage / 3))));
+    const carbonOffsetPotential = Math.min(99, Math.max(15, Math.round(80 + (stream.quantity / 15))));
+    const buyerDemand = Math.min(95, Math.max(40, Math.round(92 - (stream.turbidity / 5))));
+    const treatmentComplexity = Math.min(99, Math.max(10, Math.round(operationalComplexityCalc(stream))));
+    const logisticsComplexity = Math.min(95, Math.max(20, Math.round(30 + (stream.sludge_percentage / 2.5))));
+    const industrialScalability = Math.min(98, Math.max(30, Math.round(94 - (stream.ph < 5 ? 20 : 0))));
+    const esgComplianceReadiness = Math.min(99, Math.max(40, Math.round(100 - toxicityRisk)));
+    const hazardProbability = Math.min(99, Math.max(2, Math.round(toxicityRisk * 0.85)));
 
     return {
       recoveryFeasibility,
-      profitability,
-      operationalComplexity,
-      workforceRequirement,
-      machineryCompatibility,
-      treatmentDependency,
-      logisticsComplexity,
-      circularityScore,
+      circularFlowScore,
       sustainabilityImpact,
-      resalePotential
+      toxicityRisk,
+      infrastructureDependency,
+      waterRecoveryEfficiency,
+      industrialReusability,
+      resourceRecovery,
+      carbonOffsetPotential,
+      buyerDemand,
+      treatmentComplexity,
+      logisticsComplexity,
+      industrialScalability,
+      esgComplianceReadiness,
+      hazardProbability
     };
   };
 
-  // CSV/Report Ingestion Pipeline
+  const operationalComplexityCalc = (stream: WasteStream) => {
+    return Math.round((stream.sludge_percentage * 0.7) + (stream.dye_concentration * 1.8));
+  };
+
+  // CSV Ingestion simulation
   const ingestWasteStream = (streamData: Partial<WasteStream>) => {
     setIsIngesting(true);
-    setIngestionStatus('Calibrating neural parsing matrices...');
+    setIngestionStatus('Deploying XGBoost material diagnostic arrays...');
 
     setTimeout(() => {
-      setIngestionStatus('Analyzing molecular chemical contamination layers...');
+      setIngestionStatus('Clustering physical composition streams...');
       
       setTimeout(() => {
-        setIngestionStatus('Initiating Digital Water Twin blueprint mapping...');
+        setIngestionStatus('Locking digital water twin metrics on secure ledger...');
         
         setTimeout(() => {
-          // Construct fully formed stream object
           const newStream: WasteStream = {
             id: 'ws-' + Date.now(),
             name: streamData.name || 'Stream Manifest Array',
@@ -480,28 +627,26 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
           const scores = calculateMetricsForStream(newStream);
           setActiveScores(scores);
 
-          // Update general environmental counts in INR ₹
           setYtdSavings(prev => prev + 3500000);
           setAvoidedCarbonTons(prev => prev + 180);
           setRecycledWaterGallons(prev => prev + 120000);
 
-          // Dynamically generate corresponding circular product
           const isChemical = newStream.waste_category.toLowerCase().includes('chemical') || newStream.ph < 6;
           const newProduct: GeneratedProduct = {
             id: 'gp-' + Date.now(),
             name: isChemical ? 'Refined Dye-Extract Structural Compound' : 'Dense Eco-Concrete Structural Block',
             sourceStreamId: newStream.id,
             feasibilityScore: scores.recoveryFeasibility,
-            profitability: scores.profitability,
-            marketDemand: Math.round(scores.profitability * 1.05),
+            profitability: scores.circularFlowScore,
+            marketDemand: scores.buyerDemand,
             machineryRequirement: isChemical ? 'Molecular Acid Filters, pH Balancing Buffers' : 'Solid Agglomeration Presses, Dense Kilns',
             workforceRequirement: '2 Specialized Chemical Engineers',
             carbonReduction: `${Math.round(newStream.quantity * 0.8)} Metric Tons`,
             nearbyBuyers: isChemical ? ['ChemSeparation Partners'] : ['GeoBuild Infrastructure Ltd', 'Apex Cements'],
             estimatedMarketValue: isChemical ? '₹36,000 per ton' : '₹6,400 per batch',
-            estimatedROI: `+${Math.round(scores.profitability * 1.6)}%`,
+            estimatedROI: `+145%`,
             scalabilityPotential: 'High industrial compatibility with modern architectural foundations',
-            treatmentDependency: scores.treatmentDependency > 60 ? 'Critical high-neutralization treatment required' : 'Low secondary buffering required',
+            treatmentDependency: scores.treatmentComplexity > 60 ? 'Critical high-neutralization treatment required' : 'Low secondary buffering required',
             isSaved: false,
             isListed: false,
             activeWorkflowStep: 'IDLE',
@@ -518,7 +663,6 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
 
           setGeneratedProducts(prev => [newProduct, ...prev]);
 
-          // Notify user
           addNotification(
             'Ingestion & Matching Matrix Complete',
             `Successfully processed "${newStream.name}". Generated matching product concept "${newProduct.name}" in the Innovation Lab.`,
@@ -532,11 +676,9 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
     }, 800);
   };
 
-  // Custom blueprint synthesis from raw/segregated material
   const generateProductFromMaterial = (materialId: string, name: string, decidedPrice: string) => {
     const raw = rawMaterials.find(r => r.id === materialId);
     if (raw) {
-      // Mark as generated
       setRawMaterials(prev => prev.map(item => item.id === materialId ? { ...item, isGenerated: true } : item));
       
       const newProduct: GeneratedProduct = {
@@ -573,7 +715,6 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Notifications helper
   const addNotification = (title: string, message: string, type: SystemNotification['type']) => {
     const notif: SystemNotification = {
       id: 'notif-' + Date.now(),
@@ -590,7 +731,6 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
   };
 
-  // Product Lab interactions
   const saveProduct = (id: string) => {
     setGeneratedProducts(prev => prev.map(p => p.id === id ? { ...p, isSaved: true } : p));
     addNotification('Concept Saved', 'Circular product blueprint saved to facility catalog.', 'success');
@@ -623,7 +763,24 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Dynamic Multi-stage Workflow Simulation Progress Tick
+  const updateCustomProductSpecs = (id: string, ratio: number, purity: number, marketPrice: string, complexity: number) => {
+    setGeneratedProducts(prev => prev.map(p => {
+      if (p.id === id) {
+        return {
+          ...p,
+          customRatio: ratio,
+          customPurity: purity,
+          customMarketPrice: marketPrice,
+          customComplexity: complexity,
+          estimatedMarketValue: marketPrice,
+          feasibilityScore: Math.round(p.feasibilityScore * (purity / 100))
+        };
+      }
+      return p;
+    }));
+    addNotification('Product Specs Calibrated', 'Custom composition and market price updated on matching catalog.', 'success');
+  };
+
   const startRecoveryWorkflow = (id: string) => {
     setGeneratedProducts(prev => prev.map(p => {
       if (p.id === id) {
@@ -634,7 +791,6 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
     
     addNotification('Workflow Triggered', 'Material physical sorting matrices initialized on conveyor arrays...', 'info');
 
-    // Tick progress dynamically
     setTimeout(() => {
       setGeneratedProducts(prev => prev.map(p => {
         if (p.id === id) {
@@ -668,7 +824,6 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
     }, 1500);
   };
 
-  // Marketplace interaction (INR ₹ support)
   const placeBidOnListing = (id: string, amount: number, bidderName: string) => {
     setListings(prev => prev.map(item => {
       if (item.id === id) {
@@ -707,7 +862,6 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
     addNotification('Tender / Contract Listed', `Opportunity "${newList.title}" posted to the Industrial network.`, 'success');
   };
 
-  // Toggle Partnership State on Marketplace Listing (Live feedback request)
   const togglePartnershipOnListing = (id: string) => {
     setListings(prev => prev.map(item => {
       if (item.id === id) {
@@ -731,22 +885,37 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
     }));
   };
 
-  // Authentication & Onboarding
+  const requestCollaboration = (expertId: string) => {
+    const exp = experts.find(e => e.id === expertId);
+    if (exp) {
+      addNotification(
+        'Collaboration Requested',
+        `Partnership proposal submitted to ${exp.name} for technical resource support.`,
+        'success'
+      );
+    }
+  };
+
   const loginUser = (email: string, role: UserRole) => {
-    const nameMap: {[key in UserRole]: string} = {
+    const nameMap: Record<UserRole, string> = {
       manufacturer: 'Dr. Helen Vance',
-      recycler: 'Chief Engineer Marcus Flint',
       buyer: 'Clara Oswald',
+      recycler: 'Chief Engineer Marcus Flint',
       treatment: 'Dr. Evelyn Brand',
       sustainability: 'Director Samira Carter',
+      government: 'Commissioner Rahul Sharma',
+      middleman: 'Logistics Lead Jayesh Patel',
       admin: 'Sysop Antigravity'
     };
-    const orgMap: {[key in UserRole]: string} = {
+
+    const orgMap: Record<UserRole, string> = {
       manufacturer: 'Vance Textile Mills',
-      recycler: 'EcoBrick Smelting',
       buyer: 'SoundSeal Architectural',
+      recycler: 'EcoBrick Smelting',
       treatment: 'ChemSeparation Partners',
-      sustainability: 'ZeroCarbon Alliance',
+      sustainability: 'ZeroCarbon Alliance NGO',
+      government: 'Ministry of Circular Economy (MoEFCC)',
+      middleman: 'Decentralized Freight Logistics',
       admin: 'ReWeave AI Core Ops'
     };
 
@@ -766,7 +935,7 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
       fullName,
       organization,
       role,
-      isOnboarded: false // Needs onboarding details setup next
+      isOnboarded: false
     });
   };
 
@@ -781,7 +950,7 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   };
 
-  // Intelligent context-aware copilot query response logic
+  // Multilingual, role-aware copilot messaging
   const sendCopilotMessage = (text: string) => {
     const userMsg: CopilotMessage = {
       id: 'm-' + Date.now(),
@@ -796,22 +965,43 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
       let botResponse = '';
       const query = text.toLowerCase();
 
-      if (query.includes('waste') || query.includes('contaminant') || query.includes('stream') || query.includes('material')) {
+      // Multilingual localized terms
+      const isHindi = language === 'hi';
+      const isTamil = language === 'ta';
+      const isGujarati = language === 'gu';
+
+      if (query.includes('waste') || query.includes('stream') || query.includes('material')) {
         if (activeStream) {
-          botResponse = `Understood. Analyzing "${activeStream.name}" of ${activeStream.quantity} tons. Based on chemical indices, COD is at ${activeStream.cod} mg/L and TDS at ${activeStream.tds} mg/L. The turbidity rating of ${activeStream.turbidity} indicates specialized agglomeration separation pathways should be deployed. Active matching generates high demand for high-strength bio bricks.`;
+          if (isHindi) {
+            botResponse = `समझा गया। "${activeStream.name}" के ${activeStream.quantity} टन का विश्लेषण। आणविक रासायनिक सूचकांकों के अनुसार, COD ${activeStream.cod} mg/L और TDS ${activeStream.tds} mg/L है। सघन पृथक्करण प्रक्रियाओं को लागू किया जाना चाहिए।`;
+          } else if (isTamil) {
+            botResponse = `புரிந்து கொள்ளப்பட்டது. "${activeStream.name}" இன் பகுப்பாய்வு. இரசாயன குறியீடுகளின்படி, COD ${activeStream.cod} mg/L மற்றும் TDS ${activeStream.tds} mg/L ஆகும். மூலக்கூறு பிரிப்பு வழிமுறைகளை பயன்படுத்த வேண்டும்.`;
+          } else if (isGujarati) {
+            botResponse = `સમજાયું. "${activeStream.name}" ના ${activeStream.quantity} ટનનું વિશ્લેષણ. મોલેક્યુલર કેમિકલ ઇન્ડેક્સ મુજબ, COD ${activeStream.cod} mg/L અને TDS ${activeStream.tds} mg/L છે. કૃપા કરીને રીસાયક્લિંગ પ્રક્રિયા સક્રિય કરો.`;
+          } else {
+            botResponse = `Understood. Analyzing "${activeStream.name}" of ${activeStream.quantity} tons. Based on chemical indices, COD is at ${activeStream.cod} mg/L and TDS at ${activeStream.tds} mg/L. The turbidity rating indicates specialized separation pathways should be deployed.`;
+          }
         } else {
-          botResponse = `I see. Please select or upload a waste stream manifest. Once ingested, I can provide precise molecular analysis, segregations, and treatment metrics.`;
+          botResponse = `Please select or upload a waste stream manifest. Once ingested, I will output precise molecular fractions.`;
         }
-      } else if (query.includes('roi') || query.includes('money') || query.includes('profit') || query.includes('cost') || query.includes('saving') || query.includes('rupee')) {
+      } else if (query.includes('roi') || query.includes('money') || query.includes('profit') || query.includes('rupee')) {
         if (activeScores) {
-          botResponse = `Financial telemetry suggests an active Resale Potential Score of ${activeScores.resalePotential}% and Profitability index of ${activeScores.profitability}%. Processing the current batch will result in estimated payback periods of under 8 months. YTD savings for your organization are currently tracking at ₹${(ytdSavings/10000000).toFixed(2)} Crore.`;
+          if (isHindi) {
+            botResponse = `वित्तीय विश्लेषण: आपके चक्रीय प्रवाह का आर्थिक व्यवहार्यता सूचकांक ${activeScores.circularFlowScore}% है। कुल संचित बचत ₹${(ytdSavings/10000000).toFixed(2)} करोड़ है।`;
+          } else if (isTamil) {
+            botResponse = `நிதி பகுப்பாய்வு: உங்கள் சுழற்சி பொருளாதார செயல்திறன் ${activeScores.circularFlowScore}% ஆகும். ஒட்டுமொத்த சேமிப்பு ₹${(ytdSavings/10000000).toFixed(2)} கோடி ஆகும்.`;
+          } else if (isGujarati) {
+            botResponse = `નાણાકીય વિશ્લેષણ: તમારા વર્તુળાકાર પ્રવાહની આર્થિક કાર્યક્ષમતા ${activeScores.circularFlowScore}% છે. કુલ બચત ₹${(ytdSavings/10000000).toFixed(2)} કરોડ છે.`;
+          } else {
+            botResponse = `Financial telemetry suggests an active Circular Flow Score of ${activeScores.circularFlowScore}% and Buyer Demand index of ${activeScores.buyerDemand}%. Sourced savings track at ₹${(ytdSavings/10000000).toFixed(2)} Crore.`;
+          }
         } else {
-          botResponse = `Our financial recovery engine models ROI utilizing logistics complexity, machinery capital expenses, and regional procurement indices. Ingest a CSV, and I will output an interactive balance ledger.`;
+          botResponse = `Our financial recovery engine models ROI utilizing logistics complexity, machinery capital expenses, and regional procurement indices.`;
         }
-      } else if (query.includes('carbon') || query.includes('esg') || query.includes('compliance') || query.includes('sustainability')) {
-        botResponse = `Active ESG metrics: Carbon Avoidance is currently at ${avoidedCarbonTons.toLocaleString()} Metric Tons. Aligned with SEC climate disclosure mandates, and tracking 85% Csrd european directive consistency. Recycled freshwater stands at ${recycledWaterGallons.toLocaleString()} Gallons.`;
+      } else if (query.includes('expert') || query.includes('ngo') || query.includes('workforce') || query.includes('government')) {
+        botResponse = `You can directly engage with our Circular Workforce & Sustainability Assistance Network. NGOs like Zero-Carbon India Foundation offer subsidized training programs for plant staff, and technical consultants guide structural casting setups.`;
       } else {
-        botResponse = `Understood. System is monitoring the Industrial Supply chain matrix. We can initiate molecular separation modeling, generate circular products, browse active biddings on the exchange, or review carbon avoidance compliance certificates. What circular protocol should we initiate?`;
+        botResponse = `System is monitoring the Industrial Supply chain matrix. We can initiate molecular separation modeling, generate circular products, browse active biddings on the exchange, or review carbon avoidance compliance certificates. What circular protocol should we initiate?`;
       }
 
       const assistantMsg: CopilotMessage = {
@@ -832,6 +1022,9 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
       registerUser,
       onboardOrganization,
       logout,
+      language,
+      setLanguage,
+      t,
       wasteStreams,
       activeStream,
       setActiveStreamById,
@@ -845,6 +1038,7 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
       saveProduct,
       listProductOnMarketplace,
       startRecoveryWorkflow,
+      updateCustomProductSpecs,
       listings,
       placeBidOnListing,
       createMarketplaceListing,
@@ -852,6 +1046,8 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
       networkNodes,
       selectedNode,
       setSelectedNode,
+      experts,
+      requestCollaboration,
       copilotMessages,
       sendCopilotMessage,
       isCopilotThinking,
