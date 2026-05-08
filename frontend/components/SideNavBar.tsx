@@ -11,31 +11,31 @@ export default function SideNavBar() {
   const { user, logout, language, setLanguage, t } = useCircular();
 
   const primaryLinks = [
-    { name: 'Circular Flows', href: '/dashboard', icon: 'loop' },
-    { name: 'Water Twin Diagnostics', href: '/dashboard/water-twin', icon: 'psychology' },
-    { name: 'AI Recovery Center', href: '/dashboard/recovery-center', icon: 'model_training' },
-    { name: 'AI Circular Manufacturing', href: '/dashboard/innovation-lab', icon: 'auto_awesome' },
-    { name: 'Industrial Marketplace', href: '/dashboard/exchange', icon: 'shopping_basket' },
-    { name: 'Tenders & Contracts', href: '/dashboard/tenders', icon: 'gavel' },
+    { name: 'flows', href: '/dashboard', icon: 'loop' },
+    { name: 'waterTwin', href: '/dashboard/water-twin', icon: 'psychology' },
+    { name: 'recoveryCenter', href: '/dashboard/recovery-center', icon: 'model_training' },
+    { name: 'manufacturing', href: '/dashboard/innovation-lab', icon: 'auto_awesome' },
+    { name: 'marketplace', href: '/dashboard/exchange', icon: 'shopping_basket' },
+    { name: 'contracts', href: '/dashboard/tenders', icon: 'gavel' },
   ];
 
   const intelligenceLinks = [
-    { name: 'Ecosystem Network', href: '/dashboard/network', icon: 'hub' },
-    { name: 'Live Monitoring', href: '/dashboard/monitoring', icon: 'monitoring' },
-    { name: 'Simulation Sandbox', href: '/dashboard/sandbox', icon: 'tune' },
-    { name: 'AI Copilot Chat', href: '/dashboard/copilot', icon: 'smart_toy' },
-    { name: 'Cooperative Network', href: '/dashboard/expert-network', icon: 'groups_3' },
+    { name: 'network', href: '/dashboard/network', icon: 'hub' },
+    { name: 'monitoring', href: '/dashboard/monitoring', icon: 'monitoring' },
+    { name: 'sandbox', href: '/dashboard/sandbox', icon: 'tune' },
+    { name: 'copilot', href: '/dashboard/copilot', icon: 'smart_toy' },
+    { name: 'expertNetworkLink', href: '/dashboard/expert-network', icon: 'groups_3' },
   ];
 
   const sustainabilityLinks = [
-    { name: 'ESG & Compliance', href: '/dashboard/sustainability', icon: 'assignment_turned_in' },
-    { name: 'Supply Chain Intel', href: '/dashboard/supply-chain', icon: 'local_shipping' },
-    { name: 'Carbon Analytics', href: '/dashboard/carbon', icon: 'co2' },
+    { name: 'esg', href: '/dashboard/sustainability', icon: 'assignment_turned_in' },
+    { name: 'supplyChain', href: '/dashboard/supply-chain', icon: 'local_shipping' },
+    { name: 'carbon', href: '/dashboard/carbon', icon: 'co2' },
   ];
 
   const systemLinks = [
-    { name: 'Alert Notification Log', href: '/dashboard/notifications', icon: 'notifications' },
-    { name: 'Organization Settings', href: '/dashboard/settings', icon: 'settings' },
+    { name: 'notifications', href: '/dashboard/notifications', icon: 'notifications' },
+    { name: 'settings', href: '/dashboard/settings', icon: 'settings' },
   ];
 
   // Dynamic colors based on active login role
@@ -72,7 +72,7 @@ export default function SideNavBar() {
 
         {/* Dynamic Global Multilingual Switcher inside sidebar */}
         <div className="px-5 py-3 border-b border-outline-variant/10 whitespace-nowrap shrink-0 group-hover:block hidden">
-          <span className="font-label-caps text-[9px] text-on-surface-variant/60 font-bold uppercase tracking-widest block mb-2">Platform Language</span>
+          <span className="font-label-caps text-[9px] text-on-surface-variant/60 font-bold uppercase tracking-widest block mb-2">{t('platformLanguage')}</span>
           <div className="grid grid-cols-4 gap-1.5">
             {([
               { code: 'en', label: 'EN' },
@@ -100,17 +100,17 @@ export default function SideNavBar() {
           
           {/* Section: Operations */}
           <div className="space-y-1">
-            <span className="hidden group-hover:block px-3 font-label-caps text-[9px] text-on-surface-variant/60 font-bold uppercase tracking-widest mb-1.5">Core Operations</span>
+            <span className="hidden group-hover:block px-3 font-label-caps text-[9px] text-on-surface-variant/60 font-bold uppercase tracking-widest mb-1.5">{t('coreOperations')}</span>
             {primaryLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
                 <Link 
                   key={link.name} 
                   href={link.href}
-                  className={`flex items-center gap-3.5 p-3 rounded-xl transition-all whitespace-nowrap ${isActive ? 'bg-primary text-white font-bold' : 'text-on-surface-variant hover:bg-primary-container/15'}`}
+                  className={`flex items-center gap-3.5 p-3 rounded-xl transition-all whitespace-nowrap ${isActive ? 'bg-primary text-white font-bold animate-pulse' : 'text-on-surface-variant hover:bg-primary-container/15'}`}
                 >
                   <span className={`material-symbols-outlined text-xl shrink-0 ${isActive ? 'fill-1' : ''}`}>{link.icon}</span>
-                  <span className="text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">{link.name}</span>
+                  <span className="text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-semibold">{t(link.name)}</span>
                 </Link>
               );
             })}
@@ -118,17 +118,17 @@ export default function SideNavBar() {
 
           {/* Section: Intel */}
           <div className="space-y-1">
-            <span className="hidden group-hover:block px-3 font-label-caps text-[9px] text-on-surface-variant/60 font-bold uppercase tracking-widest mb-1.5">Intelligence</span>
+            <span className="hidden group-hover:block px-3 font-label-caps text-[9px] text-on-surface-variant/60 font-bold uppercase tracking-widest mb-1.5">{t('intelligence')}</span>
             {intelligenceLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
                 <Link 
                   key={link.name} 
                   href={link.href}
-                  className={`flex items-center gap-3.5 p-3 rounded-xl transition-all whitespace-nowrap ${isActive ? 'bg-primary text-white font-bold' : 'text-on-surface-variant hover:bg-primary-container/15'}`}
+                  className={`flex items-center gap-3.5 p-3 rounded-xl transition-all whitespace-nowrap ${isActive ? 'bg-primary text-white font-bold animate-pulse' : 'text-on-surface-variant hover:bg-primary-container/15'}`}
                 >
                   <span className={`material-symbols-outlined text-xl shrink-0 ${isActive ? 'fill-1' : ''}`}>{link.icon}</span>
-                  <span className="text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">{link.name}</span>
+                  <span className="text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-semibold">{t(link.name)}</span>
                 </Link>
               );
             })}
@@ -136,7 +136,7 @@ export default function SideNavBar() {
 
           {/* Section: Sustainability */}
           <div className="space-y-1">
-            <span className="hidden group-hover:block px-3 font-label-caps text-[9px] text-on-surface-variant/60 font-bold uppercase tracking-widest mb-1.5">ESG Auditing</span>
+            <span className="hidden group-hover:block px-3 font-label-caps text-[9px] text-on-surface-variant/60 font-bold uppercase tracking-widest mb-1.5">{t('esgAuditing')}</span>
             {sustainabilityLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
@@ -146,7 +146,7 @@ export default function SideNavBar() {
                   className={`flex items-center gap-3.5 p-3 rounded-xl transition-all whitespace-nowrap ${isActive ? 'bg-primary text-white font-bold' : 'text-on-surface-variant hover:bg-primary-container/15'}`}
                 >
                   <span className={`material-symbols-outlined text-xl shrink-0 ${isActive ? 'fill-1' : ''}`}>{link.icon}</span>
-                  <span className="text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">{link.name}</span>
+                  <span className="text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-semibold">{t(link.name)}</span>
                 </Link>
               );
             })}
@@ -154,7 +154,7 @@ export default function SideNavBar() {
 
           {/* Section: Platform */}
           <div className="space-y-1">
-            <span className="hidden group-hover:block px-3 font-label-caps text-[9px] text-on-surface-variant/60 font-bold uppercase tracking-widest mb-1.5">System Portal</span>
+            <span className="hidden group-hover:block px-3 font-label-caps text-[9px] text-on-surface-variant/60 font-bold uppercase tracking-widest mb-1.5">{t('systemControl')}</span>
             {systemLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
@@ -164,7 +164,7 @@ export default function SideNavBar() {
                   className={`flex items-center gap-3.5 p-3 rounded-xl transition-all whitespace-nowrap ${isActive ? 'bg-primary text-white font-bold' : 'text-on-surface-variant hover:bg-primary-container/15'}`}
                 >
                   <span className={`material-symbols-outlined text-xl shrink-0 ${isActive ? 'fill-1' : ''}`}>{link.icon}</span>
-                  <span className="text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">{link.name}</span>
+                  <span className="text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-semibold">{t(link.name)}</span>
                 </Link>
               );
             })}
@@ -207,19 +207,19 @@ export default function SideNavBar() {
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center px-2 py-1.5 bg-surface/30 backdrop-blur-glass border-t border-primary/20 shadow-xl">
         <Link href="/dashboard" className="flex flex-col items-center justify-center p-2 text-on-surface-variant hover:text-primary">
           <span className="material-symbols-outlined text-lg">loop</span>
-          <span className="text-[9px] font-bold mt-0.5">Flows</span>
+          <span className="text-[9px] font-bold mt-0.5">{t('flows')}</span>
         </Link>
         <Link href="/dashboard/water-twin" className="flex flex-col items-center justify-center p-2 text-on-surface-variant hover:text-primary">
           <span className="material-symbols-outlined text-lg font-bold">psychology</span>
-          <span className="text-[9px] font-bold mt-0.5">Twin</span>
+          <span className="text-[9px] font-bold mt-0.5">{t('waterTwin')}</span>
         </Link>
         <Link href="/dashboard/copilot" className="flex flex-col items-center justify-center p-2 text-on-surface-variant hover:text-primary">
           <span className="material-symbols-outlined text-lg">smart_toy</span>
-          <span className="text-[9px] font-bold mt-0.5">Copilot</span>
+          <span className="text-[9px] font-bold mt-0.5">{t('copilot')}</span>
         </Link>
         <Link href="/dashboard/exchange" className="flex flex-col items-center justify-center p-2 text-on-surface-variant hover:text-primary">
           <span className="material-symbols-outlined text-lg">shopping_basket</span>
-          <span className="text-[9px] font-bold mt-0.5">Exchange</span>
+          <span className="text-[9px] font-bold mt-0.5">{t('marketplace')}</span>
         </Link>
       </nav>
     </>
