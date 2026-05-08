@@ -1,0 +1,26 @@
+# Node
+node_modules
+.next
+out
+.DS_Store
+.env.local
+.env.development.local
+.env.production.local
+.vscode
+
+# Python
+__pycache__/
+*.py[cod]
+*.env
+*.sqlite3
+.venv
+env/
+venv/
+celerybeat-schedule
+
+# Docker
+docker-compose.override.yml
+**/dist
+
+# Logs
+*.log

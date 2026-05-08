@@ -1,0 +1,241 @@
+'use client';
+
+import React, { useState } from 'react';
+import Image from 'next/image';
+import { useCircular } from '@/lib/CircularContext';
+
+export default function IndustrialExchange() {
+  const { listings, placeBidOnListing } = useCircular();
+  const [activeFilter, setActiveFilter] = useState<'ALL' | 'WASTE' | 'PRODUCT' | 'CONTRACT' | 'TENDER'>('ALL');
+
+  const handlePlaceBidSubmit = (id: string, currentBid: string) => {
+    const numericVal = parseFloat(currentBid.replace(/[^0-9.]/g, '')) || 5000;
+    const nextBid = numericVal + 500;
+    placeBidOnListing(id, nextBid, 'Your Facility Terminal');
+  };
+
+  const filteredListings = listings.filter(item => {
+    if (activeFilter === 'ALL') return true;
+    return item.type === activeFilter;
+  });
+
+  return (
+    <div className="flex flex-col gap-8 pb-16">
+      
+      {/* Header section */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 bg-surface/30 backdrop-blur-glass p-6 rounded-2xl border border-outline-variant/15 shadow-sm">
+        <div>
+          <span className="font-label-caps text-[10px] text-primary font-bold uppercase tracking-widest bg-primary-container/20 px-3.5 py-1.5 rounded-full border border-primary/20">
+            Exchange Module
+          </span>
+          <h1 className="font-display-hero text-4xl md:text-5xl font-extrabold text-on-background tracking-tighter mt-3">
+            Industrial Marketplace
+          </h1>
+          <p className="font-body-large text-sm text-on-surface-variant mt-1.5 max-w-2xl leading-relaxed">
+            Live decentralized environmental intelligence & circular material exchange network.
+          </p>
+        </div>
+        <div className="glass-panel px-5 py-2.5 rounded-full flex items-center gap-3 border border-primary-container shadow-[0_0_20px_rgba(76,242,194,0.15)] animate-pulse">
+          <span className="w-2 h-2 rounded-full bg-primary-fixed" />
+          <span className="font-label-caps text-xs text-primary font-bold uppercase tracking-wider">System Online</span>
+        </div>
+      </div>
+
+      {/* Bento Grid Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+        
+        {/* Highlight Chamber Card (Spans 8 cols) */}
+        <section className="col-span-1 md:col-span-8 glass-panel rounded-2xl p-6 relative overflow-hidden group hover:border-primary transition-all duration-500">
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-surface/20 to-surface-variant/10 z-0 pointer-events-none" />
+          
+          <div className="relative z-10 flex flex-col h-full justify-between">
+            <div className="flex justify-between items-center mb-6 border-b border-outline-variant/20 pb-4">
+              <h2 className="font-headline-md text-xl text-on-background font-bold flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary fill-1">view_in_ar</span>
+                Innovation Chamber
+              </h2>
+              <span className="font-label-caps text-[10px] text-on-surface-variant border border-outline-variant/30 px-3 py-1 rounded-full font-bold uppercase tracking-wider">Live Preview</span>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+              {/* Highlight image frame */}
+              <div className="relative h-64 w-full rounded-xl overflow-hidden group-hover:scale-[1.02] transition-transform duration-700 shadow-lg border border-outline-variant/20">
+                <Image 
+                  alt="Eco Brick Transformation" 
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiyZwIT3lyJM1N84_gWDILWWO_3qqfXDzcVFPBsFSY8wd3y0GWiqSAN9szWJzVXe_MKTOS-AEHMGOpIMPW3EU12oCT7zvm2NxrKWhNaqXFLKPmPKUWXDaCMzaRINnziC8aYizCAK5hhI6eu-ciw4qB5qNfoBkEsEDBQxwNIkxdoDp4_VqfJ5xhRRocwee-9_kCiyrGNBnLr75OsycKYPZDDDDxSv6mzfIfrhncipg67mMSHHd-E6mdJ8swgIlTh88q_yEkMhlwMQ"
+                  fill
+                  className="object-cover opacity-95 mix-blend-overlay scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent pointer-events-none" />
+                {/* Overlay text */}
+                <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+                  <div>
+                    <p className="font-metadata text-[10px] text-primary font-bold uppercase tracking-wider">Material Phase</p>
+                    <p className="font-headline-md text-lg text-on-background font-extrabold">Bio-Brick Cured</p>
+                  </div>
+                  <div className="glass-panel rounded-full p-2 holographic-glow flex items-center justify-center text-primary">
+                    <span className="material-symbols-outlined text-sm">sync</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Highlight description details */}
+              <div className="space-y-5">
+                <div>
+                  <h3 className="text-lg font-bold text-on-background mb-1">Industrial Sludge Conversion</h3>
+                  <p className="font-body-main text-xs text-on-surface-variant leading-relaxed">
+                    Transforming high-density chemical waste streams into high-strength architectural bio-materials. Real-time molecular monitoring active.
+                  </p>
+                </div>
+                
+                <div className="space-y-3.5 text-xs">
+                  <div className="flex justify-between items-center border-b border-outline-variant/15 pb-2">
+                    <span className="text-on-surface-variant font-medium">Recovery Score</span>
+                    <span className="text-primary font-bold text-sm">98.4%</span>
+                  </div>
+                  <div className="flex justify-between items-center border-b border-outline-variant/15 pb-2">
+                    <span className="text-on-surface-variant font-medium">Demand Level</span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-4 bg-primary-container rounded-sm"></span>
+                      <span className="w-1.5 h-4 bg-primary-container rounded-sm"></span>
+                      <span className="w-1.5 h-4 bg-primary-container rounded-sm"></span>
+                      <span className="w-1.5 h-4 bg-surface-variant rounded-sm"></span>
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center pb-1">
+                    <span className="text-on-surface-variant font-medium">Est. Sustainability Value</span>
+                    <span className="text-on-background font-bold">+420 Eco-Credits</span>
+                  </div>
+                </div>
+
+                <button className="w-full py-3 rounded-xl border border-primary-container text-on-background hover:bg-primary-container/20 font-label-caps text-xs font-bold uppercase tracking-wider hover:holographic-glow-active transition-all">
+                  Initiate Partnership
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* AI Insights & Nearby Bidders Card (Spans 4 cols) */}
+        <section className="col-span-1 md:col-span-4 flex flex-col gap-6">
+          {/* AI Insights panel */}
+          <div className="glass-panel rounded-2xl p-6 relative flex flex-col items-center justify-center text-center hover-lift flex-grow border border-outline-variant/20">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary-container/30 to-surface-variant/30 border border-primary-container flex items-center justify-center mb-4 relative shadow-[0_0_30px_rgba(127,255,212,0.35)] animate-[pulse_4s_ease-in-out_infinite]">
+              <span className="material-symbols-outlined text-3xl text-primary fill-1">smart_toy</span>
+              <div className="absolute -right-1 -top-1 w-5 h-5 rounded-full bg-surface border border-outline-variant/30 flex items-center justify-center">
+                <span className="w-2 h-2 rounded-full bg-secondary-container animate-ping"></span>
+              </div>
+            </div>
+            <h3 className="font-headline-md text-base mb-1 font-bold text-on-background">Copilot Insights</h3>
+            <p className="font-body-main text-xs text-on-surface-variant leading-relaxed px-2">
+              &quot;Local buyer demand for Bio-Bricks is peaking within a 50km radius. Recommend listing current batch.&quot;
+            </p>
+          </div>
+
+          {/* Bidding Location Map */}
+          <div className="glass-panel rounded-2xl p-4 flex flex-col hover-lift relative overflow-hidden min-h-[140px] border border-outline-variant/20">
+            <div className="flex justify-between items-center mb-3 z-10">
+              <span className="font-label-caps text-[10px] text-on-surface-variant font-bold tracking-wider uppercase">Nearby Buyers</span>
+              <span className="material-symbols-outlined text-primary text-base">my_location</span>
+            </div>
+            <div className="relative w-full flex-grow rounded-xl overflow-hidden min-h-[100px] bg-surface-variant/30 border border-outline-variant/10">
+              {/* Fake mapping markers */}
+              <div className="absolute top-1/4 left-1/3 w-3.5 h-3.5 rounded-full bg-primary-container shadow-[0_0_8px_rgba(127,255,212,0.8)] border-2 border-white animate-pulse" />
+              <div className="absolute bottom-1/3 right-1/4 w-2 h-2 rounded-full bg-secondary-container" />
+              <div className="absolute top-1/2 right-1/3 w-5 h-5 rounded-full border border-primary-container flex items-center justify-center pointer-events-none">
+                <div className="w-2 h-2 rounded-full bg-primary-container animate-ping" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Live Industrial Exchange Feed (Spans 12 cols) */}
+        <section className="col-span-1 md:col-span-12 glass-panel rounded-2xl p-6">
+          <div className="flex flex-wrap justify-between items-center mb-6 border-b border-outline-variant/20 pb-4 gap-4">
+            <h2 className="font-headline-md text-xl text-on-background font-bold flex items-center gap-2">
+              <span className="material-symbols-outlined text-primary">dynamic_feed</span>
+              Live Industrial Exchange
+            </h2>
+            <div className="flex gap-2 text-[10px] font-bold uppercase tracking-wider">
+              {['ALL', 'WASTE', 'PRODUCT', 'CONTRACT', 'TENDER'].map(t => (
+                <button 
+                  key={t}
+                  onClick={() => setActiveFilter(t as any)}
+                  className={`px-4 py-2 rounded-full border transition-all ${activeFilter === t ? 'bg-primary text-white border-primary' : 'bg-surface text-on-surface-variant border-outline-variant/30 hover:bg-surface-dim'}`}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Table headers (Desktop) */}
+          <div className="hidden md:grid grid-cols-12 gap-4 font-label-caps text-[10px] text-on-surface-variant font-bold tracking-wider mb-4 px-4">
+            <div className="col-span-3">Asset / Stream</div>
+            <div className="col-span-2">Volume</div>
+            <div className="col-span-3">Current Bid / Value</div>
+            <div className="col-span-2">Recovery Score</div>
+            <div className="col-span-2 text-right">Action</div>
+          </div>
+
+          {/* Listings list */}
+          <div className="flex flex-col gap-3 font-semibold text-xs text-on-surface">
+            {filteredListings.map((item) => (
+              <div 
+                key={item.id} 
+                className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center p-4 rounded-xl bg-surface border border-primary-container/30 holographic-glow hover:scale-[1.01] transition-transform"
+              >
+                <div className="col-span-1 md:col-span-3 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary-container/20 flex items-center justify-center shrink-0 text-primary border border-primary/10">
+                    <span className="material-symbols-outlined text-lg">
+                      {item.type === 'WASTE' ? 'water_drop' : 'architecture'}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-on-background">{item.title}</p>
+                    <p className="font-metadata text-[10px] text-on-surface-variant/80">Org: {item.ownerOrg} • {item.type}</p>
+                  </div>
+                </div>
+                
+                <div className="col-span-1 md:col-span-2 font-medium">
+                  {item.volume}
+                </div>
+                
+                <div className="col-span-1 md:col-span-3 flex items-center gap-3">
+                  <span className="text-base text-on-background font-bold tracking-tight">{item.currentBid}</span>
+                  {item.bidsCount > 0 && (
+                    <span className="font-metadata text-[10px] text-primary bg-primary-container/20 border border-primary/20 px-1.5 py-0.5 rounded flex items-center gap-0.5 font-bold">
+                      {item.bidsCount} Bids
+                    </span>
+                  )}
+                </div>
+                
+                <div className="col-span-1 md:col-span-2 flex flex-col gap-1">
+                  <div className="w-full bg-surface-variant h-1.5 rounded-full overflow-hidden">
+                    <div className="bg-primary-fixed h-full rounded-full" style={{ width: `${item.recoveryScore}%` }} />
+                  </div>
+                  <span className="font-metadata text-[10px] text-on-surface-variant font-medium">{item.recoveryScore}% Yield</span>
+                </div>
+                
+                <div className="col-span-1 md:col-span-2 md:text-right flex flex-col gap-1 items-stretch md:items-end">
+                  <button 
+                    onClick={() => handlePlaceBidSubmit(item.id, item.currentBid)}
+                    className="px-4 py-2 border border-primary text-primary hover:bg-primary hover:text-on-primary font-label-caps text-[10px] font-bold tracking-wider uppercase rounded-lg transition-colors"
+                  >
+                    Bid Asset
+                  </button>
+                  {item.highestBidder && (
+                    <span className="text-[9px] text-primary font-bold text-center mt-1 animate-pulse">
+                      High: {item.highestBidder}
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+      </div>
+    </div>
+  );
+}

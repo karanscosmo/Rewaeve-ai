@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Industrial Marketplace - ReWeave AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-error": "#ffffff",
+                      "on-secondary-fixed": "#00201e",
+                      "outline-variant": "#bccac2",
+                      "on-tertiary": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "on-background": "#171d1a",
+                      "surface-container-low": "#eff5f0",
+                      "surface-bright": "#f4fbf6",
+                      "tertiary-fixed-dim": "#44deb7",
+                      "background": "#f4fbf6",
+                      "on-primary-container": "#00765b",
+                      "primary-fixed": "#79f9ce",
+                      "tertiary-container": "#7bffd9",
+                      "inverse-surface": "#2b322f",
+                      "surface-container-lowest": "#ffffff",
+                      "primary-fixed-dim": "#5adcb3",
+                      "surface": "#f4fbf6",
+                      "inverse-on-surface": "#ecf2ed",
+                      "primary": "#006c52",
+                      "on-error-container": "#93000a",
+                      "on-surface-variant": "#3d4a44",
+                      "on-tertiary-fixed-variant": "#005140",
+                      "surface-tint": "#006c52",
+                      "surface-container-highest": "#dde4df",
+                      "error": "#ba1a1a",
+                      "surface-container-high": "#e3eae5",
+                      "on-tertiary-fixed": "#002018",
+                      "error-container": "#ffdad6",
+                      "on-secondary-container": "#006f69",
+                      "primary-container": "#7fffd4",
+                      "secondary": "#006a64",
+                      "tertiary-fixed": "#67fbd3",
+                      "outline": "#6d7a73",
+                      "surface-variant": "#dde4df",
+                      "inverse-primary": "#5adcb3",
+                      "secondary-container": "#61f6ea",
+                      "surface-dim": "#d5dcd7",
+                      "on-primary-fixed": "#002117",
+                      "surface-container": "#e9efea",
+                      "tertiary": "#006b56",
+                      "secondary-fixed": "#65f8ed",
+                      "secondary-fixed-dim": "#40dcd1",
+                      "on-surface": "#171d1a",
+                      "on-primary-fixed-variant": "#00513d",
+                      "on-secondary-fixed-variant": "#00504b",
+                      "on-primary": "#ffffff",
+                      "on-tertiary-container": "#00765f"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "module-gap": "2rem",
+                      "glass-blur": "24px",
+                      "internal-padding": "1.5rem",
+                      "safe-area": "4rem"
+              },
+              "fontFamily": {
+                      "display-hero": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "metadata": [
+                              "Inter"
+                      ],
+                      "body-large": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "body-main": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "display-hero": [
+                              "72px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "300"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "0.04em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "metadata": [
+                              "13px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "letterSpacing": "0.02em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-large": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "letterSpacing": "0.01em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "letterSpacing": "0.03em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-main": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "letterSpacing": "0.01em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.0",
+                                      "letterSpacing": "0.15em",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        body {
+            background: linear-gradient(135deg, #FCFFFC 0%, #F7FFF9 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(122, 146, 138, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+        }
+        .holographic-glow {
+            box-shadow: 0 0 20px rgba(76, 242, 194, 0.15);
+        }
+        .holographic-glow-active {
+            box-shadow: 0 0 30px rgba(127, 255, 212, 0.3);
+            border-color: #7FFFD4;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="text-on-background font-body-main pb-32 md:pb-0 overflow-x-hidden">
+<!-- Top Navigation (Web) -->
+<header class="hidden md:flex fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-internal-padding h-16 max-w-7xl mx-auto rounded-full mt-4 mx-safe-area bg-surface/30 backdrop-blur-glass border border-outline-variant/20 shadow-[0_0_20px_rgba(76,242,194,0.15)]">
+<div class="flex items-center gap-4">
+<span class="font-display-hero text-headline-md tracking-tighter text-primary">ReWeave AI</span>
+</div>
+<nav class="flex gap-8">
+<a class="text-on-surface-variant font-medium hover:scale-105 hover:border-secondary transition-all" href="#">Ecosystem</a>
+<a class="text-on-surface-variant font-medium hover:scale-105 hover:border-secondary transition-all" href="#">Flows</a>
+<a class="text-primary font-bold border-b-2 border-primary hover:scale-105 hover:border-secondary transition-all" href="#">Optimization</a>
+</nav>
+<div class="flex items-center gap-6">
+<button class="text-primary hover:scale-105 transition-all">
+<span class="material-symbols-outlined text-2xl">account_tree</span>
+</button>
+<button class="text-primary hover:scale-105 transition-all">
+<span class="material-symbols-outlined text-2xl">notifications</span>
+</button>
+<img alt="AI Operator Avatar" class="w-10 h-10 rounded-full border border-primary/30" data-alt="A cinematic macro shot of a sleek, futuristic AI interface sphere glowing with soft mint green light against a stark white laboratory background. The sphere represents an AI Operator avatar, emitting a sense of advanced intelligence and biological preservation. The lighting is high-key and pristine, fitting a modern, light-mode spatial UI aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHpsTlvabciBaBvW-uL8BLeRfQtwqVeYJ8-sFJaKHk9r5iGoLPI4qP3uMZcziwXJuIwSix5bW9FCzEiWCz2Qts4NKFezF7cna_0X3XlLRqVNRQ83xWuPuFTsbYt16PRc9FCXkh8IyDfhw2547iYpvVlXSFLeyBuOFBnb7dW7eC7Ya4uvr-ykC337V6kWwOtOWWkdGUKrbF_353AKGS3Rq3LQ4PGzvKTGgAC8P_Ued0JOhqzpa39eF1_IJ_6A-ORq6empCLLbAoSA"/>
+</div>
+</header>
+<!-- Side Navigation (Web) -->
+<nav class="hidden md:flex fixed left-0 top-20 bottom-20 z-40 flex-col bg-surface/40 backdrop-blur-glass rounded-xl m-4 w-20 hover:w-64 transition-all duration-500 overflow-hidden border-r border-outline-variant/10 shadow-xl group">
+<div class="p-6 flex items-center gap-4 border-b border-outline-variant/10 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary">psychology</span>
+</div>
+<div>
+<h2 class="font-headline-lg text-headline-md text-primary">ReWeave OS</h2>
+<p class="font-metadata text-metadata text-on-surface-variant">Active Intelligence</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 p-3 mt-4 w-full">
+<a class="flex items-center gap-4 p-3 rounded-lg text-on-surface-variant hover:bg-secondary-container/50 transition-all whitespace-nowrap overflow-hidden" href="#">
+<span class="material-symbols-outlined shrink-0">psychology</span>
+<span class="font-body-main opacity-0 group-hover:opacity-100 transition-opacity">Intelligence</span>
+</a>
+<a class="flex items-center gap-4 p-3 rounded-lg text-on-surface-variant hover:bg-secondary-container/50 transition-all whitespace-nowrap overflow-hidden" href="#">
+<span class="material-symbols-outlined shrink-0">loop</span>
+<span class="font-body-main opacity-0 group-hover:opacity-100 transition-opacity">Circular Flows</span>
+</a>
+<a class="flex items-center gap-4 p-3 rounded-lg bg-primary-container text-on-primary-container hover:bg-secondary-container/50 transition-all whitespace-nowrap overflow-hidden" href="#">
+<span class="material-symbols-outlined shrink-0">monitoring</span>
+<span class="font-body-main opacity-0 group-hover:opacity-100 transition-opacity font-medium">ROI Hub</span>
+</a>
+<a class="flex items-center gap-4 p-3 rounded-lg text-on-surface-variant hover:bg-secondary-container/50 transition-all whitespace-nowrap overflow-hidden" href="#">
+<span class="material-symbols-outlined shrink-0">hub</span>
+<span class="font-body-main opacity-0 group-hover:opacity-100 transition-opacity">Nexus</span>
+</a>
+<a class="flex items-center gap-4 p-3 rounded-lg text-on-surface-variant hover:bg-secondary-container/50 transition-all whitespace-nowrap overflow-hidden" href="#">
+<span class="material-symbols-outlined shrink-0">settings</span>
+<span class="font-body-main opacity-0 group-hover:opacity-100 transition-opacity">Settings</span>
+</a>
+</div>
+<div class="mt-auto p-4 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+<button class="w-full py-3 rounded-lg border border-primary text-primary font-label-caps text-label-caps hover:bg-primary hover:text-on-primary transition-colors">
+                Optimize System
+            </button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="md:pl-28 pt-8 md:pt-28 px-4 md:px-8 max-w-[1600px] mx-auto min-h-screen">
+<!-- Header Section -->
+<div class="mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+<div>
+<h1 class="font-display-hero text-headline-lg md:text-display-hero text-on-background tracking-tighter">Industrial Marketplace</h1>
+<p class="font-body-large text-body-large text-on-surface-variant mt-2 max-w-2xl">Live environmental intelligence &amp; circular material exchange.</p>
+</div>
+<div class="glass-panel px-6 py-3 rounded-full flex items-center gap-3 holographic-glow">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+<span class="font-label-caps text-label-caps text-primary tracking-widest">SYSTEM ONLINE</span>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-module-gap">
+<!-- Highlight Chamber: Circular Product Innovation (Spans 8 cols) -->
+<section class="col-span-1 md:col-span-8 glass-panel rounded-xl p-internal-padding relative overflow-hidden group hover:holographic-glow-active transition-all duration-500">
+<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-surface/20 to-surface-variant/10 z-0"></div>
+<div class="relative z-10">
+<div class="flex justify-between items-center mb-6 border-b border-outline-variant/20 pb-4">
+<h2 class="font-headline-md text-headline-md flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">view_in_ar</span>
+                            Innovation Chamber
+                        </h2>
+<span class="font-label-caps text-label-caps text-on-surface-variant border border-outline-variant/30 px-3 py-1 rounded-full">LIVE PREVIEW</span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+<div class="relative h-64 md:h-80 w-full rounded-lg overflow-hidden group-hover:scale-105 transition-transform duration-700">
+<img alt="Eco Brick Transformation" class="absolute inset-0 w-full h-full object-cover opacity-90 mix-blend-multiply" data-alt="A 3D holographic rendering of industrial sludge transforming into sleek, geometric eco-bricks, floating inside a luminous cylindrical glass chamber. The background is a stark, high-key white environment typical of a modern laboratory. Neon mint accents highlight the structural integrity of the bricks, embodying the intersection of heavy industry and biological preservation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiyZwIT3lyJM1N84_gWDILWWO_3qqfXDzcVFPBsFSY8wd3y0GWiqSAN9szWJzVXe_MKTOS-AEHMGOpIMPW3EU12oCT7zvm2NxrKWhNaqXFLKPmPKUWXDaCMzaRINnziC8aYizCAK5hhI6eu-ciw4qB5qNfoBkEsEDBQxwNIkxdoDp4_VqfJ5xhRRocwee-9_kCiyrGNBnLr75OsycKYPZDDDDxSv6mzfIfrhncipg67mMSHHd-E6mdJ8swgIlTh88q_yEkMhlwMQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent"></div>
+<!-- Floating UI elements over image -->
+<div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+<div>
+<p class="font-metadata text-metadata text-primary-fixed drop-shadow-md">Material Phase</p>
+<p class="font-headline-md text-headline-md text-surface-bright font-bold">Bio-Brick Cured</p>
+</div>
+<div class="glass-panel rounded-full p-2 holographic-glow">
+<span class="material-symbols-outlined text-primary-fixed">sync</span>
+</div>
+</div>
+</div>
+<div class="space-y-6">
+<div>
+<h3 class="font-headline-md text-body-large font-bold mb-1">Industrial Sludge Conversion</h3>
+<p class="font-body-main text-body-main text-on-surface-variant">Transforming high-density waste streams into structural biomaterials. Real-time yield monitoring active.</p>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center border-b border-outline-variant/20 pb-2">
+<span class="font-metadata text-metadata text-on-surface-variant">Recovery Score</span>
+<span class="font-body-main text-body-main text-primary font-bold">98.4%</span>
+</div>
+<div class="flex justify-between items-center border-b border-outline-variant/20 pb-2">
+<span class="font-metadata text-metadata text-on-surface-variant">Demand Level</span>
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-4 bg-primary-container rounded-sm"></span>
+<span class="w-1.5 h-4 bg-primary-container rounded-sm"></span>
+<span class="w-1.5 h-4 bg-primary-container rounded-sm"></span>
+<span class="w-1.5 h-4 bg-surface-variant rounded-sm"></span>
+</div>
+</div>
+<div class="flex justify-between items-center pb-2">
+<span class="font-metadata text-metadata text-on-surface-variant">Est. Sustainability Value</span>
+<span class="font-body-main text-body-main text-on-background font-semibold">+420 Eco-Credits</span>
+</div>
+</div>
+<button class="w-full py-3 mt-2 rounded-lg border border-primary-container text-on-background font-label-caps text-label-caps relative overflow-hidden group/btn holographic-glow hover:holographic-glow-active transition-all">
+<div class="absolute inset-0 bg-gradient-to-r from-primary-container/0 via-primary-container/20 to-primary-container/0 opacity-0 group-hover/btn:opacity-100 transition-opacity"></div>
+<span class="relative z-10">INITIATE PARTNERSHIP</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Active Telemetry & AI Orb (Spans 4 cols) -->
+<section class="col-span-1 md:col-span-4 flex flex-col gap-module-gap">
+<!-- AI Copilot Panel -->
+<div class="glass-panel rounded-xl p-6 relative flex flex-col items-center justify-center text-center holographic-glow flex-grow">
+<div class="w-24 h-24 rounded-full bg-gradient-to-br from-primary-container/40 to-surface-variant/40 border border-primary-container flex items-center justify-center mb-4 relative shadow-[0_0_40px_rgba(127,255,212,0.4)] animate-[pulse_4s_ease-in-out_infinite]">
+<span class="material-symbols-outlined text-4xl text-primary" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+<div class="absolute -right-2 -top-2 w-6 h-6 rounded-full bg-surface border border-outline-variant/30 flex items-center justify-center">
+<span class="w-2 h-2 rounded-full bg-secondary-container animate-ping"></span>
+</div>
+</div>
+<h3 class="font-headline-md text-headline-md mb-2">Copilot Insights</h3>
+<p class="font-body-main text-metadata text-on-surface-variant">"Local buyer demand for Bio-Bricks is peaking within a 50km radius. Recommend listing current batch."</p>
+</div>
+<!-- Bidding Map Snippet -->
+<div class="glass-panel rounded-xl p-4 flex-grow flex flex-col relative overflow-hidden">
+<div class="flex justify-between items-center mb-3 z-10">
+<span class="font-label-caps text-label-caps text-on-surface-variant">NEARBY BUYERS</span>
+<span class="material-symbols-outlined text-primary text-sm">my_location</span>
+</div>
+<div class="relative w-full flex-grow rounded-lg overflow-hidden min-h-[120px]">
+<div class="absolute inset-0 bg-surface-variant/30" data-location="Industrial Zone Sector 7 Map" style=""></div>
+<!-- Simulated Map Nodes -->
+<div class="absolute top-1/4 left-1/4 w-3 h-3 rounded-full bg-primary-container shadow-[0_0_10px_rgba(127,255,212,0.8)]"></div>
+<div class="absolute bottom-1/3 right-1/3 w-2 h-2 rounded-full bg-secondary-container opacity-60"></div>
+<div class="absolute top-1/2 right-1/4 w-4 h-4 rounded-full border border-primary-container flex items-center justify-center">
+<div class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Marketplace Exchange Feed (Spans 12 cols) -->
+<section class="col-span-1 md:col-span-12 glass-panel rounded-xl p-internal-padding mb-8">
+<div class="flex flex-wrap justify-between items-center mb-6 border-b border-outline-variant/20 pb-4 gap-4">
+<h2 class="font-headline-md text-headline-md flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">dynamic_feed</span>
+                        Live Industrial Exchange
+                    </h2>
+<div class="flex gap-2">
+<button class="font-label-caps text-label-caps px-4 py-2 rounded-full bg-surface-variant text-on-surface-variant border border-outline-variant/20 hover:bg-surface-dim transition-colors">WASTE STREAMS</button>
+<button class="font-label-caps text-label-caps px-4 py-2 rounded-full bg-primary text-on-primary holographic-glow">TREATMENT CONTRACTS</button>
+</div>
+</div>
+<!-- Feed Header (Desktop) -->
+<div class="hidden md:grid grid-cols-12 gap-4 font-label-caps text-label-caps text-on-surface-variant mb-4 px-4">
+<div class="col-span-3">ASSET / STREAM</div>
+<div class="col-span-2">VOLUME</div>
+<div class="col-span-3">CURRENT BID</div>
+<div class="col-span-2">TELEMETRY</div>
+<div class="col-span-2 text-right">ACTION</div>
+</div>
+<!-- Feed Items -->
+<div class="flex flex-col gap-3">
+<!-- Active Bid Item -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center p-4 rounded-lg bg-surface border border-primary-container/50 holographic-glow hover:scale-[1.01] transition-transform">
+<div class="col-span-1 md:col-span-3 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container/20 flex items-center justify-center shrink-0 text-primary">
+<span class="material-symbols-outlined">water_drop</span>
+</div>
+<div>
+<p class="font-body-large text-body-main font-semibold">Alkaline Wash</p>
+<p class="font-metadata text-metadata text-on-surface-variant">ID: AW-992-B</p>
+</div>
+</div>
+<div class="col-span-1 md:col-span-2 font-body-main text-body-main">
+                            24,000 Liters
+                        </div>
+<div class="col-span-1 md:col-span-3 flex items-center gap-2">
+<span class="font-headline-md text-body-large text-on-background font-bold tracking-tight">4.21 cr/L</span>
+<span class="font-metadata text-metadata text-primary bg-primary-container/20 px-2 py-0.5 rounded text-xs flex items-center">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span> 0.12
+                            </span>
+</div>
+<div class="col-span-1 md:col-span-2 flex flex-col gap-1">
+<div class="w-full bg-surface-variant h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary-fixed h-full w-[85%]"></div>
+</div>
+<span class="font-metadata text-metadata text-on-surface-variant text-xs">85% Recovery</span>
+</div>
+<div class="col-span-1 md:col-span-2 md:text-right">
+<button class="w-full md:w-auto px-4 py-2 border border-primary text-primary font-label-caps text-label-caps rounded hover:bg-primary-container hover:text-on-primary-container transition-colors">BID NOW</button>
+</div>
+</div>
+<!-- Standard Item -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center p-4 rounded-lg bg-surface/50 border border-outline-variant/20 hover:border-outline-variant/60 hover:scale-[1.01] transition-all">
+<div class="col-span-1 md:col-span-3 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center shrink-0 text-on-surface-variant">
+<span class="material-symbols-outlined">architecture</span>
+</div>
+<div>
+<p class="font-body-large text-body-main font-semibold text-on-surface-variant">Steel Slag Mix</p>
+<p class="font-metadata text-metadata text-on-surface-variant/70">ID: SS-014-X</p>
+</div>
+</div>
+<div class="col-span-1 md:col-span-2 font-body-main text-body-main text-on-surface-variant">
+                            120 Tons
+                        </div>
+<div class="col-span-1 md:col-span-3 flex items-center gap-2">
+<span class="font-headline-md text-body-large text-on-surface-variant font-bold tracking-tight">18.50 cr/T</span>
+<span class="font-metadata text-metadata text-on-surface-variant bg-surface-variant px-2 py-0.5 rounded text-xs flex items-center">
+<span class="material-symbols-outlined text-[14px]">arrow_downward</span> 0.05
+                            </span>
+</div>
+<div class="col-span-1 md:col-span-2 flex flex-col gap-1">
+<div class="w-full bg-surface-variant h-1.5 rounded-full overflow-hidden">
+<div class="bg-outline h-full w-[45%]"></div>
+</div>
+<span class="font-metadata text-metadata text-on-surface-variant text-xs">45% Recovery</span>
+</div>
+<div class="col-span-1 md:col-span-2 md:text-right">
+<button class="w-full md:w-auto px-4 py-2 border border-outline-variant text-on-surface-variant font-label-caps text-label-caps rounded hover:bg-surface-variant transition-colors">VIEW</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Bottom Navigation (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center px-4 py-2 bg-surface/20 backdrop-blur-glass rounded-full mb-8 max-w-md mx-auto border border-primary/30 shadow-[0_0_30px_rgba(127,255,212,0.2)]">
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">smart_toy</span>
+<span class="font-label-caps text-label-caps mt-1 text-[10px]">Copilot</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">query_stats</span>
+<span class="font-label-caps text-label-caps mt-1 text-[10px]">Telemetry</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-tertiary-container text-on-tertiary-container rounded-full p-3 scale-110 shadow-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">eco</span>
+<span class="font-label-caps text-[10px] mt-1 font-bold">Impact</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">construction</span>
+<span class="font-label-caps text-label-caps mt-1 text-[10px]">Manual</span>
+</a>
+</nav>
+</body></html>

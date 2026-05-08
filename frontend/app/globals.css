@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background: linear-gradient(135deg, #FCFFFC 0%, #F7FFF9 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    @apply text-on-background antialiased font-body-main;
+  }
+}
+
+/* Material Symbols configuration */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.material-symbols-outlined.fill-1 {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Shared glass-panel utility */
+.glass-panel {
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(122, 146, 138, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(76, 242, 194, 0.05);
+}
+
+.backdrop-blur-glass {
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+/* Spatial / Holographic Glow Effects */
+.glow-effect {
+  box-shadow: 0 0 20px rgba(76, 242, 194, 0.15);
+}
+
+.holographic-glow {
+  box-shadow: 0 0 20px rgba(76, 242, 194, 0.15);
+}
+
+.holographic-glow-active {
+  box-shadow: 0 0 30px rgba(127, 255, 212, 0.3);
+  border-color: #7FFFD4 !important;
+}
+
+.hover-holographic-glow:hover {
+  box-shadow: 0 0 20px rgba(76, 242, 194, 0.2);
+  border-color: #7FFFD4 !important;
+  transform: scale(1.02);
+}
+
+.hover-lift {
+  transition: all 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: scale(1.02);
+  border-color: #7FFFD4 !important;
+}
+
+.text-glow {
+  text-shadow: 0 0 10px rgba(76, 242, 194, 0.3);
+}
+
+.bg-holographic-gradient {
+  background: radial-gradient(circle at 50% 50%, rgba(127, 255, 212, 0.1) 0%, rgba(244, 251, 246, 0) 70%);
+}
+
+.role-card:hover .role-icon {
+  color: #7FFFD4;
+  text-shadow: 0 0 10px rgba(127, 255, 212, 0.5);
+}
+
+.input-glow:focus {
+  box-shadow: 0 0 15px rgba(127, 255, 212, 0.3);
+  border-color: #7FFFD4;
+  outline: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Background connections and sphere animations */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
