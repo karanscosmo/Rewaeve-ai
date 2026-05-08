@@ -15,12 +15,13 @@ export default function TendersContractsExchange() {
 
   const handleCreateListing = (e: React.FormEvent) => {
     e.preventDefault();
+    const formattedPrice = basePrice.startsWith('₹') ? basePrice : `₹${basePrice}`;
     createMarketplaceListing({
       title,
       type,
       material,
       volume,
-      basePrice,
+      basePrice: formattedPrice,
       recoveryScore: 88,
       logisticsComplexity: 'Standard chemical transport frames',
       sustainabilityImpact: '+240 freshwater units'
@@ -33,8 +34,8 @@ export default function TendersContractsExchange() {
   };
 
   const handlePlaceBid = (id: string, currentBid: string) => {
-    const rawVal = parseFloat(currentBid.replace(/[^0-9.]/g, '')) || 5000;
-    const bidValue = rawVal + 450;
+    const rawVal = parseFloat(currentBid.replace(/[^0-9.]/g, '')) || 50000;
+    const bidValue = rawVal + 15000;
     placeBidOnListing(id, bidValue, 'Your Facility Terminal');
   };
 
@@ -123,7 +124,7 @@ export default function TendersContractsExchange() {
                   required 
                   value={basePrice}
                   onChange={(e) => setBasePrice(e.target.value)}
-                  placeholder="e.g. $12,500"
+                  placeholder="e.g. ₹9,50,000"
                   className="w-full bg-surface-container-low border border-outline-variant/30 rounded-xl py-3 px-4 text-on-background input-glow transition-all"
                 />
               </div>

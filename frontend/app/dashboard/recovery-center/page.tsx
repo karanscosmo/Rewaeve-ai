@@ -136,8 +136,8 @@ export default function AIRecoveryCenter() {
                   <span className="font-bold">7.5 Months</span>
                 </div>
                 <div className="flex justify-between items-center border-b border-outline-variant/15 pb-2">
-                  <span className="text-on-surface-variant">Estimated Capital Expenditure</span>
-                  <span className="font-bold">$42,000</span>
+                  <span className="text-on-surface-variant">Estimated CapEx</span>
+                  <span className="font-bold">₹32,50,000</span>
                 </div>
                 <div className="flex justify-between items-center border-b border-outline-variant/15 pb-2">
                   <span className="text-on-surface-variant">Sustainability Impact</span>
@@ -158,7 +158,7 @@ export default function AIRecoveryCenter() {
             <div className="glass-panel p-6 rounded-2xl">
               <h3 className="text-sm font-bold text-on-background mb-2">Operational Justification</h3>
               <p className="text-xs text-on-surface-variant leading-relaxed">
-                Separating byproducts yields significant environmental and economic benefits. Standard physical quarrying fees of silica materials average $350 per ton. Repurposing chemical and smelter residues offsets quarrying costs, avoiding EPA disposal penalties.
+                Separating byproducts yields significant environmental and economic benefits. Standard physical quarrying fees of silica materials average ₹28,000 per ton. Repurposing chemical and smelter residues offsets quarrying costs, avoiding local environmental disposal penalties.
               </p>
             </div>
           </div>

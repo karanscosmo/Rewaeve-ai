@@ -5,13 +5,34 @@ import Image from 'next/image';
 import { useCircular } from '@/lib/CircularContext';
 
 export default function IndustrialExchange() {
-  const { listings, placeBidOnListing } = useCircular();
+  const { listings, placeBidOnListing, togglePartnershipOnListing, addNotification } = useCircular();
   const [activeFilter, setActiveFilter] = useState<'ALL' | 'WASTE' | 'PRODUCT' | 'CONTRACT' | 'TENDER'>('ALL');
+  
+  // Local state for Highlight Chamber partnership
+  const [isChamberPartnershipRequested, setIsChamberPartnershipRequested] = useState(false);
 
   const handlePlaceBidSubmit = (id: string, currentBid: string) => {
     const numericVal = parseFloat(currentBid.replace(/[^0-9.]/g, '')) || 5000;
-    const nextBid = numericVal + 500;
+    const nextBid = numericVal + 25000; // Increment bids in ₹
     placeBidOnListing(id, nextBid, 'Your Facility Terminal');
+  };
+
+  const handleChamberPartnershipToggle = () => {
+    const nextVal = !isChamberPartnershipRequested;
+    setIsChamberPartnershipRequested(nextVal);
+    if (nextVal) {
+      addNotification(
+        'Partnership Initiated',
+        'Circular metallurgical sludge curing partnership contract request broadcasted to EcoBrick Smelting.',
+        'success'
+      );
+    } else {
+      addNotification(
+        'Partnership Recalled',
+        'Bilateral partnership request with EcoBrick Smelting withdrawn.',
+        'warning'
+      );
+    }
   };
 
   const filteredListings = listings.filter(item => {
@@ -88,7 +109,7 @@ export default function IndustrialExchange() {
                   </p>
                 </div>
                 
-                <div className="space-y-3.5 text-xs">
+                <div className="space-y-3.5 text-xs font-semibold">
                   <div className="flex justify-between items-center border-b border-outline-variant/15 pb-2">
                     <span className="text-on-surface-variant font-medium">Recovery Score</span>
                     <span className="text-primary font-bold text-sm">98.4%</span>
@@ -108,8 +129,15 @@ export default function IndustrialExchange() {
                   </div>
                 </div>
 
-                <button className="w-full py-3 rounded-xl border border-primary-container text-on-background hover:bg-primary-container/20 font-label-caps text-xs font-bold uppercase tracking-wider hover:holographic-glow-active transition-all">
-                  Initiate Partnership
+                <button 
+                  onClick={handleChamberPartnershipToggle}
+                  className={`w-full py-3 rounded-xl border font-label-caps text-xs font-bold uppercase tracking-wider transition-all shadow-sm ${
+                    isChamberPartnershipRequested 
+                      ? 'bg-primary text-white border-primary holographic-glow shadow-[0_0_15px_#7fffd4]' 
+                      : 'border-primary-container text-on-background hover:bg-primary-container/20 hover:holographic-glow-active'
+                  }`}
+                >
+                  {isChamberPartnershipRequested ? '✓ Partnership Initiated' : 'Initiate Partnership'}
                 </button>
               </div>
             </div>
@@ -175,7 +203,7 @@ export default function IndustrialExchange() {
             <div className="col-span-2">Volume</div>
             <div className="col-span-3">Current Bid / Value</div>
             <div className="col-span-2">Recovery Score</div>
-            <div className="col-span-2 text-right">Action</div>
+            <div className="col-span-2 text-right">Actions</div>
           </div>
 
           {/* Listings list */}
@@ -217,18 +245,31 @@ export default function IndustrialExchange() {
                   <span className="font-metadata text-[10px] text-on-surface-variant font-medium">{item.recoveryScore}% Yield</span>
                 </div>
                 
-                <div className="col-span-1 md:col-span-2 md:text-right flex flex-col gap-1 items-stretch md:items-end">
+                <div className="col-span-1 md:col-span-2 md:text-right flex items-center md:items-end justify-end gap-2 text-right">
                   <button 
-                    onClick={() => handlePlaceBidSubmit(item.id, item.currentBid)}
-                    className="px-4 py-2 border border-primary text-primary hover:bg-primary hover:text-on-primary font-label-caps text-[10px] font-bold tracking-wider uppercase rounded-lg transition-colors"
+                    onClick={() => togglePartnershipOnListing(item.id)}
+                    className={`px-3 py-2 border rounded-lg font-label-caps text-[9px] font-bold uppercase tracking-wider transition-colors ${
+                      item.isPartnershipRequested 
+                        ? 'bg-secondary text-white border-secondary' 
+                        : 'border-secondary-container text-secondary hover:bg-secondary-container/20'
+                    }`}
                   >
-                    Bid Asset
+                    {item.isPartnershipRequested ? '✓ Linked' : 'Partner'}
                   </button>
-                  {item.highestBidder && (
-                    <span className="text-[9px] text-primary font-bold text-center mt-1 animate-pulse">
-                      High: {item.highestBidder}
-                    </span>
-                  )}
+                  
+                  <div className="flex flex-col items-stretch md:items-end">
+                    <button 
+                      onClick={() => handlePlaceBidSubmit(item.id, item.currentBid)}
+                      className="px-3 py-2 border border-primary text-primary hover:bg-primary hover:text-on-primary font-label-caps text-[9px] font-bold tracking-wider uppercase rounded-lg transition-colors"
+                    >
+                      Bid
+                    </button>
+                    {item.highestBidder && (
+                      <span className="text-[8px] text-primary font-bold text-center mt-1 animate-pulse max-w-[80px] truncate">
+                        {item.highestBidder}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}

@@ -45,6 +45,16 @@ export interface FeasibilityScores {
   resalePotential: number;
 }
 
+export interface RawMaterial {
+  id: string;
+  name: string;
+  category: string;
+  volume: string;
+  consistency: number;
+  ph: number;
+  isGenerated: boolean;
+}
+
 export interface GeneratedProduct {
   id: string;
   name: string;
@@ -62,6 +72,14 @@ export interface GeneratedProduct {
   treatmentDependency: string;
   isSaved: boolean;
   isListed: boolean;
+  
+  // Immersive physical state properties
+  activeWorkflowStep: string;
+  workflowProgress: number;
+  isWorkflowActive: boolean;
+  molecularConsistency: string;
+  curingPhase: string;
+  marketTrendUpdates: string[];
 }
 
 export interface MarketplaceListing {
@@ -80,6 +98,7 @@ export interface MarketplaceListing {
   logisticsComplexity: string;
   sustainabilityImpact: string;
   timestamp: string;
+  isPartnershipRequested?: boolean;
 }
 
 export interface CircularNetworkNode {
@@ -124,6 +143,10 @@ interface CircularContextType {
   isIngesting: boolean;
   ingestionStatus: string;
 
+  // Raw Materials
+  rawMaterials: RawMaterial[];
+  generateProductFromMaterial: (materialId: string, name: string, decidedPrice: string) => void;
+
   // Feasibility & Scores
   activeScores: FeasibilityScores | null;
 
@@ -137,6 +160,7 @@ interface CircularContextType {
   listings: MarketplaceListing[];
   placeBidOnListing: (id: string, amount: number, bidderName: string) => void;
   createMarketplaceListing: (listing: Partial<MarketplaceListing>) => void;
+  togglePartnershipOnListing: (id: string) => void;
 
   // Ecosystem & Supply Chain Matching
   networkNodes: CircularNetworkNode[];
@@ -153,7 +177,7 @@ interface CircularContextType {
   markNotificationAsRead: (id: string) => void;
   addNotification: (title: string, message: string, type: SystemNotification['type']) => void;
 
-  // Financial ROI Tracker
+  // Financial ROI Tracker (INR Rupees)
   ytdSavings: number;
   avoidedCarbonTons: number;
   recycledWaterGallons: number;
@@ -191,8 +215,8 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
     }
   ]);
 
-  // Financial ROI state trackers
-  const [ytdSavings, setYtdSavings] = useState(1240000); // $1.24M
+  // Financial ROI state trackers in Indian Rupee (₹)
+  const [ytdSavings, setYtdSavings] = useState(94000000); // ₹9.4 Crore
   const [avoidedCarbonTons, setAvoidedCarbonTons] = useState(14200); // 14.2k Tons
   const [recycledWaterGallons, setRecycledWaterGallons] = useState(2800000); // 2.8M Gal
 
@@ -239,6 +263,14 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
   const [isIngesting, setIsIngesting] = useState(false);
   const [ingestionStatus, setIngestionStatus] = useState('');
 
+  // Raw Segregated Materials listing
+  const [rawMaterials, setRawMaterials] = useState<RawMaterial[]>([
+    { id: 'raw-1', name: 'High-Density Smelter Slag', category: 'Metallurgical Residue', volume: '150 Tons', consistency: 92, ph: 8.2, isGenerated: false },
+    { id: 'raw-2', name: 'Acid Rinse Wash Fluid', category: 'Chemical Effluent', volume: '45,000 Liters', consistency: 85, ph: 4.5, isGenerated: false },
+    { id: 'raw-3', name: 'Cellulose Pulp Fiber Residue', category: 'Organic Fiber pulp', volume: '80 Tons', consistency: 78, ph: 6.8, isGenerated: false },
+    { id: 'raw-4', name: 'Coal Fly Ash Residue', category: 'Smelter Fly Ash', volume: '200 Tons', consistency: 89, ph: 9.1, isGenerated: false }
+  ]);
+
   // Generated Product Innovation state
   const [generatedProducts, setGeneratedProducts] = useState<GeneratedProduct[]>([
     {
@@ -252,12 +284,23 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
       workforceRequirement: '2 Certified Material Technicians per stream',
       carbonReduction: '184 Metric Tons per batch',
       nearbyBuyers: ['GeoBuild Infrastructure Ltd', 'Apex Cements'],
-      estimatedMarketValue: '$240 per ton',
+      estimatedMarketValue: '₹18,500 per ton',
       estimatedROI: '+142%',
       scalabilityPotential: 'Global standard certification achievable',
       treatmentDependency: 'Low chemical neutralization required',
       isSaved: false,
-      isListed: false
+      isListed: false,
+      
+      activeWorkflowStep: 'IDLE',
+      workflowProgress: 0,
+      isWorkflowActive: false,
+      molecularConsistency: '94% Nominal Sieve alignment',
+      curingPhase: 'Prepress dehydration phase complete',
+      marketTrendUpdates: [
+        'Sourced Raw Cost: ₹4,500/T',
+        'Repurposed Bio-Value: ₹18,500/T',
+        'Net Margin Profitability: +311%'
+      ]
     },
     {
       id: 'gp-2',
@@ -270,16 +313,27 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
       workforceRequirement: '3 general warehouse operators',
       carbonReduction: '85 Metric Tons per batch',
       nearbyBuyers: ['SoundSeal Architectural', 'VibeFree Studios'],
-      estimatedMarketValue: '$45 per panel',
+      estimatedMarketValue: '₹3,800 per panel',
       estimatedROI: '+95%',
       scalabilityPotential: 'High commercial fit for architectural specifications',
       treatmentDependency: 'Medium dye extraction required',
       isSaved: false,
-      isListed: false
+      isListed: false,
+      
+      activeWorkflowStep: 'IDLE',
+      workflowProgress: 0,
+      isWorkflowActive: false,
+      molecularConsistency: '82% Porous expansion consistency',
+      curingPhase: 'Dry thermal compression complete',
+      marketTrendUpdates: [
+        'Sourced Raw Cost: ₹1,200/unit',
+        'Repurposed Value: ₹3,800/unit',
+        'Net Margin Profitability: +216%'
+      ]
     }
   ]);
 
-  // Marketplace listings state
+  // Marketplace listings state (Prices in INR ₹)
   const [listings, setListings] = useState<MarketplaceListing[]>([
     {
       id: 'm-1',
@@ -289,14 +343,15 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
       ownerRole: 'manufacturer',
       material: 'Smelter Slag Scraps',
       volume: '120 Tons',
-      basePrice: '$12,000',
-      currentBid: '$18,500',
+      basePrice: '₹9,50,000',
+      currentBid: '₹14,20,000',
       bidsCount: 4,
       highestBidder: 'EcoBrick Manufacturing',
       recoveryScore: 85,
       logisticsComplexity: 'Medium transport frames',
       sustainabilityImpact: '+120 avoidance score',
-      timestamp: '4 hours ago'
+      timestamp: '4 hours ago',
+      isPartnershipRequested: false
     },
     {
       id: 'm-2',
@@ -306,14 +361,15 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
       ownerRole: 'manufacturer',
       material: 'Chemical Wash Liquid',
       volume: '24,000 Liters',
-      basePrice: '$4,200',
-      currentBid: '$4,210',
+      basePrice: '₹3,20,000',
+      currentBid: '₹3,25,000',
       bidsCount: 1,
       highestBidder: 'ChemSeparation Corp',
       recoveryScore: 92,
       logisticsComplexity: 'Specialized tankers needed',
       sustainabilityImpact: '+320 freshwater units',
-      timestamp: 'Yesterday'
+      timestamp: 'Yesterday',
+      isPartnershipRequested: false
     }
   ]);
 
@@ -424,8 +480,8 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
           const scores = calculateMetricsForStream(newStream);
           setActiveScores(scores);
 
-          // Update general environmental counts
-          setYtdSavings(prev => prev + 45000);
+          // Update general environmental counts in INR ₹
+          setYtdSavings(prev => prev + 3500000);
           setAvoidedCarbonTons(prev => prev + 180);
           setRecycledWaterGallons(prev => prev + 120000);
 
@@ -442,12 +498,22 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
             workforceRequirement: '2 Specialized Chemical Engineers',
             carbonReduction: `${Math.round(newStream.quantity * 0.8)} Metric Tons`,
             nearbyBuyers: isChemical ? ['ChemSeparation Partners'] : ['GeoBuild Infrastructure Ltd', 'Apex Cements'],
-            estimatedMarketValue: isChemical ? '$480 / Metric Ton' : '$85 / Block',
+            estimatedMarketValue: isChemical ? '₹36,000 per ton' : '₹6,400 per batch',
             estimatedROI: `+${Math.round(scores.profitability * 1.6)}%`,
             scalabilityPotential: 'High industrial compatibility with modern architectural foundations',
             treatmentDependency: scores.treatmentDependency > 60 ? 'Critical high-neutralization treatment required' : 'Low secondary buffering required',
             isSaved: false,
-            isListed: false
+            isListed: false,
+            activeWorkflowStep: 'IDLE',
+            workflowProgress: 0,
+            isWorkflowActive: false,
+            molecularConsistency: '91% Compact density rating',
+            curingPhase: 'Initial curing phase ready',
+            marketTrendUpdates: [
+              'Sourced Raw Cost: ₹1,500/T',
+              'Repurposed Value: ₹6,400/T',
+              'Net Margin Profitability: +326%'
+            ]
           };
 
           setGeneratedProducts(prev => [newProduct, ...prev]);
@@ -464,6 +530,47 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
         }, 800);
       }, 800);
     }, 800);
+  };
+
+  // Custom blueprint synthesis from raw/segregated material
+  const generateProductFromMaterial = (materialId: string, name: string, decidedPrice: string) => {
+    const raw = rawMaterials.find(r => r.id === materialId);
+    if (raw) {
+      // Mark as generated
+      setRawMaterials(prev => prev.map(item => item.id === materialId ? { ...item, isGenerated: true } : item));
+      
+      const newProduct: GeneratedProduct = {
+        id: 'gp-' + Date.now(),
+        name: name,
+        sourceStreamId: raw.id,
+        feasibilityScore: raw.consistency,
+        profitability: Math.round(raw.consistency * 0.9),
+        marketDemand: Math.round(raw.consistency * 0.95),
+        machineryRequirement: 'Agglomeration Curing Furnaces, Hydraulic Compacting Press',
+        workforceRequirement: '1 Material Scientist, 2 Plant Operators',
+        carbonReduction: '124 Metric Tons per cycle',
+        nearbyBuyers: ['GeoBuild Infrastructure Ltd', 'Apex Cements'],
+        estimatedMarketValue: decidedPrice.startsWith('₹') ? decidedPrice : `₹${decidedPrice} per batch`,
+        estimatedROI: '+156%',
+        scalabilityPotential: 'Excellent structural load-bearing consistency',
+        treatmentDependency: raw.ph < 6 || raw.ph > 8 ? 'Acid neutralization sequence required' : 'Direct thermal casting compatible',
+        isSaved: true,
+        isListed: false,
+        activeWorkflowStep: 'IDLE',
+        workflowProgress: 0,
+        isWorkflowActive: false,
+        molecularConsistency: `${raw.consistency}% Molecular Lattice integrity`,
+        curingPhase: 'Hydraulic pressing complete, ready for casting kiln',
+        marketTrendUpdates: [
+          `Decided Sourced Cost: ₹3,200/T`,
+          `Configured Market Value: ${decidedPrice}`,
+          `Estimated Net Profitability Margin: +280%`
+        ]
+      };
+
+      setGeneratedProducts(prev => [newProduct, ...prev]);
+      addNotification('Material Product Synthesized', `Directly formulated "${name}" from raw ${raw.name} at ${decidedPrice}.`, 'success');
+    }
   };
 
   // Notifications helper
@@ -493,6 +600,7 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
     setGeneratedProducts(prev => prev.map(p => p.id === id ? { ...p, isListed: true } : p));
     const prod = generatedProducts.find(p => p.id === id);
     if (prod) {
+      const formattedPrice = initialPrice.startsWith('₹') ? initialPrice : `₹${initialPrice}`;
       const newListing: MarketplaceListing = {
         id: 'm-' + Date.now(),
         title: `Recovered ${prod.name}`,
@@ -501,40 +609,83 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
         ownerRole: user?.role || 'manufacturer',
         material: prod.name,
         volume: '100 Batches',
-        basePrice: initialPrice,
-        currentBid: initialPrice,
+        basePrice: formattedPrice,
+        currentBid: formattedPrice,
         bidsCount: 0,
         recoveryScore: prod.feasibilityScore,
         logisticsComplexity: 'Standard palettes',
         sustainabilityImpact: prod.carbonReduction,
-        timestamp: 'Just Now'
+        timestamp: 'Just Now',
+        isPartnershipRequested: false
       };
       setListings(prev => [newListing, ...prev]);
       addNotification('Marketplace Listing Created', `Product "${prod.name}" is now bidding active!`, 'success');
     }
   };
 
+  // Dynamic Multi-stage Workflow Simulation Progress Tick
   const startRecoveryWorkflow = (id: string) => {
-    addNotification('Workflow Started', 'Physical plant controllers alerted. Segmenting active raw material batches...', 'info');
+    setGeneratedProducts(prev => prev.map(p => {
+      if (p.id === id) {
+        return { ...p, isWorkflowActive: true, activeWorkflowStep: 'SEGREGATING RAW FEEDS' };
+      }
+      return p;
+    }));
+    
+    addNotification('Workflow Triggered', 'Material physical sorting matrices initialized on conveyor arrays...', 'info');
+
+    // Tick progress dynamically
+    setTimeout(() => {
+      setGeneratedProducts(prev => prev.map(p => {
+        if (p.id === id) {
+          return { ...p, workflowProgress: 35, activeWorkflowStep: 'THERMAL CASTING & CURING' };
+        }
+        return p;
+      }));
+      addNotification('Thermal Curing Online', 'Vacuum compaction presses are operating under nominal hydraulic load.', 'info');
+
+      setTimeout(() => {
+        setGeneratedProducts(prev => prev.map(p => {
+          if (p.id === id) {
+            return { ...p, workflowProgress: 75, activeWorkflowStep: 'COMPRESSIVE STRENGTH TESTING' };
+          }
+          return p;
+        }));
+        addNotification('Testing Compressive Lattice', 'Verifying molecular sieve consistency metrics...', 'info');
+
+        setTimeout(() => {
+          setGeneratedProducts(prev => prev.map(p => {
+            if (p.id === id) {
+              return { ...p, workflowProgress: 100, activeWorkflowStep: 'COMPLETE - BLUEPRINT LOADED' };
+            }
+            return p;
+          }));
+          addNotification('Circular Material Cast Complete', 'Successfully finalized and structural test certified.', 'success');
+        }, 1500);
+
+      }, 1500);
+
+    }, 1500);
   };
 
-  // Marketplace interaction
+  // Marketplace interaction (INR ₹ support)
   const placeBidOnListing = (id: string, amount: number, bidderName: string) => {
     setListings(prev => prev.map(item => {
       if (item.id === id) {
         return {
           ...item,
-          currentBid: `$${amount.toLocaleString()}`,
+          currentBid: `₹${amount.toLocaleString()}`,
           bidsCount: item.bidsCount + 1,
           highestBidder: bidderName
         };
       }
       return item;
     }));
-    addNotification('Bid Processed Successfully', `Bidding lock secured for $${amount.toLocaleString()}`, 'success');
+    addNotification('Bid Processed Successfully', `Bidding lock secured for ₹${amount.toLocaleString()}`, 'success');
   };
 
   const createMarketplaceListing = (listingData: Partial<MarketplaceListing>) => {
+    const basePriceStr = listingData.basePrice || '₹4,00,000';
     const newList: MarketplaceListing = {
       id: 'm-' + Date.now(),
       title: listingData.title || 'Material Tender',
@@ -543,16 +694,41 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
       ownerRole: user?.role || 'manufacturer',
       material: listingData.material || 'Mixed Streams',
       volume: listingData.volume || '50 Tons',
-      basePrice: listingData.basePrice || '$5,000',
-      currentBid: listingData.basePrice || '$5,000',
+      basePrice: basePriceStr,
+      currentBid: basePriceStr,
       bidsCount: 0,
       recoveryScore: listingData.recoveryScore || 80,
       logisticsComplexity: listingData.logisticsComplexity || 'Standard freight container',
       sustainabilityImpact: listingData.sustainabilityImpact || '+100 Eco Score',
-      timestamp: 'Just Now'
+      timestamp: 'Just Now',
+      isPartnershipRequested: false
     };
     setListings(prev => [newList, ...prev]);
     addNotification('Tender / Contract Listed', `Opportunity "${newList.title}" posted to the Industrial network.`, 'success');
+  };
+
+  // Toggle Partnership State on Marketplace Listing (Live feedback request)
+  const togglePartnershipOnListing = (id: string) => {
+    setListings(prev => prev.map(item => {
+      if (item.id === id) {
+        const nextState = !item.isPartnershipRequested;
+        if (nextState) {
+          addNotification(
+            'Partnership Initiated',
+            `Circular contract request broadcasted to "${item.ownerOrg}" node operator for ${item.title}.`,
+            'success'
+          );
+        } else {
+          addNotification(
+            'Partnership Revoked',
+            `Withdrew bilateral circular partnership request for ${item.title}.`,
+            'warning'
+          );
+        }
+        return { ...item, isPartnershipRequested: nextState };
+      }
+      return item;
+    }));
   };
 
   // Authentication & Onboarding
@@ -626,9 +802,9 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
         } else {
           botResponse = `I see. Please select or upload a waste stream manifest. Once ingested, I can provide precise molecular analysis, segregations, and treatment metrics.`;
         }
-      } else if (query.includes('roi') || query.includes('money') || query.includes('profit') || query.includes('cost')) {
+      } else if (query.includes('roi') || query.includes('money') || query.includes('profit') || query.includes('cost') || query.includes('saving') || query.includes('rupee')) {
         if (activeScores) {
-          botResponse = `Financial telemetry suggests an active Resale Potential Score of ${activeScores.resalePotential}% and Profitability index of ${activeScores.profitability}%. Processing the current batch will result in estimated payback periods of under 8 months. YTD savings for your organization are currently tracking at $${(ytdSavings/1000000).toFixed(2)}M.`;
+          botResponse = `Financial telemetry suggests an active Resale Potential Score of ${activeScores.resalePotential}% and Profitability index of ${activeScores.profitability}%. Processing the current batch will result in estimated payback periods of under 8 months. YTD savings for your organization are currently tracking at ₹${(ytdSavings/10000000).toFixed(2)} Crore.`;
         } else {
           botResponse = `Our financial recovery engine models ROI utilizing logistics complexity, machinery capital expenses, and regional procurement indices. Ingest a CSV, and I will output an interactive balance ledger.`;
         }
@@ -662,6 +838,8 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
       ingestWasteStream,
       isIngesting,
       ingestionStatus,
+      rawMaterials,
+      generateProductFromMaterial,
       activeScores,
       generatedProducts,
       saveProduct,
@@ -670,6 +848,7 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
       listings,
       placeBidOnListing,
       createMarketplaceListing,
+      togglePartnershipOnListing,
       networkNodes,
       selectedNode,
       setSelectedNode,

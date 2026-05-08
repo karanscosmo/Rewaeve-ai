@@ -4,16 +4,60 @@ import React, { useState } from 'react';
 import { useCircular } from '@/lib/CircularContext';
 
 export default function ProductInnovationLab() {
-  const { generatedProducts, saveProduct, listProductOnMarketplace, startRecoveryWorkflow } = useCircular();
+  const { 
+    generatedProducts, 
+    rawMaterials, 
+    generateProductFromMaterial, 
+    saveProduct, 
+    listProductOnMarketplace, 
+    startRecoveryWorkflow 
+  } = useCircular();
+
   const [listingPrices, setListingPrices] = useState<{[key: string]: string}>({});
+  
+  // States for dynamic custom synthesis
+  const [selectedMaterialId, setSelectedMaterialId] = useState<string | null>(null);
+  const [customProdName, setCustomProdName] = useState('');
+  const [customProdPrice, setCustomProdPrice] = useState('');
+
+  // Track active clicked/selected product for holographic detail view
+  const [selectedProductId, setSelectedProductId] = useState<string | null>('gp-1');
 
   const handlePriceChange = (id: string, price: string) => {
     setListingPrices(prev => ({ ...prev, [id]: price }));
   };
 
   const handleListingSubmit = (id: string) => {
-    const price = listingPrices[id] || '$12,000';
+    const price = listingPrices[id] || '₹12,000';
     listProductOnMarketplace(id, price);
+  };
+
+  const openSynthesisForm = (materialId: string) => {
+    const raw = rawMaterials.find(m => m.id === materialId);
+    if (raw) {
+      setSelectedMaterialId(materialId);
+      // Pre-fill smart suggestions based on raw material category
+      if (raw.category.includes('Metallurgical')) {
+        setCustomProdName('High-Performance Slag Bio-Concrete Block');
+        setCustomProdPrice('₹14,500');
+      } else if (raw.category.includes('Chemical')) {
+        setCustomProdName('Refined Indigo Acid Compound Binder');
+        setCustomProdPrice('₹8,200');
+      } else if (raw.category.includes('Organic')) {
+        setCustomProdName('Lightweight Acoustic Cellulose Board');
+        setCustomProdPrice('₹3,600');
+      } else {
+        setCustomProdName('Sintered Fly-Ash Lightweight Aggregate');
+        setCustomProdPrice('₹6,400');
+      }
+    }
+  };
+
+  const submitSynthesis = () => {
+    if (selectedMaterialId && customProdName && customProdPrice) {
+      generateProductFromMaterial(selectedMaterialId, customProdName, customProdPrice);
+      setSelectedMaterialId(null);
+    }
   };
 
   return (
@@ -34,92 +78,333 @@ export default function ProductInnovationLab() {
         </div>
       </div>
 
-      {/* Rotating 3D Blueprint Capsule Pods Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-        {generatedProducts.map((prod) => (
-          <div 
-            key={prod.id}
-            className="glass-panel rounded-2xl p-6 flex flex-col justify-between hover-lift border border-outline-variant/25 hover:border-primary-container/80 shadow-[0_0_30px_rgba(76,242,194,0.05)] transition-all duration-300 relative overflow-hidden group"
-          >
-            {/* Immersive radial glows */}
-            <div className="absolute -right-20 -top-20 w-48 h-48 bg-primary-container/15 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-500" />
-            
-            <div className="relative z-10 space-y-5">
-              <div className="flex justify-between items-start border-b border-outline-variant/15 pb-3">
-                <div>
-                  <span className="font-metadata text-[10px] text-primary font-bold uppercase tracking-widest">3D Capsule Pod v2</span>
-                  <h3 className="font-headline-md text-lg text-on-background font-extrabold mt-1">{prod.name}</h3>
-                </div>
-                <div className="w-10 h-10 rounded-full bg-primary-container/25 flex items-center justify-center border border-primary/30 text-primary">
-                  <span className="material-symbols-outlined text-sm animate-spin-slow">cycle</span>
-                </div>
-              </div>
-
-              {/* Holographic Specification table */}
-              <div className="space-y-3.5 text-xs font-medium text-on-surface">
-                <div className="flex justify-between items-center border-b border-outline-variant/10 pb-2">
-                  <span className="text-on-surface-variant">Match Confidence</span>
-                  <span className="text-primary font-bold">{prod.feasibilityScore}%</span>
-                </div>
-                <div className="flex justify-between items-center border-b border-outline-variant/10 pb-2">
-                  <span className="text-on-surface-variant">Required Equipment</span>
-                  <span className="font-semibold text-right max-w-[200px] truncate" title={prod.machineryRequirement}>{prod.machineryRequirement}</span>
-                </div>
-                <div className="flex justify-between items-center border-b border-outline-variant/10 pb-2">
-                  <span className="text-on-surface-variant">Workforce Scope</span>
-                  <span className="text-on-surface">{prod.workforceRequirement}</span>
-                </div>
-                <div className="flex justify-between items-center border-b border-outline-variant/10 pb-2">
-                  <span className="text-on-surface-variant">Carbon Offset</span>
-                  <span className="text-secondary font-bold">{prod.carbonReduction}</span>
-                </div>
-                <div className="flex justify-between items-center pb-1">
-                  <span className="text-on-surface-variant">Estimated Market Value</span>
-                  <span className="font-extrabold text-on-background">{prod.estimatedMarketValue}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Micro Interaction Triggers */}
-            <div className="mt-8 pt-4 border-t border-outline-variant/15 flex flex-col gap-4 relative z-10">
-              <div className="flex gap-4">
-                <button 
-                  onClick={() => saveProduct(prod.id)}
-                  disabled={prod.isSaved}
-                  className={`flex-1 py-2.5 rounded-lg border font-label-caps text-[10px] font-bold uppercase tracking-wider transition-colors ${prod.isSaved ? 'bg-surface border-outline-variant/20 text-on-surface-variant/50' : 'border-primary text-primary hover:bg-primary hover:text-on-primary'}`}
-                >
-                  {prod.isSaved ? 'Blueprint Saved' : 'Save Blueprint'}
-                </button>
-                <button 
-                  onClick={() => startRecoveryWorkflow(prod.id)}
-                  className="flex-1 py-2.5 bg-transparent border border-secondary text-secondary hover:bg-secondary hover:text-on-primary rounded-lg font-label-caps text-[10px] font-bold uppercase tracking-wider transition-colors"
-                >
-                  Start Workflow
-                </button>
-              </div>
-
-              {/* Quick List Marketplace trigger form */}
-              <div className="flex items-center gap-3 bg-surface-container-low/40 p-2.5 rounded-xl border border-outline-variant/25">
-                <input 
-                  type="text" 
-                  value={listingPrices[prod.id] || ''}
-                  onChange={(e) => handlePriceChange(prod.id, e.target.value)}
-                  placeholder="Listing Price ($)" 
-                  disabled={prod.isListed}
-                  className="bg-white border border-outline-variant/30 rounded-lg px-3 py-1.5 font-body-main text-xs text-on-background flex-grow focus:outline-none focus:border-primary disabled:opacity-50"
-                />
-                <button 
-                  onClick={() => handleListingSubmit(prod.id)}
-                  disabled={prod.isListed}
-                  className={`px-4 py-2 font-label-caps text-[10px] font-bold uppercase tracking-wider rounded-lg transition-colors shrink-0 ${prod.isListed ? 'bg-surface-variant/40 text-on-surface-variant/50' : 'bg-primary text-white hover:bg-secondary'}`}
-                >
-                  {prod.isListed ? 'Listed on Marketplace' : 'List on Exchange'}
-                </button>
-              </div>
-            </div>
-
+      {/* SECTION 1: Segregated Raw Materials & Interactive Formulation Form */}
+      <section className="glass-panel rounded-2xl p-6 border border-outline-variant/20 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary-container/5 rounded-full blur-3xl pointer-events-none" />
+        
+        <div className="flex items-center gap-2 mb-6 border-b border-outline-variant/15 pb-4">
+          <span className="material-symbols-outlined text-primary fill-1">layers</span>
+          <div>
+            <h2 className="font-headline-md text-lg text-on-background font-extrabold">Segregated Raw Materials</h2>
+            <p className="text-[11px] text-on-surface-variant">Awaiting custom circular blueprint synthesis formulation.</p>
           </div>
-        ))}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Materials List Table */}
+          <div className="col-span-1 lg:col-span-7 flex flex-col gap-3">
+            {rawMaterials.map((material) => (
+              <div 
+                key={material.id}
+                className={`p-4 rounded-xl border transition-all flex items-center justify-between font-semibold text-xs ${
+                  material.isGenerated 
+                    ? 'bg-surface/50 border-outline-variant/20 opacity-75' 
+                    : 'bg-surface border-primary-container/20 hover:border-primary/50 hover:bg-surface-dim'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center text-primary border border-primary/10 font-bold">
+                    <span className="material-symbols-outlined text-base">science</span>
+                  </div>
+                  <div>
+                    <h4 className="text-sm text-on-background font-bold">{material.name}</h4>
+                    <p className="text-[10px] text-on-surface-variant font-medium">Category: {material.category} • pH: {material.ph}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-6">
+                  <div className="text-right">
+                    <p className="text-[11px] text-on-background font-bold">{material.volume}</p>
+                    <p className="text-[9px] text-primary font-bold">{material.consistency}% Sieve Alignment</p>
+                  </div>
+                  
+                  <button
+                    onClick={() => openSynthesisForm(material.id)}
+                    disabled={material.isGenerated}
+                    className={`px-4 py-2 rounded-lg font-label-caps text-[9px] font-bold uppercase tracking-wider transition-colors ${
+                      material.isGenerated 
+                        ? 'bg-surface-variant/40 text-on-surface-variant/50 border border-outline-variant/20' 
+                        : 'bg-primary text-white hover:bg-secondary'
+                    }`}
+                  >
+                    {material.isGenerated ? 'Formulated ✓' : 'Synthesize Product'}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Interactive Formulation Form */}
+          <div className="col-span-1 lg:col-span-5">
+            {selectedMaterialId ? (
+              <div className="glass-panel rounded-xl p-5 border border-primary-container bg-primary-container/5 space-y-4 animate-fade-in relative">
+                <h3 className="text-sm font-bold text-on-background flex items-center gap-1.5 border-b border-primary-container/30 pb-2">
+                  <span className="material-symbols-outlined text-primary text-base">architecture</span>
+                  Formulate Blueprint
+                </h3>
+
+                <div className="space-y-3 font-semibold text-xs text-on-surface">
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-on-surface-variant text-[10px] uppercase font-bold tracking-wider">Suggested Product Name</label>
+                    <input 
+                      type="text" 
+                      value={customProdName}
+                      onChange={(e) => setCustomProdName(e.target.value)}
+                      className="bg-white border border-outline-variant/30 rounded-lg px-3 py-2 text-on-background focus:outline-none focus:border-primary"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-on-surface-variant text-[10px] uppercase font-bold tracking-wider">Decide Pricing (₹)</label>
+                    <input 
+                      type="text" 
+                      value={customProdPrice}
+                      onChange={(e) => setCustomProdPrice(e.target.value)}
+                      className="bg-white border border-outline-variant/30 rounded-lg px-3 py-2 text-on-background focus:outline-none focus:border-primary"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-2 pt-2">
+                  <button
+                    onClick={() => setSelectedMaterialId(null)}
+                    className="flex-1 py-2 rounded-lg border border-outline-variant/30 hover:bg-surface-dim font-label-caps text-[10px] font-bold uppercase tracking-wider transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={submitSynthesis}
+                    className="flex-1 py-2 bg-primary text-white hover:bg-secondary rounded-lg font-label-caps text-[10px] font-bold uppercase tracking-wider transition-colors"
+                  >
+                    Formulate Blueprint
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="p-8 rounded-xl border border-dashed border-outline-variant/30 text-center flex flex-col items-center justify-center h-full min-h-[220px]">
+                <span className="material-symbols-outlined text-3xl text-on-surface-variant/50 mb-2">auto_awesome</span>
+                <p className="text-xs font-semibold text-on-background">AI Engine Ready</p>
+                <p className="text-[10px] text-on-surface-variant mt-1 max-w-[200px]">
+                  Select any raw segregated material to synthesize a customized circular blueprint and decide commercial pricing.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 2: Active Rotating Capsule Pods & Holographic Detail Console */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        {/* Pods Grid (7 cols) */}
+        <section className="col-span-1 lg:col-span-7 flex flex-col gap-6">
+          <div className="flex items-center gap-2 border-b border-outline-variant/15 pb-3">
+            <span className="material-symbols-outlined text-primary fill-1">database</span>
+            <h3 className="font-headline-md text-lg text-on-background font-extrabold">Active 3D Capsule Pods</h3>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {generatedProducts.map((prod) => {
+              const isSelected = selectedProductId === prod.id;
+              return (
+                <div 
+                  key={prod.id}
+                  onClick={() => setSelectedProductId(prod.id)}
+                  className={`glass-panel rounded-2xl p-5 flex flex-col justify-between cursor-pointer transition-all duration-300 relative overflow-hidden group ${
+                    isSelected 
+                      ? 'border-primary shadow-[0_0_20px_rgba(76,242,194,0.15)] bg-primary-container/[0.02]' 
+                      : 'border-outline-variant/25 hover:border-primary-container/80 hover-lift'
+                  }`}
+                >
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary-container/5 rounded-full blur-2xl pointer-events-none" />
+                  
+                  <div className="space-y-4 font-semibold text-xs text-on-surface">
+                    <div className="flex justify-between items-start border-b border-outline-variant/15 pb-2">
+                      <div>
+                        <span className="font-metadata text-[9px] text-primary font-bold uppercase tracking-widest">Capsule {prod.id.startsWith('gp-') ? prod.id.slice(3, 7) : 'Active'}</span>
+                        <h4 className="text-sm text-on-background font-bold mt-0.5">{prod.name}</h4>
+                      </div>
+                      <div className="w-8 h-8 rounded-full bg-primary-container/15 flex items-center justify-center text-primary border border-primary/20">
+                        <span className="material-symbols-outlined text-sm animate-spin-slow">cycle</span>
+                      </div>
+                    </div>
+
+                    {/* Standard quick metrics */}
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-on-surface-variant font-medium">Match Score</span>
+                        <span className="text-primary font-bold">{prod.feasibilityScore}%</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-on-surface-variant font-medium">Target Pricing</span>
+                        <span className="text-on-background font-bold">{prod.estimatedMarketValue}</span>
+                      </div>
+                    </div>
+
+                    {/* Dynamic Active Workflow progress bar if triggered */}
+                    {prod.isWorkflowActive && (
+                      <div className="pt-2 border-t border-outline-variant/10 space-y-1.5 animate-pulse">
+                        <div className="flex justify-between text-[9px] font-bold text-secondary">
+                          <span>{prod.activeWorkflowStep}</span>
+                          <span>{prod.workflowProgress}%</span>
+                        </div>
+                        <div className="w-full bg-surface-variant h-1.5 rounded-full overflow-hidden">
+                          <div className="bg-secondary-fixed h-full rounded-full transition-all duration-500" style={{ width: `${prod.workflowProgress}%` }} />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Micro triggers */}
+                  <div className="mt-5 pt-3 border-t border-outline-variant/15 flex flex-col gap-3">
+                    <div className="flex gap-2">
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          saveProduct(prod.id);
+                        }}
+                        disabled={prod.isSaved}
+                        className={`flex-1 py-2 rounded-lg border font-label-caps text-[9px] font-bold uppercase tracking-wider transition-colors ${
+                          prod.isSaved 
+                            ? 'bg-surface border-outline-variant/20 text-on-surface-variant/50' 
+                            : 'border-primary text-primary hover:bg-primary hover:text-on-primary'
+                        }`}
+                      >
+                        {prod.isSaved ? 'Saved ✓' : 'Save'}
+                      </button>
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          startRecoveryWorkflow(prod.id);
+                        }}
+                        className="flex-1 py-2 bg-transparent border border-secondary text-secondary hover:bg-secondary hover:text-on-primary rounded-lg font-label-caps text-[9px] font-bold uppercase tracking-wider transition-colors"
+                      >
+                        Start Workflow
+                      </button>
+                    </div>
+
+                    <div className="flex items-center gap-2 bg-surface-container-low/40 p-1.5 rounded-lg border border-outline-variant/20">
+                      <input 
+                        type="text" 
+                        value={listingPrices[prod.id] || ''}
+                        onChange={(e) => handlePriceChange(prod.id, e.target.value)}
+                        placeholder="Price (₹)" 
+                        disabled={prod.isListed}
+                        className="bg-white border border-outline-variant/30 rounded-md px-2 py-1 text-[11px] text-on-background flex-grow focus:outline-none focus:border-primary disabled:opacity-50"
+                      />
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleListingSubmit(prod.id);
+                        }}
+                        disabled={prod.isListed}
+                        className={`px-2.5 py-1 font-label-caps text-[8px] font-bold uppercase tracking-wider rounded-md transition-colors shrink-0 ${
+                          prod.isListed 
+                            ? 'bg-surface-variant/40 text-on-surface-variant/50' 
+                            : 'bg-primary text-white hover:bg-secondary'
+                        }`}
+                      >
+                        {prod.isListed ? 'Listed' : 'List'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Holographic Specification Panel (5 cols) */}
+        <section className="col-span-1 lg:col-span-5 glass-panel rounded-2xl p-6 border border-primary-container relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary-container/[0.03] to-transparent pointer-events-none rounded-2xl" />
+          
+          {selectedProductId ? (() => {
+            const prod = generatedProducts.find(p => p.id === selectedProductId);
+            if (!prod) return null;
+            return (
+              <div className="space-y-6 relative z-10 font-semibold text-xs text-on-surface">
+                
+                <div className="border-b border-primary-container/30 pb-4">
+                  <span className="font-metadata text-[9px] text-primary font-bold uppercase tracking-widest bg-primary-container/20 px-2 py-1 rounded">
+                    Selected Product Node
+                  </span>
+                  <h3 className="font-display-hero text-xl text-on-background font-extrabold mt-3 tracking-tight">
+                    {prod.name}
+                  </h3>
+                  <p className="font-metadata text-[10px] text-on-surface-variant mt-1">
+                    Source Manifest Stream ID: {prod.sourceStreamId}
+                  </p>
+                </div>
+
+                {/* Sub section: Real-time molecular updates */}
+                <div className="space-y-3.5 bg-surface-variant/20 p-4 rounded-xl border border-outline-variant/15">
+                  <h4 className="font-label-caps text-[10px] text-primary uppercase font-extrabold tracking-wider flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-sm">wifi_tethering</span>
+                    Real-time Physical Updates
+                  </h4>
+
+                  <div className="space-y-2.5 text-[11px]">
+                    <div className="flex justify-between border-b border-outline-variant/10 pb-1.5">
+                      <span className="text-on-surface-variant font-medium">Molecular Consistency</span>
+                      <span className="text-on-background font-bold">{prod.molecularConsistency}</span>
+                    </div>
+                    <div className="flex justify-between border-b border-outline-variant/10 pb-1.5">
+                      <span className="text-on-surface-variant font-medium">Curing Coefficient</span>
+                      <span className="text-on-background font-bold">{prod.curingPhase}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-on-surface-variant font-medium">Scalability Potential</span>
+                      <span className="text-on-background font-bold text-right max-w-[150px] truncate" title={prod.scalabilityPotential}>
+                        {prod.scalabilityPotential}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Sub section: Live market trends */}
+                <div className="space-y-3.5 bg-secondary-container/5 p-4 rounded-xl border border-secondary-container/20">
+                  <h4 className="font-label-caps text-[10px] text-secondary uppercase font-extrabold tracking-wider flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-sm">trending_up</span>
+                    Interactive Market values (INR)
+                  </h4>
+
+                  <ul className="space-y-2">
+                    {prod.marketTrendUpdates.map((update, idx) => (
+                      <li key={idx} className="flex items-center gap-2 text-[11px] text-on-background font-bold">
+                        <span className="w-1.5 h-1.5 rounded-full bg-secondary-fixed shrink-0 animate-ping" />
+                        {update}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Standard specs */}
+                <div className="space-y-3 pt-2">
+                  <div className="flex justify-between">
+                    <span className="text-on-surface-variant font-medium">Regional Demand</span>
+                    <span className="text-primary font-bold">{prod.marketDemand}% High</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-on-surface-variant font-medium">Neutralization Scope</span>
+                    <span className="text-on-background font-semibold text-right max-w-[150px] truncate" title={prod.treatmentDependency}>
+                      {prod.treatmentDependency}
+                    </span>
+                  </div>
+                </div>
+
+              </div>
+            );
+          })() : (
+            <div className="text-center p-12 flex flex-col items-center justify-center min-h-[300px]">
+              <span className="material-symbols-outlined text-4xl text-on-surface-variant/40 animate-pulse mb-2">fingerprint</span>
+              <p className="text-sm text-on-background font-bold">Waiting for selection</p>
+              <p className="text-xs text-on-surface-variant mt-1">
+                Click any 3D Capsule Pod card to load dynamic holographic specifications and live market trends.
+              </p>
+            </div>
+          )}
+        </section>
+
       </div>
 
     </div>
