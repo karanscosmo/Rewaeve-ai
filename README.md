@@ -1,5 +1,9 @@
 # ReWeave AI - Industrial Circular Intelligence Platform
 
+**Team No:** 1  
+**Team Name:** 404 Waste Not Found  
+**Team Members:** Karan A Sharma, Prrajwal Kataokkar
+
 ReWeave AI is a production-grade, AI-powered industrial circular intelligence platform transforming industrial waste into intelligent economic assets. It provides real-world sustainability operations with waste analytics, recovery feasibility, AI material intelligence, marketplace matching, ESG reporting, and live industrial workflows.
 
 ## Architecture
