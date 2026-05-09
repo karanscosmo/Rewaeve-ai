@@ -33,42 +33,65 @@ export default function IndustrialExchange() {
     { zone: 'Rajasthan Ganganagar', demandStrength: 65, category: 'Agri-Stalk Fiber', color: 'bg-cyan-600/60', volatility: 'Medium', status: 'Surplus Available' }
   ];
 
-  // SVG Chart points coordinate generator based on timeframe
+  // SVG Chart points coordinate generator based on timeframe and region
   const getChartPoints = () => {
+    // Generate a simple deterministic offset based on region string
+    let offset = 0;
+    if (selectedRegion) {
+      for (let i = 0; i < selectedRegion.length; i++) {
+        offset += selectedRegion.charCodeAt(i);
+      }
+    }
+    const noise = (offset % 30) - 15; // Random offset between -15 and 15
+
+    let basePoints = [];
     switch (chartTimeline) {
       case '1D':
-        return [
+        basePoints = [
           { x: 30, y: 150, label: '09:00 AM', price: '₹14,200/T' },
           { x: 120, y: 110, label: '11:00 AM', price: '₹14,400/T' },
           { x: 210, y: 130, label: '01:00 PM', price: '₹14,350/T' },
           { x: 300, y: 70, label: '03:00 PM', price: '₹14,750/T' },
           { x: 390, y: 40, label: '05:00 PM', price: '₹14,800/T' }
         ];
+        break;
       case '1M':
-        return [
+        basePoints = [
           { x: 30, y: 160, label: 'Week 1', price: '₹13,200/T' },
           { x: 120, y: 130, label: 'Week 2', price: '₹13,800/T' },
           { x: 210, y: 90, label: 'Week 3', price: '₹14,400/T' },
           { x: 300, y: 100, label: 'Week 4', price: '₹14,200/T' },
           { x: 390, y: 40, label: 'Week 5', price: '₹14,800/T' }
         ];
+        break;
       case 'YTD':
-        return [
+        basePoints = [
           { x: 30, y: 180, label: 'Jan', price: '₹11,500/T' },
           { x: 120, y: 140, label: 'Mar', price: '₹12,200/T' },
           { x: 210, y: 110, label: 'Jun', price: '₹13,400/T' },
           { x: 300, y: 80, label: 'Sep', price: '₹14,100/T' },
           { x: 390, y: 40, label: 'YTD', price: '₹14,800/T' }
         ];
+        break;
       default: // 1W
-        return [
+        basePoints = [
           { x: 30, y: 140, label: 'Mon', price: '₹14,100/T' },
           { x: 120, y: 150, label: 'Wed', price: '₹14,050/T' },
           { x: 210, y: 100, label: 'Thu', price: '₹14,400/T' },
           { x: 300, y: 80, label: 'Fri', price: '₹14,600/T' },
           { x: 390, y: 40, label: 'Sat', price: '₹14,800/T' }
         ];
+        break;
     }
+
+    return basePoints.map((pt, index) => {
+      // Add a progressive noise so the line shape changes
+      const pointNoise = noise * (index % 2 === 0 ? 1 : -1) * (index + 1) * 0.2;
+      return {
+        ...pt,
+        y: Math.max(10, Math.min(190, pt.y + pointNoise))
+      };
+    });
   };
 
   const chartPoints = getChartPoints();
