@@ -4,8 +4,17 @@ import React, { useState } from 'react';
 import { useCircular } from '@/lib/CircularContext';
 
 export default function SupplyChainIntelligence() {
-  const { networkNodes, addNotification } = useCircular();
+  const { user, networkNodes, addNotification } = useCircular();
   const [selectedRouteId, setSelectedRouteId] = useState<string | null>('n-2');
+
+  const getRoleTheme = () => {
+    switch (user?.role) {
+      case 'buyer': return { text: 'text-yellow-600', bg: 'bg-yellow-600', bgAlpha: 'bg-yellow-600/10', border: 'border-yellow-600', hover: 'hover:bg-yellow-700' };
+      default: return { text: 'text-zinc-900', bg: 'bg-zinc-900', bgAlpha: 'bg-zinc-900/10', border: 'border-zinc-900', hover: 'hover:bg-zinc-800' };
+    }
+  };
+
+  const theme = getRoleTheme();
 
   const handleRecalculateRoute = (id: string) => {
     setSelectedRouteId(id);
@@ -22,7 +31,7 @@ export default function SupplyChainIntelligence() {
       {/* Header Panel */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 bg-surface/30 backdrop-blur-glass p-6 rounded-2xl border border-outline-variant/15 shadow-sm w-full">
         <div>
-          <span className="font-label-caps text-[10px] text-primary font-bold uppercase tracking-widest bg-primary-container/20 px-3.5 py-1.5 rounded-full border border-primary/20">
+          <span className={`font-label-caps text-[10px] ${theme.text} font-bold uppercase tracking-widest ${theme.bgAlpha} px-3.5 py-1.5 rounded-full border ${theme.border}/20`}>
             Logistics Module
           </span>
           <h1 className="font-display-hero text-4xl font-extrabold text-on-background tracking-tighter mt-3">
@@ -102,14 +111,14 @@ export default function SupplyChainIntelligence() {
                 >
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center border transition-all ${
                     isSelected 
-                      ? 'bg-secondary border-white text-white scale-110 shadow-[0_0_15px_#7bffd9]' 
-                      : 'bg-white border-primary/40 text-primary hover:scale-105'
+                      ? `${theme.bg} border-white text-white scale-110 shadow-lg` 
+                      : `bg-surface ${theme.border}/40 ${theme.text} hover:scale-105`
                   }`}>
                     <span className="material-symbols-outlined text-[14px] font-bold">
                       {node.role === 'manufacturer' ? 'factory' : node.role === 'recycler' ? 'recycling' : 'local_shipping'}
                     </span>
                   </div>
-                  <span className="font-metadata text-[8px] bg-white/95 border border-outline-variant/30 px-1.5 py-0.5 rounded shadow mt-1 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  <span className="font-metadata text-[8px] bg-surface-bright/95 border border-outline-variant/30 px-1.5 py-0.5 rounded shadow mt-1 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                     {node.name}
                   </span>
                 </button>
@@ -122,7 +131,7 @@ export default function SupplyChainIntelligence() {
         <div className="lg:col-span-4 flex flex-col gap-6">
           <div className="glass-panel p-6 rounded-2xl flex-1 flex flex-col justify-between">
             <div>
-              <h3 className="font-headline-md text-base text-secondary font-bold mb-4 flex items-center gap-2">
+              <h3 className={`font-headline-md text-base ${theme.text} font-bold mb-4 flex items-center gap-2`}>
                 <span className="material-symbols-outlined text-lg">local_shipping</span>
                 Optimized Freight Specs
               </h3>
@@ -130,17 +139,17 @@ export default function SupplyChainIntelligence() {
               <div className="space-y-4 font-semibold text-xs text-on-surface">
                 <div className="p-4 bg-surface-container-low/40 rounded-xl border border-outline-variant/25">
                   <h4 className="text-sm font-bold text-on-background">Short-Range Secondary Logistics</h4>
-                  <span className="font-metadata text-[10px] text-primary font-bold uppercase tracking-wider block mt-0.5">Average dispatch distance: 18.5 km</span>
+                  <span className={`font-metadata text-[10px] ${theme.text} font-bold uppercase tracking-wider block mt-0.5`}>Average dispatch distance: 18.5 km</span>
                 </div>
 
                 <div className="space-y-3">
                   <div className="flex justify-between border-b border-outline-variant/10 pb-2">
                     <span className="text-on-surface-variant">Minimization offset</span>
-                    <span className="text-primary font-bold">1,850 km saved</span>
+                    <span className={`${theme.text} font-bold`}>1,850 km saved</span>
                   </div>
                   <div className="flex justify-between border-b border-outline-variant/10 pb-2">
                     <span className="text-on-surface-variant">Carbon avoided</span>
-                    <span className="text-secondary font-bold">324 Metric Tons</span>
+                    <span className="text-on-background font-bold">324 Metric Tons</span>
                   </div>
                   <div className="flex justify-between pb-1">
                     <span className="text-on-surface-variant">Carrier Efficiency</span>
@@ -150,7 +159,10 @@ export default function SupplyChainIntelligence() {
               </div>
             </div>
 
-            <button className="w-full mt-6 py-3.5 bg-primary text-white font-label-caps text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-secondary transition-all shadow-md">
+            <button 
+              onClick={() => addNotification('Freight Carrier Dispatch Locked', 'Smart contract initiated for secondary logistics.', 'success')}
+              className={`w-full mt-6 py-3.5 ${theme.bg} text-white font-label-caps text-xs font-bold uppercase tracking-wider rounded-xl shadow-md ${theme.hover} transition-all`}
+            >
               Lock Freight Carrier Dispatch
             </button>
           </div>

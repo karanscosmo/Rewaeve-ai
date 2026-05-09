@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useCircular } from '@/lib/CircularContext';
 
 export default function AIRecoveryCenter() {
-  const { activeStream, activeScores, wasteStreams, setActiveStreamById } = useCircular();
+  const { activeStream, activeScores, wasteStreams, setActiveStreamById, t } = useCircular();
   
   // Decide Go/No-Go Recommendation based on stream properties
   // High acid (pH < 5) or high TDS (> 5000) or high sludge (> 50) triggers caution/no-go!
@@ -60,10 +60,10 @@ export default function AIRecoveryCenter() {
             Decision Module
           </span>
           <h1 className="font-display-hero text-4xl font-extrabold text-on-background tracking-tighter mt-3">
-            AI Recovery Decision Center
+            {t('AI Recovery Decision Center')}
           </h1>
           <p className="font-body-large text-sm text-on-surface-variant mt-1.5 max-w-2xl leading-relaxed">
-            Futuristic neural analytics calculating feasibility thresholds, payback margins, and infrastructure readiness.
+            {t('explainWaterTwin')}
           </p>
         </div>
 
@@ -92,7 +92,7 @@ export default function AIRecoveryCenter() {
               
               <div className="relative z-10 w-full border-b border-outline-variant/15 pb-4 mb-4 flex justify-between items-center text-left">
                 <div>
-                  <h3 className="font-headline-md text-base text-on-background font-extrabold">Autonomous Diagnostic Verdict</h3>
+                  <h3 className="font-headline-md text-base text-on-background font-extrabold">{t('Autonomous Diagnostic Verdict')}</h3>
                   <span className="text-[10px] text-on-surface-variant font-medium">Confidence Coefficient: 98.6%</span>
                 </div>
                 <div className="w-3.5 h-3.5 rounded-full animate-ping bg-primary-fixed" style={{ backgroundColor: decision.accentColor }} />
@@ -288,12 +288,12 @@ export default function AIRecoveryCenter() {
       <div className="flex gap-4">
         <Link href="/dashboard" className="flex-1">
           <button className="w-full py-3.5 border border-outline-variant/30 text-on-background hover:bg-surface-dim rounded-xl font-label-caps text-xs font-bold uppercase tracking-wider transition-all">
-            ← Return to Ingestion Panel
+            ← {t('Return to Ingestion Panel')}
           </button>
         </Link>
         <Link href="/dashboard/innovation-lab" className="flex-1">
           <button className="w-full py-3.5 bg-primary text-white hover:bg-secondary rounded-xl font-label-caps text-xs font-bold uppercase tracking-wider transition-all shadow-md">
-            Initialize AI Blueprint Synthesis →
+            {t('Initialize AI Blueprint Synthesis')} →
           </button>
         </Link>
       </div>

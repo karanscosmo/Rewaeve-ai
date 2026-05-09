@@ -2,9 +2,20 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { useCircular } from '@/lib/CircularContext';
 
 export default function ESGSustainabilityHub() {
+  const { user, addNotification } = useCircular();
   const [treatmentUrgency, setTreatmentUrgency] = useState<'LOW' | 'MEDIUM' | 'HIGH'>('MEDIUM');
+
+  const getRoleTheme = () => {
+    switch (user?.role) {
+      case 'buyer': return { text: 'text-yellow-600', bg: 'bg-yellow-600', bgAlpha: 'bg-yellow-600/10', border: 'border-yellow-600' };
+      default: return { text: 'text-zinc-900', bg: 'bg-zinc-900', bgAlpha: 'bg-zinc-900/10', border: 'border-zinc-900' };
+    }
+  };
+
+  const theme = getRoleTheme();
 
   // Interactive predictor parameters
   const riskStats = {
@@ -21,7 +32,7 @@ export default function ESGSustainabilityHub() {
       {/* Header Panel */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 w-full bg-surface/30 backdrop-blur-glass p-6 rounded-2xl border border-outline-variant/15 shadow-sm">
         <div>
-          <span className="font-label-caps text-[10px] text-primary font-bold uppercase tracking-widest bg-primary-container/20 px-3.5 py-1.5 rounded-full border border-primary/20">
+          <span className={`font-label-caps text-[10px] ${theme.text} font-bold uppercase tracking-widest ${theme.bgAlpha} px-3.5 py-1.5 rounded-full border ${theme.border}/20`}>
             ESG Module
           </span>
           <h1 className="font-display-hero text-4xl md:text-5xl font-extrabold text-on-background tracking-tighter mt-3">
@@ -32,7 +43,7 @@ export default function ESGSustainabilityHub() {
           </p>
         </div>
         <div className="flex items-center gap-3 bg-surface-container/50 backdrop-blur-md px-4 py-2.5 rounded-full border border-outline-variant/30 shadow-sm">
-          <div className="w-3 h-3 rounded-full bg-primary shadow-[0_0_8px_rgba(0,108,82,0.6)] animate-pulse" />
+          <div className={`w-3 h-3 rounded-full ${theme.bg} animate-pulse`} />
           <span className="font-metadata text-xs text-on-surface font-semibold">Live Predictive Radar Active</span>
         </div>
       </header>
@@ -41,17 +52,20 @@ export default function ESGSustainabilityHub() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full items-stretch">
         
         {/* Central Risk Radar Pulse Pane (Hero Visual - Spans 7 cols) */}
-        <div className="col-span-1 lg:col-span-7 bg-surface/60 backdrop-blur-[24px] border border-[#7A928A]/20 rounded-2xl p-6 relative overflow-hidden flex flex-col items-center justify-between min-h-[500px] group transition-all duration-500 shadow-sm">
-          <div className="absolute inset-0 opacity-20 pointer-events-none bg-radial-gradient from-[rgba(127,255,212,0.3)] to-transparent" />
+        <div className={`col-span-1 lg:col-span-7 bg-surface/60 backdrop-blur-[24px] border ${theme.border}/20 rounded-2xl p-6 relative overflow-hidden flex flex-col items-center justify-between min-h-[500px] group transition-all duration-500 shadow-sm`}>
+          <div className={`absolute inset-0 opacity-20 pointer-events-none bg-radial-gradient ${theme.bgAlpha} to-transparent`} />
           
           <div className="w-full flex justify-between items-center z-10 border-b border-outline-variant/15 pb-4">
-            <h2 className="font-headline-md text-base font-bold text-primary">Compliance Radar Scanning</h2>
+            <h2 className={`font-headline-md text-base font-bold ${theme.text}`}>Compliance Radar Scanning</h2>
             <div className="flex gap-2">
               {(['LOW', 'MEDIUM', 'HIGH'] as const).map((urg) => (
                 <button 
                   key={urg}
-                  onClick={() => setTreatmentUrgency(urg)}
-                  className={`px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider transition-all border ${treatmentUrgency === urg ? 'bg-secondary text-white border-secondary' : 'bg-surface text-on-surface-variant border-outline-variant/30 hover:bg-surface-dim'}`}
+                  onClick={() => {
+                    setTreatmentUrgency(urg);
+                    addNotification(`Recalculating predictive ESG model for ${urg} risk tolerance`, 'info');
+                  }}
+                  className={`px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider transition-all border ${treatmentUrgency === urg ? `${theme.bg} text-white ${theme.border}` : 'bg-surface text-on-surface-variant border-outline-variant/30 hover:bg-surface-dim'}`}
                 >
                   {urg}
                 </button>

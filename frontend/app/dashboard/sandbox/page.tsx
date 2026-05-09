@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useCircular } from '@/lib/CircularContext';
 
 export default function SmartRecoverySandbox() {
-  const { addNotification } = useCircular();
+  const { addNotification, t } = useCircular();
 
   // Slider controls
   const [feedVolume, setFeedVolume] = useState(120); // Tons
@@ -38,10 +38,10 @@ export default function SmartRecoverySandbox() {
             Sandbox Module
           </span>
           <h1 className="font-display-hero text-4xl font-extrabold text-on-background tracking-tighter mt-3">
-            Recovery Simulation Sandbox
+            {t('Recovery Simulation Sandbox')}
           </h1>
           <p className="font-body-large text-sm text-on-surface-variant mt-1">
-            Simulate operational variables, labor loads, and thermal kiln temperatures to recalculate net margins and carbon yield.
+            {t('Simulate operational variables, labor loads, and thermal kiln temperatures to recalculate net margins and carbon yield.')}
           </p>
         </div>
       </div>
@@ -53,16 +53,16 @@ export default function SmartRecoverySandbox() {
           <div className="border-b border-outline-variant/15 pb-3">
             <h3 className="font-headline-md text-base text-primary font-bold flex items-center gap-1.5">
               <span className="material-symbols-outlined text-primary fill-1">tune</span>
-              Variables Control Panel
+              {t('Variables Control Panel')}
             </h3>
-            <p className="text-[10px] text-on-surface-variant">Calibrate real-time processing streams.</p>
+            <p className="text-[10px] text-on-surface-variant">{t('Calibrate real-time processing streams.')}</p>
           </div>
 
           <div className="space-y-5 font-semibold text-xs text-on-surface">
             {/* Feedstock Volume */}
             <div className="space-y-2">
               <div className="flex justify-between text-[11px]">
-                <span className="text-on-surface-variant">Feedstock Input Volume</span>
+                <span className="text-on-surface-variant">{t('Feedstock Input Volume')}</span>
                 <span className="text-primary font-bold">{feedVolume} Metric Tons</span>
               </div>
               <input 
@@ -78,7 +78,7 @@ export default function SmartRecoverySandbox() {
             {/* Manpower */}
             <div className="space-y-2">
               <div className="flex justify-between text-[11px]">
-                <span className="text-on-surface-variant">Assigned Technicians</span>
+                <span className="text-on-surface-variant">{t('Assigned Technicians')}</span>
                 <span className="text-on-background font-bold">{manpower} Operators</span>
               </div>
               <input 
@@ -94,7 +94,7 @@ export default function SmartRecoverySandbox() {
             {/* Energy Input */}
             <div className="space-y-2">
               <div className="flex justify-between text-[11px]">
-                <span className="text-on-surface-variant">Thermal Kiln Heat Energy</span>
+                <span className="text-on-surface-variant">{t('Thermal Kiln Heat Energy')}</span>
                 <span className="text-secondary font-bold">{energyInput} MWh Rating</span>
               </div>
               <input 
@@ -110,7 +110,7 @@ export default function SmartRecoverySandbox() {
             {/* Reagents / Chemicals */}
             <div className="space-y-2">
               <div className="flex justify-between text-[11px]">
-                <span className="text-on-surface-variant">Chemical Reagents / Neutralizers</span>
+                <span className="text-on-surface-variant">{t('Chemical Reagents / Neutralizers')}</span>
                 <span className="text-tertiary font-bold">{treatmentChemicals} Liters/Ton</span>
               </div>
               <input 
@@ -128,7 +128,7 @@ export default function SmartRecoverySandbox() {
             onClick={handleApplySimPreset}
             className="w-full py-3 bg-primary text-white font-label-caps text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-secondary transition-all shadow-md mt-4"
           >
-            Run Active Simulation Loop
+            {t('Run Active Simulation Loop')}
           </button>
         </div>
 
@@ -139,8 +139,8 @@ export default function SmartRecoverySandbox() {
             
             <div className="border-b border-primary-container/30 pb-4 mb-4 flex justify-between items-center">
               <div>
-                <h3 className="font-headline-md text-base text-on-background font-extrabold">Futuristic Simulation Chamber</h3>
-                <span className="text-[10px] text-primary font-bold uppercase tracking-wider animate-pulse">Computing real-time molecular delta...</span>
+                <h3 className="font-headline-md text-base text-on-background font-extrabold">{t('Futuristic Simulation Chamber')}</h3>
+                <span className="text-[10px] text-primary font-bold uppercase tracking-wider animate-pulse">{t('Computing real-time molecular delta...')}</span>
               </div>
               <span className="material-symbols-outlined text-primary text-xl animate-spin-slow">cycle</span>
             </div>
@@ -152,17 +152,17 @@ export default function SmartRecoverySandbox() {
               <div className="flex items-center gap-6 relative z-10 font-bold text-[10px] text-on-surface-variant">
                 <div className="flex flex-col items-center p-3 bg-surface border border-outline-variant/30 rounded-xl">
                   <span className="material-symbols-outlined text-primary text-base mb-1">water_drop</span>
-                  <span>{feedVolume}T Raw Inflow</span>
+                  <span>{feedVolume}T {t('Raw Inflow')}</span>
                 </div>
                 <div className="w-8 h-0.5 border-t border-dashed border-primary-fixed" />
                 <div className="flex flex-col items-center p-3 bg-primary/10 border border-primary/20 rounded-xl text-primary shadow-[0_0_15px_rgba(76,242,194,0.15)] animate-pulse">
                   <span className="material-symbols-outlined text-base mb-1">science</span>
-                  <span>Curing Loom</span>
+                  <span>{t('Curing Loom')}</span>
                 </div>
                 <div className="w-8 h-0.5 border-t border-dashed border-secondary-fixed" />
                 <div className="flex flex-col items-center p-3 bg-surface border border-outline-variant/30 rounded-xl">
                   <span className="material-symbols-outlined text-secondary text-base mb-1">architecture</span>
-                  <span>{productionOutput}T Bio-Blocks</span>
+                  <span>{productionOutput}T {t('Bio-Blocks')}</span>
                 </div>
               </div>
             </div>
@@ -170,19 +170,19 @@ export default function SmartRecoverySandbox() {
             {/* Recalculated parameters telemetry display */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
               <div className="p-4 rounded-xl bg-surface/50 border border-outline-variant/20 flex flex-col justify-between">
-                <span className="text-[9px] text-on-surface-variant font-bold uppercase">Estimated CapEx Cost</span>
+                <span className="text-[9px] text-on-surface-variant font-bold uppercase">{t('Estimated CapEx Cost')}</span>
                 <span className="font-display-hero text-base font-extrabold text-on-background mt-1">₹{computedProcessingCost.toLocaleString()}</span>
               </div>
               <div className="p-4 rounded-xl bg-surface/50 border border-outline-variant/20 flex flex-col justify-between">
-                <span className="text-[9px] text-on-surface-variant font-bold uppercase">Avoided Raw Cost</span>
+                <span className="text-[9px] text-on-surface-variant font-bold uppercase">{t('Avoided Raw Cost')}</span>
                 <span className="font-display-hero text-base font-extrabold text-on-background mt-1">₹{rawQuarryingCost.toLocaleString()}</span>
               </div>
               <div className="p-4 rounded-xl bg-primary-container/15 border border-primary/20 flex flex-col justify-between shadow-sm">
-                <span className="text-[9px] text-primary font-bold uppercase">Net Sourcing ROI</span>
+                <span className="text-[9px] text-primary font-bold uppercase">{t('Net Sourcing ROI')}</span>
                 <span className="font-display-hero text-lg font-black text-primary mt-1">{roi}% ROI</span>
               </div>
               <div className="p-4 rounded-xl bg-secondary-container/15 border border-secondary/20 flex flex-col justify-between shadow-sm">
-                <span className="text-[9px] text-secondary font-bold uppercase">Carbon Avoided</span>
+                <span className="text-[9px] text-secondary font-bold uppercase">{t('Carbon Avoided')}</span>
                 <span className="font-display-hero text-base font-extrabold text-secondary mt-1">{carbonOffset.toFixed(1)}T CO2e</span>
               </div>
             </div>

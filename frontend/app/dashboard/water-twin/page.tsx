@@ -5,13 +5,32 @@ import Image from 'next/image';
 import { useCircular } from '@/lib/CircularContext';
 
 export default function DigitalWaterTwin() {
-  const { activeScores, addNotification } = useCircular();
+  const { user, activeStream, activeScores, addNotification, t } = useCircular();
+
+  const getRoleTheme = () => {
+    switch (user?.role) {
+      case 'buyer': return { text: 'text-yellow-600', bg: 'bg-yellow-600', bgAlpha: 'bg-yellow-600/10', border: 'border-yellow-600', ring: 'shadow-[0_0_20px_rgba(202,138,4,0.15)]', hex: '#ca8a04', hover: 'hover:bg-yellow-700', accent: 'accent-yellow-600' };
+      default: return { text: 'text-zinc-900', bg: 'bg-zinc-900', bgAlpha: 'bg-zinc-900/10', border: 'border-zinc-900', ring: 'shadow-[0_0_20px_rgba(24,24,27,0.15)]', hex: '#18181b', hover: 'hover:bg-zinc-800', accent: 'accent-zinc-900' };
+    }
+  };
+
+  const theme = getRoleTheme();
 
   // Telemetry Inputs state
   const [ph, setPh] = useState<number>(6.8);
   const [turbidity, setTurbidity] = useState<number>(12.5);
   const [heavyMetals, setHeavyMetals] = useState<number>(2.4);
   const [flowRate, setFlowRate] = useState<number>(250);
+
+  // Synchronize inputs with activeStream when activeStream changes
+  useEffect(() => {
+    if (activeStream) {
+      setPh(activeStream.ph);
+      setTurbidity(activeStream.turbidity);
+      setHeavyMetals(activeStream.dye_concentration);
+      setFlowRate(activeStream.quantity);
+    }
+  }, [activeStream]);
 
   // Score simulation calculations
   const [localScores, setLocalScores] = useState({
@@ -106,26 +125,26 @@ export default function DigitalWaterTwin() {
     triggerScoreGeneration();
   }, []);
 
-  // Synergize with context activeStream scores if available
-  const scores = activeScores || localScores;
+  // Render the local interactive simulation scores
+  const scores = localScores;
 
   // Ordered list of 15 Diagnostic metrics
   const diagnosticsList = [
-    { label: 'Recovery Feasibility', val: scores.recoveryFeasibility, desc: 'Composite percentage of viable chemical extraction.', color: 'text-primary' },
-    { label: 'Circular Flow Score', val: scores.circularFlowScore, desc: 'Frictionless recycling index rating.', color: 'text-primary' },
-    { label: 'Sustainability Impact', val: scores.sustainabilityImpact, desc: 'YTD net-zero environmental offset scale.', color: 'text-secondary' },
-    { label: 'Toxicity Risk Score', val: scores.toxicityRisk, desc: 'Density of heavy metals and chemical acids.', color: 'text-red-500' },
-    { label: 'Infrastructure Dependency', val: scores.infrastructureDependency, desc: 'Regional machinery and kiln overhead.', color: 'text-on-background' },
-    { label: 'Water Recovery Efficiency', val: scores.waterRecoveryEfficiency, desc: 'Purity level of freshwater recycled back.', color: 'text-primary' },
-    { label: 'Industrial Reusability', val: scores.industrialReusability, desc: 'Capability of integration with architectural casts.', color: 'text-primary' },
-    { label: 'Resource Recovery', val: scores.resourceRecovery, desc: 'Silt extraction and byproduct retention ratio.', color: 'text-secondary' },
-    { label: 'Carbon Offset Potential', val: scores.carbonOffsetPotential, desc: 'Est. metric tons of CO2 offset per year.', color: 'text-secondary' },
-    { label: 'Buyer Demand Score', val: scores.buyerDemand, desc: 'Procurement frequency index across network.', color: 'text-primary' },
-    { label: 'Treatment Complexity', val: scores.treatmentComplexity, desc: 'Number of chemical neutralization sequence layers.', color: 'text-red-400' },
-    { label: 'Logistics Complexity', val: scores.logisticsComplexity, desc: 'Specialized tanker requirements and route difficulty.', color: 'text-on-background' },
-    { label: 'Industrial Scalability', val: scores.industrialScalability, desc: 'Standard industrialization fit score.', color: 'text-primary' },
-    { label: 'ESG Compliance Readiness', val: scores.esgComplianceReadiness, desc: 'Regulatory safety alignment with SEC frameworks.', color: 'text-secondary' },
-    { label: 'Hazard Probability Score', val: scores.hazardProbability, desc: 'Risk profile index for toxic leak occurrences.', color: 'text-red-500' }
+    { label: t('Recovery Feasibility'), val: scores.recoveryFeasibility, desc: t('Composite percentage of viable chemical extraction.'), color: theme.text },
+    { label: t('Circular Flow Score'), val: scores.circularFlowScore, desc: t('Frictionless recycling index rating.'), color: theme.text },
+    { label: t('Sustainability Impact'), val: scores.sustainabilityImpact, desc: t('YTD net-zero environmental offset scale.'), color: theme.text },
+    { label: t('Toxicity Risk Score'), val: scores.toxicityRisk, desc: t('Density of heavy metals and chemical acids.'), color: 'text-red-500' },
+    { label: t('Infrastructure Dependency'), val: scores.infrastructureDependency, desc: t('Regional machinery and kiln overhead.'), color: 'text-on-background' },
+    { label: t('Water Recovery Efficiency'), val: scores.waterRecoveryEfficiency, desc: t('Purity level of freshwater recycled back.'), color: theme.text },
+    { label: t('Industrial Reusability'), val: scores.industrialReusability, desc: t('Capability of integration with architectural casts.'), color: theme.text },
+    { label: t('Resource Recovery'), val: scores.resourceRecovery, desc: t('Silt extraction and byproduct retention ratio.'), color: theme.text },
+    { label: t('Carbon Offset Potential'), val: scores.carbonOffsetPotential, desc: t('Est. metric tons of CO2 offset per year.'), color: theme.text },
+    { label: t('Buyer Demand Score'), val: scores.buyerDemand, desc: t('Procurement frequency index across network.'), color: theme.text },
+    { label: t('Treatment Complexity'), val: scores.treatmentComplexity, desc: t('Number of chemical neutralization sequence layers.'), color: 'text-red-400' },
+    { label: t('Logistics Complexity'), val: scores.logisticsComplexity, desc: t('Specialized tanker requirements and route difficulty.'), color: 'text-on-background' },
+    { label: t('Industrial Scalability'), val: scores.industrialScalability, desc: t('Standard industrialization fit score.'), color: theme.text },
+    { label: t('ESG Compliance Readiness'), val: scores.esgComplianceReadiness, desc: t('Regulatory safety alignment with SEC frameworks.'), color: theme.text },
+    { label: t('Hazard Probability Score'), val: scores.hazardProbability, desc: t('Risk profile index for toxic leak occurrences.'), color: 'text-red-500' }
   ];
 
   return (
@@ -134,20 +153,20 @@ export default function DigitalWaterTwin() {
       {/* Header Info */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 w-full bg-surface/30 backdrop-blur-glass p-6 rounded-2xl border border-outline-variant/15 shadow-sm">
         <div>
-          <span className="font-label-caps text-[10px] text-primary font-bold uppercase tracking-widest bg-primary-container/20 px-3.5 py-1.5 rounded-full border border-primary/20">
-            Digital Water Twin
+          <span className={`font-label-caps text-[10px] ${theme.text} font-bold uppercase tracking-widest ${theme.bgAlpha} px-3.5 py-1.5 rounded-full border ${theme.border}/20`}>
+            {t('Digital Water Twin')}
           </span>
           <h1 className="font-display-hero text-4xl font-extrabold text-on-background tracking-tighter mt-3">
-            Digital Water Twin Diagnostics
+            {t('Digital Water Twin Diagnostics')}
           </h1>
           <p className="font-body-large text-sm text-on-surface-variant mt-1.5 max-w-2xl leading-relaxed">
-            Unveiling 15 advanced mathematical diagnostic scores simulating XGBoost decision trees for deep byproduct audit tracking.
+            {t('explainWatertwin')}
           </p>
         </div>
         <div className="glass-panel px-5 py-2.5 rounded-full flex items-center gap-3 border border-outline-variant/30">
-          <div className={`w-3 h-3 rounded-full ${isGenerating ? 'bg-amber-500 shadow-[0_0_8px_#f59e0b] animate-ping' : 'bg-primary shadow-[0_0_8px_#4cf2c2] animate-pulse'}`} />
+          <div className={`w-3 h-3 rounded-full ${isGenerating ? 'bg-amber-500 shadow-[0_0_8px_#f59e0b] animate-ping' : `${theme.bg} ${theme.ring} animate-pulse`}`} />
           <span className="font-metadata text-xs text-on-surface font-semibold">
-            {isGenerating ? 'Analyzing...' : 'Twin Ingestion Live'}
+            {isGenerating ? t('Analyzing...') : t('Twin Ingestion Live')}
           </span>
         </div>
       </header>
@@ -159,16 +178,16 @@ export default function DigitalWaterTwin() {
         <section className="lg:col-span-4 glass-panel rounded-2xl p-6 flex flex-col justify-between">
           <div className="space-y-6">
             <div>
-              <h2 className="font-headline-md text-base font-bold text-primary">Simulator Controls</h2>
-              <p className="font-metadata text-xs text-on-surface-variant mt-1">Adjust active chemical streams to model recovery outcomes in the Digital Twin.</p>
+              <h2 className={`font-headline-md text-base font-bold ${theme.text}`}>{t('Simulator Controls')}</h2>
+              <p className="font-metadata text-xs text-on-surface-variant mt-1">{t('Adjust active chemical streams to model recovery outcomes in the Digital Twin.')}</p>
             </div>
 
             <div className="space-y-5 font-semibold text-xs text-on-surface-variant">
               {/* pH value */}
               <div className="space-y-1">
                 <div className="flex justify-between">
-                  <span>Acidity Level (pH)</span>
-                  <span className="text-primary font-bold">{ph}</span>
+                  <span>{t('Acidity Level (pH)')}</span>
+                  <span className={`${theme.text} font-bold`}>{ph}</span>
                 </div>
                 <input 
                   type="range" 
@@ -177,15 +196,15 @@ export default function DigitalWaterTwin() {
                   step="0.1" 
                   value={ph} 
                   onChange={(e) => setPh(parseFloat(e.target.value))}
-                  className="w-full accent-primary h-1.5 bg-outline-variant/20 rounded-lg cursor-pointer"
+                  className={`w-full ${theme.accent} h-1.5 bg-outline-variant/20 rounded-lg cursor-pointer`}
                 />
               </div>
 
               {/* Turbidity value */}
               <div className="space-y-1">
                 <div className="flex justify-between">
-                  <span>Turbidity (NTU)</span>
-                  <span className="text-primary font-bold">{turbidity} NTU</span>
+                  <span>{t('Turbidity (NTU)')}</span>
+                  <span className={`${theme.text} font-bold`}>{turbidity} NTU</span>
                 </div>
                 <input 
                   type="range" 
@@ -194,15 +213,15 @@ export default function DigitalWaterTwin() {
                   step="0.5" 
                   value={turbidity} 
                   onChange={(e) => setTurbidity(parseFloat(e.target.value))}
-                  className="w-full accent-primary h-1.5 bg-outline-variant/20 rounded-lg cursor-pointer"
+                  className={`w-full ${theme.accent} h-1.5 bg-outline-variant/20 rounded-lg cursor-pointer`}
                 />
               </div>
 
               {/* Heavy metals value */}
               <div className="space-y-1">
                 <div className="flex justify-between">
-                  <span>Heavy Metals Concentration (ppm)</span>
-                  <span className="text-primary font-bold">{heavyMetals} ppm</span>
+                  <span>{t('Heavy Metals Concentration (ppm)')}</span>
+                  <span className={`${theme.text} font-bold`}>{heavyMetals} ppm</span>
                 </div>
                 <input 
                   type="range" 
@@ -211,15 +230,15 @@ export default function DigitalWaterTwin() {
                   step="0.1" 
                   value={heavyMetals} 
                   onChange={(e) => setHeavyMetals(parseFloat(e.target.value))}
-                  className="w-full accent-primary h-1.5 bg-outline-variant/20 rounded-lg cursor-pointer"
+                  className={`w-full ${theme.accent} h-1.5 bg-outline-variant/20 rounded-lg cursor-pointer`}
                 />
               </div>
 
               {/* Flow rate value */}
               <div className="space-y-1">
                 <div className="flex justify-between">
-                  <span>Flow Rate (m³/h)</span>
-                  <span className="text-primary font-bold">{flowRate} m³/h</span>
+                  <span>{t('Flow Rate (m³/h)')}</span>
+                  <span className={`${theme.text} font-bold`}>{flowRate} m³/h</span>
                 </div>
                 <input 
                   type="range" 
@@ -228,7 +247,7 @@ export default function DigitalWaterTwin() {
                   step="10" 
                   value={flowRate} 
                   onChange={(e) => setFlowRate(parseInt(e.target.value))}
-                  className="w-full accent-primary h-1.5 bg-outline-variant/20 rounded-lg cursor-pointer"
+                  className={`w-full ${theme.accent} h-1.5 bg-outline-variant/20 rounded-lg cursor-pointer`}
                 />
               </div>
             </div>
@@ -238,25 +257,25 @@ export default function DigitalWaterTwin() {
           <button
             onClick={triggerScoreGeneration}
             disabled={isGenerating}
-            className="w-full mt-8 py-4 bg-primary hover:bg-secondary text-white font-label-caps text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center gap-2 relative overflow-hidden group disabled:opacity-75 disabled:cursor-not-allowed"
+            className={`w-full mt-8 py-4 ${theme.bg} ${theme.hover} text-white font-label-caps text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center gap-2 relative overflow-hidden group disabled:opacity-75 disabled:cursor-not-allowed`}
           >
             <span className="material-symbols-outlined text-sm animate-spin-slow">psychology</span>
-            {isGenerating ? 'Running Core Diagnostic Forest...' : 'Generate Diagnostic Score'}
+            {isGenerating ? t('Running Core Diagnostic Forest...') : t('Generate Diagnostic Score')}
           </button>
         </section>
 
         {/* Center Panel: Holographic Twin Lens Viewport (Col Span 4) */}
         <section className="lg:col-span-4 flex flex-col items-center justify-center relative min-h-[400px] bg-surface/10 rounded-2xl border border-outline-variant/10 p-6 overflow-hidden">
           {/* Animated Glow Rings */}
-          <div className="absolute inset-0 border border-primary/10 rounded-full animate-spin-slow scale-[1.05] pointer-events-none" />
-          <div className="absolute inset-0 border border-secondary/10 rounded-full animate-pulse scale-[1.12] pointer-events-none" />
+          <div className={`absolute inset-0 border ${theme.border}/20 rounded-full animate-spin-slow scale-[1.05] pointer-events-none`} />
+          <div className={`absolute inset-0 border ${theme.border}/10 rounded-full animate-pulse scale-[1.12] pointer-events-none`} />
           
           {/* Main Spherical Hologram Frame */}
           <div className="relative w-72 h-72 rounded-full overflow-hidden shadow-[0_0_50px_rgba(76,242,194,0.25)] bg-surface-container border-2 border-outline-variant/30 p-1 flex items-center justify-center">
             {isGenerating ? (
               <div className="absolute inset-0 bg-background/80 z-20 flex flex-col items-center justify-center p-4 text-center">
                 <div className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin mb-4" />
-                <p className="font-label-caps text-[10px] text-primary font-bold uppercase tracking-widest animate-pulse">Running Neural Twin Inference</p>
+                <p className="font-label-caps text-[10px] text-primary font-bold uppercase tracking-widest animate-pulse">{t('Running Neural Twin Inference')}</p>
                 <p className="text-[11px] text-on-surface-variant font-medium mt-1.5">{generationStep}</p>
               </div>
             ) : null}
@@ -274,15 +293,15 @@ export default function DigitalWaterTwin() {
 
           <div className="absolute bottom-[10%] bg-surface-bright/95 backdrop-blur-md rounded-full px-4 py-1.5 border border-outline-variant/35 shadow-sm text-xs font-bold flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-primary animate-ping" />
-            <span className="text-on-surface">Optimal Secondary Flow Ingested</span>
+            <span className="text-on-surface">{t('Optimal Secondary Flow Ingested')}</span>
           </div>
         </section>
 
         {/* Right Panel: The 15 AI Diagnostics Metrics Grid (Col Span 4) */}
         <section className="lg:col-span-4 glass-panel rounded-2xl p-6 flex flex-col gap-4">
           <div className="border-b border-outline-variant/15 pb-3">
-            <h3 className="font-headline-md text-base text-primary font-bold">15 Diagnostic Telemetries</h3>
-            <p className="text-[10px] text-on-surface-variant font-medium">Real-time XGBoost forest prediction vectors.</p>
+            <h3 className="font-headline-md text-base text-primary font-bold">{t('15 Diagnostic Telemetries')}</h3>
+            <p className="text-[10px] text-on-surface-variant font-medium">{t('Real-time XGBoost forest prediction vectors.')}</p>
           </div>
 
           <div className="flex flex-col gap-4 overflow-y-auto max-h-[420px] pr-1 scrollbar-thin">

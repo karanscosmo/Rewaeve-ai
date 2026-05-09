@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useCircular } from '@/lib/CircularContext';
 
 export default function DedicatedCopilotChat() {
-  const { copilotMessages, sendCopilotMessage, isCopilotThinking, activeStream } = useCircular();
+  const { copilotMessages, sendCopilotMessage, isCopilotThinking, activeStream, t } = useCircular();
   const [inputText, setInputText] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -24,10 +24,10 @@ export default function DedicatedCopilotChat() {
             Intelligence Module
           </span>
           <h1 className="font-display-hero text-4xl font-extrabold text-on-background tracking-tighter mt-3">
-            ReWeave AI Copilot
+            {t('copilotTitle')}
           </h1>
           <p className="font-body-large text-sm text-on-surface-variant mt-1">
-            Contextual circular economy guidance, automated chemical explanations, and financial ledgers.
+            {t('copilotDesc')}
           </p>
         </div>
         {activeStream && (
@@ -70,7 +70,7 @@ export default function DedicatedCopilotChat() {
           {isCopilotThinking && (
             <div className="flex items-center gap-3 text-primary text-xs font-bold animate-pulse p-4">
               <span className="material-symbols-outlined animate-spin-slow">cycle</span>
-              <span>ReWeave Copilot is optimizing recovery matching routes...</span>
+              <span>{t('copilotThinking')}</span>
             </div>
           )}
         </div>
@@ -81,7 +81,7 @@ export default function DedicatedCopilotChat() {
             type="text" 
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
-            placeholder="Ask anything about chemical specifications, ROI periods, carbon avoidances, or bidding..."
+            placeholder={t('copilotPlaceholder')}
             className="flex-1 bg-surface-container-low border border-outline-variant/30 rounded-xl px-4 py-3.5 text-xs text-on-background input-glow focus:outline-none transition-all"
           />
           <button 
@@ -89,7 +89,7 @@ export default function DedicatedCopilotChat() {
             className="px-6 bg-primary text-white font-label-caps text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-secondary hover:holographic-glow transition-all flex items-center justify-center gap-2"
           >
             <span className="material-symbols-outlined text-sm">send</span>
-            Transmit Query
+            {t('copilotSubmit')}
           </button>
         </form>
       </div>

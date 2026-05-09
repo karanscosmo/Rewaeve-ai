@@ -4,10 +4,19 @@ import React, { useState } from 'react';
 import { useCircular } from '@/lib/CircularContext';
 
 export default function CooperativeExpertNetwork() {
-  const { experts, requestCollaboration, t } = useCircular();
+  const { user, experts, requestCollaboration, t } = useCircular();
   const [selectedExpertId, setSelectedExpertId] = useState<string | null>('exp-1');
 
   const selectedExpert = experts.find(e => e.id === selectedExpertId);
+
+  const getRoleTheme = () => {
+    switch (user?.role) {
+      case 'buyer': return { text: 'text-yellow-600', bg: 'bg-yellow-600', bgAlpha: 'bg-yellow-600/10', border: 'border-yellow-600', hover: 'hover:bg-yellow-700' };
+      default: return { text: 'text-zinc-900', bg: 'bg-zinc-900', bgAlpha: 'bg-zinc-900/10', border: 'border-zinc-900', hover: 'hover:bg-zinc-800' };
+    }
+  };
+
+  const theme = getRoleTheme();
 
   return (
     <div className="flex flex-col gap-8 pb-16">
@@ -15,7 +24,7 @@ export default function CooperativeExpertNetwork() {
       {/* Header Panel */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 w-full bg-surface/30 backdrop-blur-glass p-6 rounded-2xl border border-outline-variant/15 shadow-sm">
         <div>
-          <span className="font-label-caps text-[10px] text-primary font-bold uppercase tracking-widest bg-primary-container/20 px-3.5 py-1.5 rounded-full border border-primary/20">
+          <span className={`font-label-caps text-[10px] ${theme.text} font-bold uppercase tracking-widest ${theme.bgAlpha} px-3.5 py-1.5 rounded-full border ${theme.border}/20`}>
             Cooperative Network
           </span>
           <h1 className="font-display-hero text-4xl font-extrabold text-on-background tracking-tighter mt-3">
@@ -107,7 +116,7 @@ export default function CooperativeExpertNetwork() {
 
               <button 
                 onClick={() => requestCollaboration(selectedExpert.id)}
-                className="w-full mt-8 py-3 bg-primary text-white font-label-caps text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-secondary transition-all shadow-md relative z-10"
+                className={`w-full mt-8 py-3 ${theme.bg} text-white font-label-caps text-xs font-bold uppercase tracking-wider rounded-xl shadow-md relative z-10 ${theme.hover} transition-all`}
               >
                 Request Support & Schedule Audit
               </button>

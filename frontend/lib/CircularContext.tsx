@@ -4,14 +4,14 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 // Definitions for the Upgraded Circular Intelligence Operating System
 
-export type UserRole = 
-  | 'manufacturer' 
-  | 'buyer' 
-  | 'recycler' 
-  | 'treatment' 
-  | 'sustainability' 
-  | 'government' 
-  | 'middleman' 
+export type UserRole =
+  | 'manufacturer'
+  | 'buyer'
+  | 'recycler'
+  | 'treatment'
+  | 'sustainability'
+  | 'government'
+  | 'middleman'
   | 'admin';
 
 export type GlobalLanguage = 'en' | 'hi' | 'ta' | 'gu';
@@ -90,7 +90,7 @@ export interface GeneratedProduct {
   treatmentDependency: string;
   isSaved: boolean;
   isListed: boolean;
-  
+
   // Advanced specs for Custom synthesis design
   customRatio?: number;
   customPurity?: number;
@@ -243,22 +243,22 @@ const TRANSLATIONS: Record<GlobalLanguage, Record<string, string>> = {
     autonomousVerdict: "Autonomous Diagnostic Verdict",
     sellCredits: "Sell Certified Credits",
     tendersTitle: "Autonomous Circular Contract Engine",
-    innovationLabTitle: "AI Circular Manufacturing Studio",
+    innovationLabTitle: "AI Innovation Lab & Manufacturing Studio",
     synthesisReady: "AI Material Synthesis Chamber Ready",
     sustainabilityHub: "AI Compliance Risk Predictor",
     copilotGreetings: "Greetings. I am your ReWeave Industrial Intelligence Copilot. Ask me how to optimize molecular curing and regional raw feedstock margins.",
-    expertNetwork: "Circular Workforce & Sustainability Assistance Network",
+    expertNetwork: "Circular Workforce & Expert Hiring Network",
     flows: "Circular Flows",
     waterTwin: "Water Twin Diagnostics",
     recoveryCenter: "AI Recovery Center",
-    manufacturing: "AI Circular Manufacturing",
+    manufacturing: "AI Innovation Lab",
     marketplace: "Industrial Marketplace",
     contracts: "Tenders & Contracts",
     network: "Ecosystem Network",
     monitoring: "Live Monitoring",
     sandbox: "Simulation Sandbox",
     copilot: "AI Copilot Chat",
-    expertNetworkLink: "Cooperative Network",
+    expertNetworkLink: "Hire Experts & Resources",
     esg: "ESG & Compliance",
     supplyChain: "Supply Chain Intel",
     carbon: "Carbon Analytics",
@@ -282,22 +282,22 @@ const TRANSLATIONS: Record<GlobalLanguage, Record<string, string>> = {
     autonomousVerdict: "स्वायत्त नैदानिक निर्णय प्रणाली",
     sellCredits: "प्रमाणित कार्बन क्रेडिट बेचें",
     tendersTitle: "स्वायत्त चक्रीय अनुबंध प्रणाली",
-    innovationLabTitle: "एआई चक्रीय विनिर्माण स्टूडियो",
+    innovationLabTitle: "एआई नवाचार लैब और विनिर्माण स्टूडियो",
     synthesisReady: "एआई सामग्री संश्लेषण कक्ष तैयार है",
     sustainabilityHub: "एआई पर्यावरण अनुपालन जोखिम सूचक",
     copilotGreetings: "नमस्कार। मैं आपका रीवीव औद्योगिक सहायक हूँ। आणविक शोधन और क्षेत्रीय कच्चे माल की मूल्य सीमा को अनुकूलित करने के लिए मुझसे प्रश्न पूछें।",
-    expertNetwork: "चक्रीय कार्यबल और स्थिरता सहायता नेटवर्क",
+    expertNetwork: "चक्रीय कार्यबल और विशेषज्ञ भर्ती नेटवर्क",
     flows: "चक्रीय प्रवाह",
     waterTwin: "जल ट्विन निदान",
     recoveryCenter: "एआई पुनर्चक्रण केंद्र",
-    manufacturing: "एआई चक्रीय विनिर्माण",
+    manufacturing: "एआई नवाचार लैब",
     marketplace: "औद्योगिक बाजार",
     contracts: "निविदा और अनुबंध",
     network: "पारिस्थितिकी तंत्र नेटवर्क",
     monitoring: "सक्रिय निगरानी",
     sandbox: "सिमुलेशन सैंडबॉक्स",
     copilot: "एआई कोपायलट चैट",
-    expertNetworkLink: "सहकारी नेटवर्क",
+    expertNetworkLink: "विशेषज्ञ और संसाधन भर्ती",
     esg: "ईएसजी और अनुपालन",
     supplyChain: "आपूर्ति श्रृंखला खुफिया",
     carbon: "कार्बन विश्लेषण",
@@ -321,22 +321,22 @@ const TRANSLATIONS: Record<GlobalLanguage, Record<string, string>> = {
     autonomousVerdict: "தன்னியக்க பகுப்பாய்வு தீர்ப்பு",
     sellCredits: "சான்றளிக்கப்பட்ட கார்பன் கிரெடிட்களை விற்கவும்",
     tendersTitle: "தன்னியக்க சுழற்சி ஒப்பந்த தளம்",
-    innovationLabTitle: "ஏஐ சுழற்சி உற்பத்தி அரங்கம்",
+    innovationLabTitle: "ஏஐ புதுமை ஆய்வகம் & உற்பத்தி அரங்கம்",
     synthesisReady: "ஏஐ சுழற்சி பொருள் உற்பத்தி கலன் தயார்",
     sustainabilityHub: "ஏஐ சுற்றுச்சூழல் இணக்க ஆபத்து கண்டறிவி",
     copilotGreetings: "வணக்கம். நான் உங்கள் ரீவீவ் தொழில்துறை நுண்ணறிவு உதவியாளர். மூலக்கூறு சுத்திகரிப்பு மற்றும் பிராந்திய சுழற்சி பொருள் வரம்புகளை எவ்வாறு மேம்படுத்துவது என்று என்னிடம் கேளுங்கள்.",
-    expertNetwork: "சுழற்சி தொழிலாளர் மற்றும் நிலைத்தன்மை உதவி நெட்வொர்க்",
+    expertNetwork: "சுழற்சி தொழிலாளர் மற்றும் நிபுணர் பணியமர்த்தல் நெட்வொர்க்",
     flows: "சுழற்சி ஓட்டம்",
     waterTwin: "நீர் இரட்டை பகுப்பாய்வு",
     recoveryCenter: "ஏஐ மீட்பு மையம்",
-    manufacturing: "ஏஐ சுழற்சி உற்பத்தி",
+    manufacturing: "ஏஐ புதுமை ஆய்வகம்",
     marketplace: "தொழில்துறை சந்தை",
     contracts: "ஒப்பந்தங்கள் மற்றும் டெண்டர்கள்",
     network: "சுற்றுச்சூழல் நெட்வொர்க்",
     monitoring: "செயலில் உள்ள கண்காணிப்பு",
     sandbox: "உருவகப்படுத்துதல் சாண்ட்பாக்ஸ்",
     copilot: "ஏஐ கோபைலட் அரட்டை",
-    expertNetworkLink: "கூட்டுறவு நெட்வொர்க்",
+    expertNetworkLink: "நிபுணர்கள் மற்றும் வளங்களை நியமிக்கவும்",
     esg: "ஈஎஸ்ஜி மற்றும் இணக்கம்",
     supplyChain: "விநியோக சங்கிலி தகவல்",
     carbon: "கார்பன் பகுப்பாய்வு",
@@ -360,22 +360,22 @@ const TRANSLATIONS: Record<GlobalLanguage, Record<string, string>> = {
     autonomousVerdict: "સ્વાયત્ત નિદાન ચુકાદો",
     sellCredits: "પ્રમાણિત કાર્બન ક્રેડિટ વેચો",
     tendersTitle: "સ્વાયત્ત વર્તુળાકાર કરાર એન્જિન",
-    innovationLabTitle: "એઆઈ વર્તુળાકાર મેન્યુફેક્ચરિંગ સ્ટુડિયો",
+    innovationLabTitle: "એઆઈ ઇનોવેશન લેબ અને મેન્યુફેક્ચરિંગ સ્ટુડિયો",
     synthesisReady: "એઆઈ મટીરીયલ સિન્થેસીસ ચેમ્બર તૈયાર છે",
     sustainabilityHub: "એઆઈ પર્યાવરણીય પાલન જોખમ સૂચક",
     copilotGreetings: "નમસ્કાર. હું આપનો રીવીવ ઔદ્યોગિક સહાયક છું. મોલેક્યુલર રિફાઇનિંગ અને પ્રાદેશિક કાચા માલના ભાવોને કેવી રીતે બહેતર બનાવવા તે મને પૂછો.",
-    expertNetwork: "વર્તુળાકાર કાર્યબળ અને સ્થિરતા સહાય નેટવર્ક",
+    expertNetwork: "વર્તુળાકાર કાર્યબળ અને નિષ્ણાત હાયરિંગ નેટવર્ક",
     flows: "વર્તુળાકાર પ્રવાહો",
     waterTwin: "વોટર ટ્વીન નિદાન",
     recoveryCenter: "એઆઈ રિકવરી સેન્ટર",
-    manufacturing: "એઆઈ વર્તુળાકાર ઉત્પાદન",
+    manufacturing: "એઆઈ ઇનોવેશન લેબ",
     marketplace: "ઔદ્યોગિક બજાર",
     contracts: "ટેન્ડરો અને કરારો",
     network: "ઇકોસિસ્ટમ નેટવર્ક",
     monitoring: "લાઇવ મોનિટરિંગ",
     sandbox: "સિમ્યુલેશન સેન્ડબૉક્સ",
     copilot: "એઆઈ કોપાયલોટ ચેટ",
-    expertNetworkLink: "સહકારી નેટવર્ક",
+    expertNetworkLink: "નિષ્ણાતો અને સંસાધનો હાયર કરો",
     esg: "ESG અને પાલન",
     supplyChain: "સપ્લાય ચેઈન ઇન્ટેલ",
     carbon: "કાર્બન એનાલિટિક્સ",
@@ -398,10 +398,243 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
     isOnboarded: true,
   });
 
-  const [language, setLanguage] = useState<GlobalLanguage>('en');
+  const [language, setLanguageState] = useState<GlobalLanguage>('en');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('reweave_language');
+      if (saved === 'hi' || saved === 'ta' || saved === 'gu' || saved === 'en') {
+        setLanguageState(saved as GlobalLanguage);
+      }
+    }
+  }, []);
+
+  const setLanguage = (lang: GlobalLanguage) => {
+    setLanguageState(lang);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('reweave_language', lang);
+    }
+  };
 
   // Multi-lingual translation lookup function
   const t = (key: string): string => {
+    if (!key) return '';
+
+    // 1. Direct translation key lookup
+    if (TRANSLATIONS[language]?.[key]) {
+      return TRANSLATIONS[language][key];
+    }
+
+    // 2. Fuzzy/literal phrase translation library
+    const MASTER_PHRASES: Record<GlobalLanguage, Record<string, string>> = {
+      en: {},
+      hi: {
+        "flows": "चक्रीय प्रवाह",
+        "watertwin": "जल ट्विन निदान",
+        "recoverycenter": "एआई पुनर्चक्रण केंद्र",
+        "manufacturing": "एआई चक्रीय विनिर्माण",
+        "marketplace": "औद्योगिक बाजार",
+        "contracts": "निविदा और अनुबंध",
+        "network": "पारिस्थितिकी तंत्र नेटवर्क",
+        "monitoring": "सक्रिय निगरानी",
+        "sandbox": "सिमुलेशन सैंडबॉक्स",
+        "copilot": "एआई कोपायलट चैट",
+        "expertnetworklink": "सहकारी नेटवर्क",
+        "esg": "ईएसजी और अनुपालन",
+        "supplychain": "आपूर्ति श्रृंखला खुफिया",
+        "carbon": "कार्बन विश्लेषण",
+        "notifications": "अलर्ट अधिसूचना लॉग",
+        "settings": "संगठन सेटिंग्स",
+        "digital water twin": "डिजिटल वाटर ट्विन निदान",
+        "view digital twin": "डिजिटल वाटर ट्विन देखें",
+        "view feasibility scores": "व्यवहार्यता स्कोर देखें",
+        "start neural parser": "न्यूरल पार्सर शुरू करें",
+        "start ai sieve synthesis chamber": "एआई संश्लेषण कक्ष शुरू करें",
+        "add to catalog": "कैटलॉग में जोड़ें",
+        "request support & schedule audit": "सहायता का अनुरोध करें और ऑडिट तय करें",
+        "bid +₹15,000": "बोली लगाएं +₹15,000",
+        "initiate bilateral partnership": "द्विपक्षीय साझेदारी शुरू करें",
+        "industrial data ingestion": "औद्योगिक डेटा अंतर्ग्रहण",
+        "active industrial stream ingested": "सक्रिय औद्योगिक अपशिष्ट प्रवाह",
+        "drag & drop waste stream manifest": "सक्रिय सामग्री रिपोर्ट फ़ाइलें यहाँ छोड़ें",
+        "recalculate optimal freight route": "इष्टतम परिवहन मार्ग की पुनर्गणना करें",
+        "ai recovery decision center": "एआई पुनर्चक्रण निर्णय केंद्र",
+        "autonomous diagnostic verdict": "स्वायत्त नैदानिक निर्णय प्रणाली",
+        "sell certified credits": "प्रमाणित कार्बन क्रेडिट बेचें",
+        "autonomous circular contract engine": "स्वायत्त चक्रीय अनुबंध प्रणाली",
+        "ai circular manufacturing studio": "एआई चक्रीय विनिर्माण स्टूडियो",
+        "ai material synthesis chamber ready": "एआई सामग्री संश्लेषण कक्ष तैयार है",
+        "ai compliance risk predictor": "एआई पर्यावरण अनुपालन जोखिम सूचक",
+        "ecosystem efficiency": "पारिस्थितिकी तंत्र दक्षता",
+        "reuse optimization": "पुनः उपयोग अनुकूलन",
+        "logistics friction": "परिवहन घर्षण",
+        "market value potential": "बाजार मूल्य क्षमता",
+        "active flow analytics": "सक्रिय प्रवाह विश्लेषण",
+        "transmit query": "प्रश्न प्रेषित करें",
+        "copilot lens": "कोपायलट लेंस",
+        "facility streams catalog": "केंद्र अपशिष्ट सूची पत्र",
+        "ytd savings ledger": "YTD बचत बहीखाता",
+        "carbon avoidance ledger": "कार्बन बचाव बहीखाता",
+        "water conservation": "जल संरक्षण",
+        "analyzing twin": "ट्विन का विश्लेषण",
+        "view feasibility": "व्यवहार्यता देखें",
+        "facility": "औद्योगिक केंद्र",
+        "operator": "प्रचालक",
+        "node protocol": "नोड प्रोटोकॉल",
+        "recovery simulation sandbox": "पुनर्प्राप्ति सिमुलेशन सैंडबॉक्स",
+        "variables control panel": "चर नियंत्रण कक्ष",
+        "run active simulation loop": "सक्रिय सिमुलेशन चलाएं",
+        "futuristic simulation chamber": "भविष्य सिमुलेशन कक्ष",
+        "digital water twin diagnostics": "डिजिटल वॉटर ट्विन डायग्नोस्टिक्स",
+        "simulator controls": "सिम्युलेटर नियंत्रण",
+        "return to ingestion panel": "प्रविष्टि पैनल पर लौटें",
+        "initialize ai blueprint synthesis": "एआई खाका संश्लेषण प्रारंभ करें",
+        "explainwatertwin": "अपशिष्ट लेखापरीक्षा ट्रैकिंग के लिए XGBoost निर्णय पेड़ों का अनुकरण करने वाले 15 उन्नत गणितीय नैदानिक स्कोर प्रस्तुत करना।"
+      },
+      ta: {
+        "flows": "சுழற்சி ஓட்டம்",
+        "watertwin": "நீர் இரட்டை பகுப்பாய்வு",
+        "recoverycenter": "ஏஐ மீட்பு மையம்",
+        "manufacturing": "ஏஐ சுழற்சி உற்பத்தி",
+        "marketplace": "தொழில்துறை சந்தை",
+        "contracts": "ஒப்பந்தங்கள் மற்றும் டெண்டர்கள்",
+        "network": "சுற்றுச்சூழல் நெட்வொர்க்",
+        "monitoring": "செயலில் உள்ள கண்காணிப்பு",
+        "sandbox": "உருவகப்படுத்துதல் சாண்ட்பாக்ஸ்",
+        "copilot": "ஏஐ கோபைலட் அரட்டை",
+        "expertnetworklink": "கூட்டுறவு நெட்வொர்க்",
+        "esg": "ஈஎஸ்ஜி மற்றும் இணக்கம்",
+        "supplychain": "விநியோக சங்கிலி தகவல்",
+        "carbon": "கார்பன் பகுப்பாய்வு",
+        "notifications": "அறிவிப்பு பதிவு",
+        "settings": "அமைப்பு முறைகள்",
+        "digital water twin": "டிஜிட்டல் வாட்டர் ட்வின் பகுப்பாய்வு",
+        "view digital twin": "டிஜிட்டல் ட்வின் காண்க",
+        "view feasibility scores": "சாத்தியக்கூறு மதிப்பெண் காண்க",
+        "start neural parser": "நியூரல் பார்சரைத் தொடங்கு",
+        "start ai sieve synthesis chamber": "ஏஐ சின்தசிஸ் அறையைத் தொடங்கு",
+        "add to catalog": "பட்டியலில் சேர்",
+        "request support & schedule audit": "ஆடிட் மற்றும் ஆதரவைக் கோரவும்",
+        "bid +₹15,000": "ஏலம் +₹15,000",
+        "initiate bilateral partnership": "இருதரப்பு கூட்டணியைத் தொடங்கு",
+        "industrial data ingestion": "தொழில்துறை தரவு உள்ளீடு",
+        "active industrial stream ingested": "செயலில் உள்ள தொழில்துறை கழிவு ஓட்டம்",
+        "drag & drop waste stream manifest": "கழிவு ஓட்ட ஆவணத்தை இங்கே பதிவேற்றவும்",
+        "recalculate optimal freight route": "சரியான போக்குவரத்து பாதையை மீண்டும் கணக்கிடு",
+        "ai recovery decision center": "ஏஐ மறுசுழற்சி முடிவு மையம்",
+        "autonomous diagnostic verdict": "தன்னியக்க பகுப்பாய்வு தீர்ப்பு",
+        "sell certified credits": "சான்றளிக்கப்பட்ட கார்பன் கிரெடிட்களை விற்கவும்",
+        "autonomous circular contract engine": "தன்னியக்க சுழற்சி ஒப்பந்த தளம்",
+        "ai circular manufacturing studio": "ஏஐ சுழற்சி உற்பத்தி அரங்கம்",
+        "ai material synthesis chamber ready": "ஏஐ சுழற்சி பொருள் உற்பத்தி கலன் தயார்",
+        "ai compliance risk predictor": "ஏஐ சுற்றுச்சூழல் இணக்க ஆபத்து கண்டறிவி",
+        "ecosystem efficiency": "சுற்றுச்சூழல் திறன்",
+        "reuse optimization": "மறுபயன்பாட்டு மேம்பாடு",
+        "logistics friction": "போக்குவரத்து உராய்வு",
+        "market value potential": "சந்தை மதிப்பு திறன்",
+        "active flow analytics": "செயலில் உள்ள ஓட்ட பகுப்பாய்வு",
+        "transmit query": "கேள்வியை அனுப்பு",
+        "copilot lens": "கோபைலட் லென்ஸ்",
+        "facility streams catalog": "தொழிற்சாலை கழிவுப் பட்டியல்",
+        "ytd savings ledger": "ஆண்டு சேமிப்பு பதிவு",
+        "carbon avoidance ledger": "கார்பன் சேமிப்பு பதிவு",
+        "water conservation": "நீர் பாதுகாப்பு",
+        "analyzing twin": "இரட்டை பகுப்பாய்வு",
+        "view feasibility": "சாத்தியக்கூறுகள் காண்க",
+        "facility": "தொழில்துறை வசதி",
+        "operator": "இயக்குனர்",
+        "node protocol": "நோட் நெறிமுறை",
+        "recovery simulation sandbox": "மீட்பு உருவகப்படுத்துதல் சாண்ட்பாக்ஸ்",
+        "variables control panel": "மாறி கட்டுப்பாட்டு குழு",
+        "run active simulation loop": "செயலில் உள்ள உருவகப்படுத்துதலை இயக்கு",
+        "futuristic simulation chamber": "எதிர்கால உருவகப்படுத்துதல் அறை",
+        "digital water twin diagnostics": "டிஜிட்டல் வாட்டர் இரட்டை பகுப்பாய்வு",
+        "simulator controls": "சிமுலேட்டர் கட்டுப்பாடுகள்",
+        "return to ingestion panel": "உள்வாங்கும் பலகத்திற்குத் திரும்பு",
+        "initialize ai blueprint synthesis": "ஏஐ வரைபட சின்தசிஸைத் தொடங்கு",
+        "explainwatertwin": "ஆழ்ந்த உபரி தயாரிப்பு தணிக்கைக்காக XGBoost முடிவு மரங்களை உருவகப்படுத்தும் 15 மேம்பட்ட கணித கண்டறியும் குறியீடுகளை வழங்குகிறது."
+      },
+      gu: {
+        "flows": "વર્તુળાકાર પ્રવાહો",
+        "watertwin": "વોટર ટ્વીન નિદાન",
+        "recoverycenter": "એઆઈ રિકવરી સેન્ટર",
+        "manufacturing": "એઆઈ વર્તુળાકાર ઉત્પાદન",
+        "marketplace": "ઔદ્યોગિક બજાર",
+        "contracts": "ટેન્ડરો અને કરારો",
+        "network": "ઇકોસિસ્ટમ નેટવર્ક",
+        "monitoring": "લાઇવ મોનિટરિંગ",
+        "sandbox": "સિમ્યુલેશન સેન્ડબૉક્સ",
+        "copilot": "એઆઈ કોપાયલોટ ચેટ",
+        "expertnetworklink": "સહકારી નેટવર્ક",
+        "esg": "ESG અને પાલન",
+        "supplychain": "સપ્લાય ચેઈન ઇન્ટેલ",
+        "carbon": "કાર્બન એનાલિટિક્સ",
+        "notifications": "ચેતવણી સૂચના લોગ",
+        "settings": "સંંસ્થા સેટિંગ્સ",
+        "digital water twin": "ડિજિટલ વોટર ટ્વીન નિદાન",
+        "view digital twin": "ડિજિટલ ટ્વીન જુઓ",
+        "view feasibility scores": "વ્યવહારિકતા સ્કોર જુઓ",
+        "start neural parser": "ન્યુરલ પાર્સર શરૂ કરો",
+        "start ai sieve synthesis chamber": "એઆઈ સિન્થેસિસ ચેમ્બર શરૂ કરો",
+        "add to catalog": "કેટલોગમાં ઉમેરો",
+        "request support & schedule audit": "સ્થિરતા ઓડિટ અને સપોર્ટ બુક કરો",
+        "bid +₹15,000": "બોલી લગાવો +₹15,000",
+        "initiate bilateral partnership": "દ્વિપક્ષીય ભાગીદારી શરૂ કરો",
+        "industrial data ingestion": "ઔદ્યોગિક ડેટા ઇન્જેશન",
+        "active industrial stream ingested": "સક્રિય ઔદ્યોગિક કચરો પ્રવાહ",
+        "drag & drop waste stream manifest": "મટીરીયલ રિપોર્ટ ફાઇલો અહીં ડ્રોપ કરો",
+        "recalculate optimal freight route": "શ્રેષ્ઠ પરિવહન માર્ગની પુનઃગણતરી કરો",
+        "ai recovery decision center": "એઆઈ રિસાયક્લિંગ નિર્ણય કેન્દ્ર",
+        "autonomous diagnostic verdict": "સ્વાયત્ત નિદાન ચુકાદો",
+        "sell certified credits": "પ્રમાણિત કાર્બન ક્રેડિટ વેચો",
+        "autonomous circular contract engine": "સ્વાયત્ત વર્તુળાકાર કરાર એન્જિન",
+        "ai circular manufacturing studio": "એઆઈ વર્તુળાકાર મેન્યુફેક્ચરિંગ સ્ટુડિયો",
+        "ai material synthesis chamber ready": "એઆઈ મટીરીયલ સિન્થેસીસ ચેમ્બર તૈયાર છે",
+        "ai compliance risk predictor": "એઆઈ પર્યાવરણીય પાલન જોખમ સૂચક",
+        "ecosystem efficiency": "ઇકોસિસ્ટમ કાર્યક્ષમતા",
+        "reuse optimization": "પુનઃઉપયોગ ઓપ્ટિમાઇઝેશન",
+        "logistics friction": "લોજિસ્ટિક્સ ઘર્ષણ",
+        "market value potential": "બજાર મૂલ્ય સંભવિત",
+        "active flow analytics": "સક્રિય પ્રવાહ એનાલિટિક્સ",
+        "transmit query": "પ્રશ્ન મોકલો",
+        "copilot lens": "કોપાયલોટ લેન્સ",
+        "facility streams catalog": "ઔદ્યોગિક પ્રવાહ સૂચિ",
+        "ytd savings ledger": "વાર્ષિક બચત ખાતાવહી",
+        "carbon avoidance ledger": "કાર્બન મુક્તિ ખાતાવહી",
+        "water conservation": "જળ સંરક્ષણ",
+        "analyzing twin": "ટ્વીન વિશ્લેષણ",
+        "view feasibility": "વ્યવહારિકતા જુઓ",
+        "facility": "ઔદ્યોગિક સુવિધા",
+        "operator": "ઓપરેટર",
+        "node protocol": "નોડ પ્રોટોકોલ",
+        "recovery simulation sandbox": "પુનઃપ્રાપ્તિ સિમ્યુલેશન સેન્ડબૉક્સ",
+        "variables control panel": "વેરિયેબલ્સ કંટ્રોલ પેનલ",
+        "run active simulation loop": "સક્રિય સિમ્યુલેશન ચલાવો",
+        "futuristic simulation chamber": "ભાવિ સિમ્યુલેશન ચેમ્બર",
+        "digital water twin diagnostics": "ડિજિટલ વોટર ટ્વીન ડાયગ્નોસ્ટિક્સ",
+        "simulator controls": "સિમ્યુલેટર નિયંત્રણો",
+        "return to ingestion panel": "પ્રવેશ પેનલ પર પાછા ફરો",
+        "initialize ai blueprint synthesis": "એઆઈ બ્લુપ્રિન્ટ સિન્થેસિસ શરૂ કરો",
+        "explainwatertwin": "કચરા ઓડિટિંગ ટ્રેકિંગ માટે XGBoost નિર્ણય વૃક્ષોનું અનુકરણ કરતા 15 અદ્યતન ગાણિતિક નિદાન સ્કોર્સ રજૂ કરે છે."
+      }
+    };
+
+    const normKey = key.trim().toLowerCase();
+    const langPhrases = MASTER_PHRASES[language];
+
+    if (langPhrases && langPhrases[normKey]) {
+      return langPhrases[normKey];
+    }
+
+    // Try a partial substring match for dynamic sentences
+    if (langPhrases) {
+      for (const [englishStr, translatedStr] of Object.entries(langPhrases)) {
+        if (normKey.includes(englishStr) || englishStr.includes(normKey)) {
+          return translatedStr;
+        }
+      }
+    }
+
     return TRANSLATIONS[language]?.[key] || TRANSLATIONS['en']?.[key] || key;
   };
 
@@ -499,7 +732,7 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
       treatmentDependency: 'Low chemical neutralization required',
       isSaved: false,
       isListed: false,
-      
+
       activeWorkflowStep: 'IDLE',
       workflowProgress: 0,
       isWorkflowActive: false,
@@ -528,7 +761,7 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
       treatmentDependency: 'Medium dye extraction required',
       isSaved: false,
       isListed: false,
-      
+
       activeWorkflowStep: 'IDLE',
       workflowProgress: 0,
       isWorkflowActive: false,
@@ -635,7 +868,7 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
   // 15 Advanced ML Diagnostic Scores implementation (simulating XGBoost/LightGBM model weights)
   const calculateMetricsForStream = (stream: WasteStream): FeasibilityScores => {
     const penalty = (stream.ph < 5 || stream.ph > 9) ? 15 : 0;
-    
+
     const recoveryFeasibility = Math.min(98, Math.max(40, Math.round(95 - (stream.tds / 1200) - penalty)));
     const circularFlowScore = Math.min(99, Math.max(35, Math.round(92 - (stream.turbidity / 4))));
     const sustainabilityImpact = Math.min(98, Math.max(40, Math.round(84 + (stream.bod / 120))));
@@ -682,10 +915,10 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
 
     setTimeout(() => {
       setIngestionStatus('Clustering physical composition streams...');
-      
+
       setTimeout(() => {
         setIngestionStatus('Locking digital water twin metrics on secure ledger...');
-        
+
         setTimeout(() => {
           const newStream: WasteStream = {
             id: 'ws-' + Date.now(),
@@ -707,7 +940,7 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
 
           setWasteStreams(prev => [newStream, ...prev]);
           setActiveStream(newStream);
-          
+
           const scores = calculateMetricsForStream(newStream);
           setActiveScores(scores);
 
@@ -764,7 +997,7 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
     const raw = rawMaterials.find(r => r.id === materialId);
     if (raw) {
       setRawMaterials(prev => prev.map(item => item.id === materialId ? { ...item, isGenerated: true } : item));
-      
+
       const newProduct: GeneratedProduct = {
         id: 'gp-' + Date.now(),
         name: name,
@@ -872,7 +1105,7 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
       }
       return p;
     }));
-    
+
     addNotification('Workflow Triggered', 'Material physical sorting matrices initialized on conveyor arrays...', 'info');
 
     setTimeout(() => {
@@ -1071,13 +1304,13 @@ export function CircularProvider({ children }: { children: React.ReactNode }) {
       } else if (query.includes('roi') || query.includes('money') || query.includes('profit') || query.includes('rupee')) {
         if (activeScores) {
           if (isHindi) {
-            botResponse = `वित्तीय विश्लेषण: आपके चक्रीय प्रवाह का आर्थिक व्यवहार्यता सूचकांक ${activeScores.circularFlowScore}% है। कुल संचित बचत ₹${(ytdSavings/10000000).toFixed(2)} करोड़ है।`;
+            botResponse = `वित्तीय विश्लेषण: आपके चक्रीय प्रवाह का आर्थिक व्यवहार्यता सूचकांक ${activeScores.circularFlowScore}% है। कुल संचित बचत ₹${(ytdSavings / 10000000).toFixed(2)} करोड़ है।`;
           } else if (isTamil) {
-            botResponse = `நிதி பகுப்பாய்வு: உங்கள் சுழற்சி பொருளாதார செயல்திறன் ${activeScores.circularFlowScore}% ஆகும். ஒட்டுமொத்த சேமிப்பு ₹${(ytdSavings/10000000).toFixed(2)} கோடி ஆகும்.`;
+            botResponse = `நிதி பகுப்பாய்வு: உங்கள் சுழற்சி பொருளாதார செயல்திறன் ${activeScores.circularFlowScore}% ஆகும். ஒட்டுமொத்த சேமிப்பு ₹${(ytdSavings / 10000000).toFixed(2)} கோடி ஆகும்.`;
           } else if (isGujarati) {
-            botResponse = `નાણાકીય વિશ્લેષણ: તમારા વર્તુળાકાર પ્રવાહની આર્થિક કાર્યક્ષમતા ${activeScores.circularFlowScore}% છે. કુલ બચત ₹${(ytdSavings/10000000).toFixed(2)} કરોડ છે.`;
+            botResponse = `નાણાકીય વિશ્લેષણ: તમારા વર્તુળાકાર પ્રવાહની આર્થિક કાર્યક્ષમતા ${activeScores.circularFlowScore}% છે. કુલ બચત ₹${(ytdSavings / 10000000).toFixed(2)} કરોડ છે.`;
           } else {
-            botResponse = `Financial telemetry suggests an active Circular Flow Score of ${activeScores.circularFlowScore}% and Buyer Demand index of ${activeScores.buyerDemand}%. Sourced savings track at ₹${(ytdSavings/10000000).toFixed(2)} Crore.`;
+            botResponse = `Financial telemetry suggests an active Circular Flow Score of ${activeScores.circularFlowScore}% and Buyer Demand index of ${activeScores.buyerDemand}%. Sourced savings track at ₹${(ytdSavings / 10000000).toFixed(2)} Crore.`;
           }
         } else {
           botResponse = `Our financial recovery engine models ROI utilizing logistics complexity, machinery capital expenses, and regional procurement indices.`;

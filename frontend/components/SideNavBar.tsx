@@ -40,14 +40,14 @@ export default function SideNavBar() {
 
   // Dynamic colors based on active login role
   const roleColorMap = {
-    manufacturer: { border: 'border-primary/20', text: 'text-primary', textBg: 'bg-primary-container/20' },
-    buyer: { border: 'border-sky-500/20', text: 'text-sky-500', textBg: 'bg-sky-500/10' },
-    middleman: { border: 'border-cyan-400/20', text: 'text-cyan-400', textBg: 'bg-cyan-400/10' },
-    sustainability: { border: 'border-emerald-500/20', text: 'text-emerald-500', textBg: 'bg-emerald-500/10' },
-    government: { border: 'border-emerald-600/20', text: 'text-emerald-600', textBg: 'bg-emerald-600/10' },
-    recycler: { border: 'border-primary/20', text: 'text-primary', textBg: 'bg-primary-container/20' },
-    treatment: { border: 'border-primary/20', text: 'text-primary', textBg: 'bg-primary-container/20' },
-    admin: { border: 'border-primary/20', text: 'text-primary', textBg: 'bg-primary-container/20' }
+    manufacturer: { border: 'border-zinc-900/20', text: 'text-zinc-900', textBg: 'bg-zinc-900/10' },
+    buyer: { border: 'border-yellow-600/20', text: 'text-yellow-600', textBg: 'bg-yellow-600/10' },
+    middleman: { border: 'border-zinc-900/20', text: 'text-zinc-900', textBg: 'bg-zinc-900/10' },
+    sustainability: { border: 'border-zinc-900/20', text: 'text-zinc-900', textBg: 'bg-zinc-900/10' },
+    government: { border: 'border-zinc-900/20', text: 'text-zinc-900', textBg: 'bg-zinc-900/10' },
+    recycler: { border: 'border-zinc-900/20', text: 'text-zinc-900', textBg: 'bg-zinc-900/10' },
+    treatment: { border: 'border-zinc-900/20', text: 'text-zinc-900', textBg: 'bg-zinc-900/10' },
+    admin: { border: 'border-zinc-900/20', text: 'text-zinc-900', textBg: 'bg-zinc-900/10' }
   };
 
   const activeTheme = roleColorMap[user?.role || 'manufacturer'] || roleColorMap.manufacturer;
