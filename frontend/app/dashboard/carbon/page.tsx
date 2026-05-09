@@ -7,7 +7,7 @@ export default function CarbonReductionAnalytics() {
   const { user, avoidedCarbonTons, recycledWaterGallons, addNotification } = useCircular();
 
   // Expanded carbon credit estimations (Rupees)
-  const carbonPricePerTon = 1450; // ₹1,450 per credit ton (standard offset price)
+  const carbonPricePerTon = 350; // ₹350 per credit ton (standard offset price)
   const creditValuation = avoidedCarbonTons * carbonPricePerTon;
 
   const [selectedOffsetYear, setSelectedOffsetYear] = useState<'2025' | '2026'>('2026');
@@ -153,21 +153,16 @@ export default function CarbonReductionAnalytics() {
               </div>
 
               {/* Giant credit valuation callout */}
-              <div className={`p-4 ${theme.bgAlpha} border ${theme.border}/20 rounded-xl text-center shadow-sm`}>
+              <div className={`p-4 ${theme.bgAlpha} border ${theme.border}/20 rounded-xl text-center shadow-sm mt-8`}>
                 <span className={`font-metadata text-[10px] ${theme.text} font-bold uppercase tracking-wider block`}>Estimated Carbon Credit Valuation</span>
                 <span className={`font-display-hero text-3xl font-extrabold ${theme.text} mt-1.5 block`}>
-                  ₹{selectedOffsetYear === '2026' ? creditValuation.toLocaleString() : '1,37,02,500'}
+                  ₹{selectedOffsetYear === '2026' ? creditValuation.toLocaleString('en-IN') : '33,07,500'}
                 </span>
                 <span className="text-[10px] text-on-surface-variant/70 mt-1 block font-medium">Derived directly from Clean Development registers.</span>
               </div>
             </div>
 
-            <button 
-              onClick={() => addNotification('Credits Listed on Exchange', 'Your carbon offsets have been successfully pushed to the regional CDM exchange.', 'success')}
-              className={`w-full py-3.5 ${theme.bg} text-white font-label-caps text-xs font-bold uppercase tracking-wider rounded-xl ${theme.hover} transition-all shadow-md mt-6`}
-            >
-              Sell Certified Credits
-            </button>
+
           </div>
         </div>
 

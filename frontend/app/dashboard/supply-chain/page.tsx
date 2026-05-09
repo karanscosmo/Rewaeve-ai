@@ -6,6 +6,12 @@ import { useCircular } from '@/lib/CircularContext';
 export default function SupplyChainIntelligence() {
   const { user, networkNodes, addNotification } = useCircular();
   const [selectedRouteId, setSelectedRouteId] = useState<string | null>('n-2');
+  const [isLocked, setIsLocked] = useState(false);
+
+  const handleLock = () => {
+    addNotification('Freight Carrier Dispatch Locked', 'Smart contract initiated for secondary logistics.', 'success');
+    setIsLocked(true);
+  };
 
   const getRoleTheme = () => {
     switch (user?.role) {
@@ -160,10 +166,11 @@ export default function SupplyChainIntelligence() {
             </div>
 
             <button 
-              onClick={() => addNotification('Freight Carrier Dispatch Locked', 'Smart contract initiated for secondary logistics.', 'success')}
-              className={`w-full mt-6 py-3.5 ${theme.bg} text-white font-label-caps text-xs font-bold uppercase tracking-wider rounded-xl shadow-md ${theme.hover} transition-all`}
+              onClick={handleLock}
+              disabled={isLocked}
+              className={`w-full mt-6 py-3.5 ${isLocked ? 'bg-surface-container-low text-on-surface-variant cursor-not-allowed' : `${theme.bg} text-white ${theme.hover}`} font-label-caps text-xs font-bold uppercase tracking-wider rounded-xl shadow-md transition-all`}
             >
-              Lock Freight Carrier Dispatch
+              {isLocked ? 'Freight Dispatch Locked' : 'Lock Freight Carrier Dispatch'}
             </button>
           </div>
         </div>

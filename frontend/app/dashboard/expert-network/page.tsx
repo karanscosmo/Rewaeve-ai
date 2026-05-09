@@ -6,6 +6,12 @@ import { useCircular } from '@/lib/CircularContext';
 export default function CooperativeExpertNetwork() {
   const { user, experts, requestCollaboration, t } = useCircular();
   const [selectedExpertId, setSelectedExpertId] = useState<string | null>('exp-1');
+  const [requestedExperts, setRequestedExperts] = useState<Record<string, boolean>>({});
+
+  const handleRequest = (id: string) => {
+    requestCollaboration(id);
+    setRequestedExperts(prev => ({ ...prev, [id]: true }));
+  };
 
   const selectedExpert = experts.find(e => e.id === selectedExpertId);
 
@@ -115,10 +121,11 @@ export default function CooperativeExpertNetwork() {
               </div>
 
               <button 
-                onClick={() => requestCollaboration(selectedExpert.id)}
-                className={`w-full mt-8 py-3 ${theme.bg} text-white font-label-caps text-xs font-bold uppercase tracking-wider rounded-xl shadow-md relative z-10 ${theme.hover} transition-all`}
+                onClick={() => handleRequest(selectedExpert.id)}
+                disabled={requestedExperts[selectedExpert.id]}
+                className={`w-full mt-8 py-3 ${requestedExperts[selectedExpert.id] ? 'bg-surface-container-low text-on-surface-variant cursor-not-allowed' : `${theme.bg} text-white hover:opacity-90`} font-label-caps text-xs font-bold uppercase tracking-wider rounded-xl shadow-md relative z-10 transition-all`}
               >
-                Request Support & Schedule Audit
+                {requestedExperts[selectedExpert.id] ? 'Collaboration Requested' : 'Request Support & Schedule Audit'}
               </button>
             </div>
           )}

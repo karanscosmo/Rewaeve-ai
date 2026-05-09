@@ -1,0 +1,99 @@
+================================================================================
+REWEAVE AI - DETAILED AI MODELS, SCORING ENGINES & LOGIC PIPELINE
+================================================================================
+
+This document details the exact logic, flow, and simulation models behind every "AI" and scoring engine used in the ReWeave AI platform.
+
+1. INDUSTRIAL DATA INGESTION & PARSING ENGINE
+--------------------------------------------------------------------------------
+Trigger: User uploads a CSV/PDF in the Manufacturer Dashboard (`app/dashboard/page.tsx`).
+Logic Flow:
+- The Neural Parser activates and scans the raw file.
+- It identifies the material source (e.g., "Textile Dyeing" vs "Metal Smelting").
+- Extraction Model: It extracts 12 critical chemical and physical parameters:
+  * Acidity (pH)
+  * Chemical Oxygen Demand (COD)
+  * Biological Oxygen Demand (BOD)
+  * Total Dissolved Solids (TDS)
+  * Turbidity (NTU)
+  * Contaminants (e.g., Azo dyes, sodium salts, copper slag)
+  * Sludge Percentage
+  * Quantity (Metric Tons)
+  * Temperature
+- State Update: This parsed data constructs the `activeStream` object in the global `CircularContext`, which is now available to all other AI models across the platform.
+
+2. CIRCULAR FEASIBILITY SCORING ENGINE
+--------------------------------------------------------------------------------
+Location: Recovery Center (`app/dashboard/recovery-center/page.tsx`)
+Trigger: Evaluates the `activeStream`.
+Logic Flow: 
+The system runs a multi-variate analysis to determine if the waste is salvageable. It generates three primary indexes:
+- Technical Feasibility Score (0-100%): Calculated based on the complexity of separating the contaminants. (e.g., High heavy metals = lower technical feasibility without advanced treatment).
+- Economic Viability Score (0-100%): Calculated by checking the cost of extraction against the current market price of the raw material.
+- Market Demand Score (0-100%): Pulled from the simulated Commodity Exchange, determining if buyers actually want the recovered material.
+Output: A final "Circular Alignment Score". If the score is > 75%, it is flagged for product synthesis. If < 50%, it is routed to a specialized Treatment Facility.
+
+3. 3D INNOVATION LAB & RECOMMENDATION AI
+--------------------------------------------------------------------------------
+Location: Innovation Lab (`app/dashboard/innovation-lab/page.tsx`)
+Trigger: "Run Product Synthesis" on an active waste stream.
+Logic Flow:
+- Material Ontology Matching: The engine looks at the chemical composition. For example, if it detects high cellulose and polymer sludge from textiles, it queries its material database.
+- Generative Output: The AI generates the top 3 high-value secondary products that can be physically manufactured from this waste. 
+- Example Outputs: "Acoustic Soundproofing Panels", "Eco-Bricks", or "Industrial Insulation".
+- Blueprint Generation: For each recommended product, the engine outputs:
+  * Estimated Profit Margin (e.g., +45%)
+  * Process Steps (e.g., 1. Thermal Compression, 2. Binding, 3. Curing)
+  * Holographic 3D visualization of the final product.
+
+4. DIGITAL WATER TWIN & PURIFICATION ENGINE
+--------------------------------------------------------------------------------
+Location: Water Optimization (`app/dashboard/water-twin/page.tsx`)
+Trigger: Live monitoring of factory effluent.
+Logic Flow:
+- Simulation Model: Takes incoming TDS (e.g., 3200 ppm) and pH (e.g., 4.5).
+- Treatment Logic: The user triggers a "Purification Sequence". The engine applies simulated chemical dosing steps:
+  * Coagulation & Flocculation (drops Turbidity)
+  * Reverse Osmosis (drops TDS to < 200 ppm)
+  * Neutralization (brings pH to 7.0)
+- Scoring: Outputs a "Potability Index". The engine calculates how many gallons were saved and adds this to the global `recycledWaterGallons` metric.
+
+5. SUSTAINABILITY & CARBON ANALYTICS ENGINE
+--------------------------------------------------------------------------------
+Location: ESG & Carbon Analytics (`app/dashboard/carbon/page.tsx`)
+Trigger: Continuous background calculation.
+Logic Flow:
+- Lifecycle Assessment (LCA) Model: The engine looks at the total metric tons of waste recovered instead of sent to a landfill/incinerator.
+- Formula: Tonnage * Material-Specific Emission Factor = Avoided Scope 3 Emissions.
+- Output: Generates real-time "Carbon Offsets" (Tons of CO2e avoided) and calculates the equivalent monetary value in the carbon credit market.
+- Compliance Ranks: Assigns an ESG Compliance Rank (e.g., "Tier 1 - SEC Aligned") allowing the company to export official compliance reports.
+
+6. SUPPLY CHAIN ROUTING & MARKETPLACE RANKING
+--------------------------------------------------------------------------------
+Location: Supply Chain Intelligence (`app/dashboard/supply-chain/page.tsx`)
+Trigger: Finding a buyer for the recovered material.
+Logic Flow:
+- Geospatial Routing AI: Calculates the friction of moving waste from the Manufacturer to the Buyer.
+- Parameters Evaluated: Distance (km), Transport Emissions (Diesel vs EV freight), and Logistics Cost.
+- Supplier Ranking: Buyers see a ranked list of waste suppliers. The rank is determined by the "Sustainability Match Score"—a blend of material purity and lowest transport emissions.
+
+7. MULTILINGUAL AI COPILOT & TRANSLATION ENGINE
+--------------------------------------------------------------------------------
+Location: AI Copilot Console (`app/dashboard/copilot/page.tsx` & floating widget)
+Trigger: User interaction or context-aware prompts.
+Logic Flow:
+- Contextual Awareness: The Copilot reads the `activeStream` and global telemetry. If COD is spiking, the Copilot proactively warns the user.
+- Natural Language Processing (NLP) Simulation: It acts as an expert consultant, capable of answering queries like "How do I lower TDS?" by referencing standard chemical engineering practices.
+- Translation AI: Specifically designed for the Indian industrial workforce. It detects the operator's preferred language (Hindi, Tamil, Gujarati, English) and translates complex chemical analytics into simple, localized, actionable instructions so floor workers can operate the system without needing a data science degree.
+
+================================================================================
+SUMMARY OF STATE FLOW
+================================================================================
+1. Data Enters -> CSV Parser Engine
+2. Data Scored -> Circular Feasibility Engine
+3. Product Generated -> Innovation Lab Recommendation AI
+4. Logistics Planned -> Supply Chain Routing AI
+5. Credits Calculated -> Carbon Analytics Engine
+6. User Guided -> Multilingual AI Copilot
+
+All models feed their outputs back into the `CircularContext`, updating the Global Telemetry Dashboard in real-time.
