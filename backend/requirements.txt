@@ -7,15 +7,9 @@ pydantic
 pydantic-settings
 python-multipart
 alembic
-celery
-redis
 pandas
 openpyxl
 pdfplumber
 python-jose[cryptography]
 passlib[bcrypt]
-langchain
-chromadb
-scikit-learn
-xgboost
 numpy
