@@ -63,7 +63,7 @@ export default function ESGSustainabilityHub() {
                   key={urg}
                   onClick={() => {
                     setTreatmentUrgency(urg);
-                    addNotification(`Recalculating predictive ESG model for ${urg} risk tolerance`, 'info');
+                    addNotification('Risk Model Update', `Recalculating predictive ESG model for ${urg} risk tolerance`, 'info');
                   }}
                   className={`px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider transition-all border ${treatmentUrgency === urg ? `${theme.bg} text-white ${theme.border}` : 'bg-surface text-on-surface-variant border-outline-variant/30 hover:bg-surface-dim'}`}
                 >
